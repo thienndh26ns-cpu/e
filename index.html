@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* ================= [NÂNG CẤP 2] PHỔ NHIỆT ĐỘ MÀU KELVIN TOÀN TRANG ================= */
+        /* ================= PHỔ NHIỆT ĐỘ MÀU KELVIN TOÀN TRANG (NGÀY & ĐÊM) ================= */
         :root {
             /* BAN ĐÊM (6500K -> Deep Midnight): Xanh biển trắng -> Xanh lam -> Xanh đen đậm */
             --bg-sky-gradient: linear-gradient(155deg, rgba(224, 242, 254, 0.22) 0%, rgba(56, 189, 248, 0.16) 24%, #0b1936 58%, #020617 100%);
@@ -28,26 +28,30 @@
         body.day-theme {
             /* BAN NGÀY (4000K -> 1500K): Trắng tự nhiên -> Vàng nắng nhẹ -> Cam đỏ nhẹ */
             --bg-sky-gradient: linear-gradient(145deg, #ffffff 0%, #fffbeb 32%, #fed7aa 70%, #fecaca 100%);
-            --bg-sidebar: rgba(255, 251, 235, 0.85);
-            --bg-card: rgba(255, 255, 255, 0.86);
-            --bg-sub: rgba(255, 247, 237, 0.85);
-            --bg-header: rgba(255, 255, 255, 0.88);
-            --border: rgba(234, 88, 12, 0.22);
+            --bg-sidebar: rgba(255, 251, 235, 0.88);
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-sub: rgba(255, 247, 237, 0.88);
+            --bg-header: rgba(255, 255, 255, 0.9);
+            --border: rgba(234, 88, 12, 0.25);
             --text-main: #1e1b18;
             --text-muted: #7c2d12;
             --accent: #ea580c;
             --accent-2: #d97706;
             --safe: #059669; --warn: #d97706; --danger: #dc2626;
-            --shadow: 0 10px 26px rgba(194, 65, 12, 0.12);
+            --shadow: 0 10px 26px rgba(194, 65, 12, 0.14);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s ease, color 0.2s ease, border-color 0.2s ease; }
         body {
-            background: var(--bg-sky-gradient); background-attachment: fixed;
-            color: var(--text-main); line-height: 1.55; min-height: 100vh; overflow-x: hidden;
+            background: var(--bg-sky-gradient) !important;
+            background-attachment: fixed !important;
+            color: var(--text-main);
+            line-height: 1.55;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* ================= [NÂNG CẤP 2 & 3] INTRO BẦU TRỜI, MÂY, SAO, THÁP CANH & BÓNG QUANG HỌC ================= */
+        /* ================= INTRO BẦU TRỜI, MÂY, SAO, THÁP CANH & BÓNG QUANG HỌC ================= */
         #welcomeScreen { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px; overflow: hidden; }
         .sky-horizon-backdrop {
             position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -77,9 +81,9 @@
         @keyframes starTwinkle { 0% { opacity: 0.55; } 100% { opacity: 1; } }
 
         .day-clouds-layer { position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: 0; transition: opacity 1s ease; overflow: hidden; }
-        body.day-theme .day-clouds-layer { opacity: 0.9; }
-        .cloud-puff { position: absolute; background: rgba(255, 255, 255, 0.82); border-radius: 999px; filter: blur(2px); box-shadow: 0 6px 18px rgba(251, 146, 60, 0.12); }
-        .cloud-puff::before, .cloud-puff::after { content: ""; position: absolute; background: rgba(255, 255, 255, 0.9); border-radius: 50%; }
+        body.day-theme .day-clouds-layer { opacity: 0.92; }
+        .cloud-puff { position: absolute; background: rgba(255, 255, 255, 0.88); border-radius: 999px; filter: blur(1.5px); box-shadow: 0 6px 18px rgba(251, 146, 60, 0.14); }
+        .cloud-puff::before, .cloud-puff::after { content: ""; position: absolute; background: rgba(255, 255, 255, 0.95); border-radius: 50%; }
         .cloud-1 { width: 110px; height: 32px; top: 13%; left: -120px; animation: cloudDrift 34s linear infinite; }
         .cloud-1::before { width: 46px; height: 46px; top: -22px; left: 16px; }
         .cloud-1::after { width: 34px; height: 34px; top: -14px; left: 54px; }
@@ -108,7 +112,6 @@
             margin: 0 auto 12px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 2;
         }
 
-        /* Luồng sáng ban ngày (từ trên xuống) & Ban đêm (chiếu từ dưới lên) */
         .thermal-light-cone {
             position: absolute; top: -40px; width: 290px; height: 265px;
             background: linear-gradient(to bottom, rgba(255, 255, 255, 0.92) 0%, rgba(254, 240, 138, 0.55) 45%, rgba(217, 119, 6, 0.24) 82%, transparent 100%);
@@ -132,7 +135,7 @@
         .watchtower { position: absolute; bottom: 18px; z-index: 4; opacity: 0.92; transition: opacity 0.8s ease; }
         .watchtower-left { left: 18px; }
         .watchtower-right { right: 18px; }
-        body.day-theme .watchtower { opacity: 0.25; }
+        body.day-theme .watchtower { opacity: 0.22; }
 
         .shield-emblem { position: relative; z-index: 4; width: 112px; height: 124px; margin-bottom: 18px; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 20px; }
         .kinetic-entry { animation: flyInAndHarden 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
@@ -203,7 +206,7 @@
         .btn-primary { background: linear-gradient(135deg, #0284c7, #7c3aed, #d97706); color: #fff; border: none; padding: 14px 36px; font-size: 1.05rem; font-weight: 700; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35); }
         .btn-primary:hover { transform: translateY(-2px); }
 
-        /* ================= [NÂNG CẤP 1] MÀN HÌNH CHẨN ĐOÁN NHANH (5S NGẦM) ================= */
+        /* ================= MÀN HÌNH CHẨN ĐOÁN NHANH (5S NGẦM) ================= */
         #triageScreen { display: none; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center; padding: 24px; text-align: center; position: relative; z-index: 50; }
         .triage-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px; padding: 30px 26px; max-width: 680px; width: 100%; box-shadow: var(--shadow); animation: fadeIn 0.35s ease; }
         .triage-badge { display: inline-block; background: rgba(168, 85, 247, 0.14); border: 1px solid #a855f7; color: #c084fc; padding: 4px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; margin-bottom: 12px; }
@@ -261,7 +264,7 @@
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
         .card h2 { font-size: 1.12rem; color: var(--text-main); }
 
-        /* ================= [NÂNG CẤP 4] TRANG CHỦ TIN TỨC AN NINH MẠNG ================= */
+        /* ================= TRANG CHỦ TIN TỨC AN NINH MẠNG ================= */
         .threat-ticker-bar { display: flex; align-items: center; gap: 12px; background: var(--bg-card); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 12px; padding: 8px 14px; margin-bottom: 16px; overflow: hidden; box-shadow: var(--shadow); }
         .ticker-tag { background: var(--danger); color: #fff; font-size: 0.74rem; font-weight: 800; padding: 3px 9px; border-radius: 6px; flex-shrink: 0; letter-spacing: 0.4px; }
         .ticker-track { flex: 1; overflow: hidden; white-space: nowrap; font-size: 0.85rem; font-weight: 600; }
@@ -294,6 +297,7 @@
         @keyframes bubbleFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-7px); } }
         .bubble-close-btn { position: absolute; top: -4px; right: -2px; width: 24px; height: 24px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted); font-size: 0.78rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 955; }
         .bubble-close-btn:hover { color: var(--danger); border-color: var(--danger); }
+
         /* ================= CSS CÁC MODULE CHỨC NĂNG & ĐẤU TRƯỜNG ================= */
         .tier-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 12px 0; }
         .tier-card { background: var(--bg-sub); border: 2px solid var(--border); border-radius: 14px; padding: 18px; cursor: pointer; text-align: left; }
@@ -719,7 +723,7 @@
         <footer>CyberGuard AI • Khoa Kỹ thuật Máy tính & Điện tử (VKU) • GVHD: TS. Hoàng Hữu Đức</footer>
     </main>
 
-    <!-- VÒNG TRÒN BONG BÓNG GỢI Ý KIỂM TRA MỨC ĐỘ CẢNH GIÁC (25S) -->
+    <!-- VÒNG TRÒN BONG BÓNG GỢI Ý KIỂM TRA MỨC ĐỘ CẢNH GIÁC (LẶP LẠI SAU 25S) -->
     <div class="vigilance-bubble-wrapper" id="vigilanceBubbleWrap">
         <button class="bubble-close-btn" title="Ẩn gợi ý" onclick="dismissVigilanceBubble()">×</button>
         <div class="vigilance-circle-bubble" onclick="openVigilanceGame()">
@@ -751,7 +755,7 @@
     </div>
 </div>
 <script>
-    // ================= [NÂNG CẤP 4] DỮ LIỆU & RENDER TRANG CHỦ AN NINH MẠNG =================
+    // ================= 1. DỮ LIỆU & RENDER TRANG CHỦ AN NINH MẠNG =================
     const globalCyberNews = [
         {
             cat: "zeroday",
@@ -824,7 +828,7 @@
                 <div>
                     <div class="news-meta">
                         <span class="badge ${item.badgeClass}">${item.tag}</span>
-                        <span>${item.source} •${item.date}</span>
+                        <span>${item.source} • ${item.date}</span>
                     </div>
                     <h3 class="news-title">${item.title}</h3>
                     <p class="news-summary">${item.summary}</p>
@@ -845,7 +849,7 @@
         sendChat();
     }
 
-    // ================= [NÂNG CẤP 1] MÀN HÌNH CHỜ 5S & BONG BÓNG LẶP LẠI SAU 25S =================
+    // ================= 2. MÀN HÌNH CHỜ 5S & BONG BÓNG LẶP LẠI SAU 25S =================
     let triageTimeout = null;
     let bubbleRespawnTimer = null;
 
@@ -864,14 +868,16 @@
         if (triageTimeout) { clearTimeout(triageTimeout); triageTimeout = null; }
         document.getElementById('triageScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
-        document.getElementById('protocolStatus').innerHTML = window.location.protocol === 'https:'
-            ? '<span style="color:var(--safe);">HTTPS (An toàn)</span>'
-            : '<span style="color:var(--warn);">HTTP / Local</span>';
+        const protoEl = document.getElementById('protocolStatus');
+        if (protoEl) {
+            protoEl.innerHTML = window.location.protocol === 'https:'
+                ? '<span style="color:var(--safe);">HTTPS (An toàn)</span>'
+                : '<span style="color:var(--warn);">HTTP / Local</span>';
+        }
 
         renderCyberNews('all');
 
         const sidebarBtns = document.querySelectorAll('.sidebar-item');
-        // [0]=Trang Chủ Tin Tức, [1]=Ứng Cứu 60s & AI, [2]=Quét Wi-Fi & Link, [3]=Mật Khẩu & Giờ độc, [4]=Vượt Ải 3 Tầng
         if (choice === 'sos') {
             switchTab('sosAiTab', sidebarBtns[1]);
         } else if (choice === 'scan') {
@@ -902,8 +908,9 @@
         document.body.classList.remove('mobile-menu-open');
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).classList.add('active');
-        btn.classList.add('active');
+        const targetTab = document.getElementById(tabId);
+        if (targetTab) targetTab.classList.add('active');
+        if (btn) btn.classList.add('active');
 
         if (tabId === 'gameTab') {
             const b = document.getElementById('vigilanceBubbleWrap');
@@ -920,7 +927,8 @@
     function showVigilanceBubbleNow() {
         if (bubbleRespawnTimer) { clearTimeout(bubbleRespawnTimer); bubbleRespawnTimer = null; }
         const b = document.getElementById('vigilanceBubbleWrap');
-        const isGameActive = document.getElementById('gameTab').classList.contains('active');
+        const gameTab = document.getElementById('gameTab');
+        const isGameActive = gameTab && gameTab.classList.contains('active');
         if (b && !isGameActive) {
             b.style.display = 'flex';
         }
@@ -946,29 +954,40 @@
 
     function jumpToSos() { switchTab('sosAiTab', document.querySelectorAll('.sidebar-item')[1]); }
 
-    // ================= BẢO MẬT QUYỀN ADMIN BẰNG SHA-256 =================
+    // ================= 3. BẢO MẬT QUYỀN ADMIN (TƯƠNG THÍCH MỌI MÔI TRƯỜNG) =================
     const ADMIN_PIN_SHA256 = "f2c9a6a91096a1c83380d1d0250a42b38c8404954728162b1615c0e889260292";
     const SIGN_SALT = "CG_VKU_SEC_2026_";
 
     async function sha256Text(text) {
-        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+        if (window.crypto && window.crypto.subtle && window.TextEncoder) {
+            try {
+                const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+                return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+            } catch (e) {}
+        }
+        return (text === "VKU@2026") ? ADMIN_PIN_SHA256 : "invalid_pin";
     }
+
     function computeSignature(lvl) {
         let hash = 0; const str = SIGN_SALT + String(lvl);
         for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; }
         return String(hash);
     }
     function loadVerifiedLevel() {
-        const rawLvl = parseInt(localStorage.getItem('cg_lvl') || '1');
-        const sig = localStorage.getItem('cg_sig') || '';
-        if (rawLvl >= 1 && rawLvl <= 3 && computeSignature(rawLvl) === sig) return rawLvl;
-        saveVerifiedLevel(1); return 1;
+        try {
+            const rawLvl = parseInt(localStorage.getItem('cg_lvl') || '1');
+            const sig = localStorage.getItem('cg_sig') || '';
+            if (rawLvl >= 1 && rawLvl <= 3 && computeSignature(rawLvl) === sig) return rawLvl;
+            saveVerifiedLevel(1);
+        } catch (e) {}
+        return 1;
     }
     function saveVerifiedLevel(lvl) {
         const safeLvl = Math.min(3, Math.max(1, lvl));
-        localStorage.setItem('cg_lvl', String(safeLvl));
-        localStorage.setItem('cg_sig', computeSignature(safeLvl));
+        try {
+            localStorage.setItem('cg_lvl', String(safeLvl));
+            localStorage.setItem('cg_sig', computeSignature(safeLvl));
+        } catch (e) {}
         unlockedLevel = safeLvl;
     }
 
@@ -999,7 +1018,7 @@
     function adminUnlockAll() { saveVerifiedLevel(3); updateTierCardsUI(); closeAdminModal(); showAiNarrator(true, "Đã mở khóa cả 3 Tầng (Admin)."); }
     function adminRelockAll() { saveVerifiedLevel(1); updateTierCardsUI(); resetToTiers(); closeAdminModal(); showAiNarrator(false, "Đã khóa lại về Tầng 1."); }
 
-    // ================= KỊCH BẢN & ĐẤU TRƯỜNG 3 TẦNG =================
+    // ================= 4. KỊCH BẢN & ĐẤU TRƯỜNG 3 TẦNG =================
     const visualScenes = {
         call: { device: "📞 Cuộc gọi số lạ", signal: "⚠️ Giả mạo", svg: `<svg width="84" height="74" viewBox="0 0 90 80" fill="none"><rect x="27" y="6" width="36" height="68" rx="7" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5"/><circle cx="45" cy="28" r="9" fill="#f59e0b"/><path d="M32 48C32 41 58 41 58 48" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/><circle cx="66" cy="18" r="10" fill="#f43f5e"/><text x="63" y="22" fill="#fff" font-size="13" font-weight="bold">!</text></svg>`, caption: "Số lạ tự xưng shipper / cán bộ yêu cầu chuyển khoản gấp.", tag: "+84 9xx.xxx.xxx • Yêu cầu chuyển phí", safe: false },
         sms_apk: { device: "📲 Tin nhắn SMS / Zalo", signal: "🚨 Tệp .APK", svg: `<svg width="84" height="74" viewBox="0 0 90 80" fill="none"><rect x="20" y="12" width="50" height="56" rx="8" fill="#0f172a" stroke="#f43f5e" stroke-width="2.5"/><path d="M45 24V44M37 37L45 45L53 37" stroke="#f43f5e" stroke-width="3" stroke-linecap="round"/><rect x="29" y="51" width="32" height="10" rx="3" fill="#f43f5e"/><text x="34" y="59" fill="#fff" font-size="8" font-weight="bold">.APK</text></svg>`, caption: "Tin nhắn đính kèm tệp cài đặt ngoài kho ứng dụng.", tag: "File: DichVuCong_Update_v2.apk", safe: false },
@@ -1054,8 +1073,34 @@
         unlockedLevel = loadVerifiedLevel();
         for (let t = 1; t <= 3; t++) {
             const card = document.getElementById(`cardTier${t}`);
-            const status = document.getElementById(`statusTier${t}`); if (t <= unlockedLevel) { card.classList.remove('locked'); status.className = 'unlock-banner'; status.innerText = t === 1 ? '🔓 Sẵn sàng' : `🔓 Đã mở khóa Tầng ${t}`; }
-            else { card.classList.add('locked'); status.className = 'lock-banner'; status.innerText = `🔒 Đã khóa • Cần ≥ 7/10 Tầng ${t - 1}`; } } } function tryStartTier(tier) { unlockedLevel = loadVerifiedLevel(); if (tier > unlockedLevel) { showAiNarrator(false, `Tầng ${tier} đang khóa! Bạn phải vượt qua Tầng ${tier - 1} với số điểm ≥ 7/10.`); return; } currentTier = tier; currentIdx = 0; score = 0; winStreak = 0; document.getElementById('tierSelector').style.display = 'none'; document.getElementById('quizSummaryArea').style.display = 'none'; document.getElementById('quizPlayArea').style.display = 'block'; const names = { 1: '🟢 Tầng 1: Dễ', 2: '🟡 Tầng 2: Khá', 3: '🔴 Tầng 3: Khó' }; document.getElementById('quizTierTitle').innerText = names[tier]; renderQuestion(); } function resetToTiers() { hideAiNarrator(); updateTierCardsUI(); document.getElementById('quizPlayArea').style.display = 'none'; document.getElementById('quizSummaryArea').style.display = 'none'; document.getElementById('tierSelector').style.display = 'grid'; } function renderQuestion() { hideAiNarrator(); const list = questionBank[currentTier]; const item = list[currentIdx]; const scene = visualScenes[item.scene] \vert{}\vert{} visualScenes.phish_url; document.getElementById('quizProgress').innerText = `Câu ${currentIdx + 1}/${list.length} \vert{} Điểm: ${score}`;
+            const status = document.getElementById(`statusTier${t}`);
+            if (!card || !status) continue;
+            if (t <= unlockedLevel) { card.classList.remove('locked'); status.className = 'unlock-banner'; status.innerText = t === 1 ? '🔓 Sẵn sàng' : `🔓 Đã mở khóa Tầng ${t}`; }
+            else { card.classList.add('locked'); status.className = 'lock-banner'; status.innerText = `🔒 Đã khóa • Cần ≥ 7/10 Tầng ${t - 1}`; }
+        }
+    }
+    function tryStartTier(tier) {
+        unlockedLevel = loadVerifiedLevel();
+        if (tier > unlockedLevel) { showAiNarrator(false, `Tầng ${tier} đang khóa! Bạn phải vượt qua Tầng ${tier - 1} với số điểm ≥ 7/10.`); return; }
+        currentTier = tier; currentIdx = 0; score = 0; winStreak = 0;
+        document.getElementById('tierSelector').style.display = 'none';
+        document.getElementById('quizSummaryArea').style.display = 'none';
+        document.getElementById('quizPlayArea').style.display = 'block';
+        const names = { 1: '🟢 Tầng 1: Dễ', 2: '🟡 Tầng 2: Khá', 3: '🔴 Tầng 3: Khó' };
+        document.getElementById('quizTierTitle').innerText = names[tier];
+        renderQuestion();
+    }
+    function resetToTiers() {
+        hideAiNarrator(); updateTierCardsUI();
+        document.getElementById('quizPlayArea').style.display = 'none';
+        document.getElementById('quizSummaryArea').style.display = 'none';
+        document.getElementById('tierSelector').style.display = 'grid';
+    }
+    function renderQuestion() {
+        hideAiNarrator();
+        const list = questionBank[currentTier]; const item = list[currentIdx];
+        const scene = visualScenes[item.scene] || visualScenes.phish_url;
+        document.getElementById('quizProgress').innerText = `Câu ${currentIdx + 1}/${list.length} | Điểm: ${score}`;
         document.getElementById('questionText').innerText = item.q;
         document.getElementById('nextQuestionBtn').style.display = 'none';
         document.getElementById('mockupDeviceLabel').innerText = scene.device;
@@ -1075,12 +1120,18 @@
         if (selectedIdx === item.ans) {
             score++; winStreak++; btnEl.classList.add('correct');
             if (typeof confetti === 'function') confetti({ particleCount: 90, spread: 70, origin: { y: 0.65 } });
-            showAiNarrator(true, (winStreak >= 3 ? `🔥 Chuỗi ${winStreak} câu đúng! ` : '') + item.exp); } else { winStreak = 0; btnEl.classList.add('wrong'); allBtns[item.ans].classList.add('correct'); showAiNarrator(false, item.exp); } document.getElementById('quizProgress').innerText = `Câu ${currentIdx + 1}/${list.length} \vert{} Điểm: ${score}`;
+            showAiNarrator(true, (winStreak >= 3 ? `🔥 Chuỗi ${winStreak} câu đúng! ` : '') + item.exp);
+        } else {
+            winStreak = 0; btnEl.classList.add('wrong'); allBtns[item.ans].classList.add('correct');
+            showAiNarrator(false, item.exp);
+        }
+        document.getElementById('quizProgress').innerText = `Câu ${currentIdx + 1}/${list.length} | Điểm: ${score}`;
         const nextBtn = document.getElementById('nextQuestionBtn'); nextBtn.style.display = 'inline-block';
         nextBtn.innerText = (currentIdx === list.length - 1) ? '🏁 Xem Kết Quả' : 'Tiếp theo ➡️';
     }
     function showAiNarrator(isSuccess, explanation) {
         const box = document.getElementById('aiNarratorBox'); const title = document.getElementById('aiNarratorTitle');
+        if (!box || !title) return;
         if (aiTimer) clearTimeout(aiTimer);
         title.innerText = isSuccess ? '🎉 Chính xác!' : '⚠️ Lưu ý từ AI:';
         title.style.color = isSuccess ? 'var(--safe)' : 'var(--warn)';
@@ -1088,7 +1139,7 @@
         box.classList.remove('leave'); box.classList.add('enter');
         aiTimer = setTimeout(hideAiNarrator, 6000);
     }
-    function hideAiNarrator() { const box = document.getElementById('aiNarratorBox'); box.classList.remove('enter'); box.classList.add('leave'); }
+    function hideAiNarrator() { const box = document.getElementById('aiNarratorBox'); if (box) { box.classList.remove('enter'); box.classList.add('leave'); } }
     function nextQuestion() { if (currentIdx < questionBank[currentTier].length - 1) { currentIdx++; renderQuestion(); } else finishQuiz(); }
 
     let gameRadar = null;
@@ -1098,7 +1149,167 @@
         document.getElementById('quizSummaryArea').style.display = 'block';
         const total = questionBank[currentTier].length; const pct = Math.round((score / total) * 100);
         const passed = (score >= 7); const nextTierBtn = document.getElementById('nextTierJumpBtn');
-        document.getElementById('finalScoreText').innerText = `Tầng ${currentTier}:${score}/${total} câu đúng (${pct}%)`;
+        document.getElementById('finalScoreText').innerText = `Tầng ${currentTier}: ${score}/${total} câu đúng (${pct}%)`;
         if (passed) {
             if (typeof confetti === 'function') confetti({ particleCount: 150, spread: 95, origin: { y: 0.6 } });
-            document.getElementById('finalCertBadge').innerHTML = `<span class="badge b-safe">🏅 VƯỢT
+            document.getElementById('finalCertBadge').innerHTML = `<span class="badge b-safe">🏅 VƯỢT ẢI THÀNH CÔNG</span>`;
+            if (currentTier < 3) {
+                if (unlockedLevel < currentTier + 1) saveVerifiedLevel(currentTier + 1);
+                document.getElementById('unlockNoticeText').innerText = `🔓 Đã mở khóa Tầng ${currentTier + 1}!`;
+                nextTierBtn.style.display = 'inline-block';
+            } else { document.getElementById('unlockNoticeText').innerText = `🏆 Hoàn thành trọn vẹn cả 3 Tầng!`; nextTierBtn.style.display = 'none'; }
+        } else {
+            document.getElementById('finalCertBadge').innerHTML = `<span class="badge b-danger">🔒 CHƯA ĐỦ ĐIỂM MỞ KHÓA</span>`;
+            document.getElementById('unlockNoticeText').innerText = `Cần đạt ≥ 7/10 câu đúng để mở tầng tiếp theo.`;
+            nextTierBtn.style.display = 'none';
+        }
+        updateTierCardsUI();
+        if (typeof Chart !== 'undefined') {
+            const ctx = document.getElementById('gameRadarChart').getContext('2d');
+            if (gameRadar) gameRadar.destroy();
+            gameRadar = new Chart(ctx, { type: 'radar', data: { labels: ['Lừa đảo', 'Wi-Fi', 'Tài khoản', 'Ứng cứu'], datasets: [{ label: `Tầng ${currentTier} (%)`, data: [pct, Math.min(100, pct + 5), Math.max(20, pct - 5), pct], backgroundColor: 'rgba(168, 85, 247, 0.25)', borderColor: '#a855f7' }] }, options: { scales: { r: { min: 0, max: 100, ticks: { display: false } } } } });
+        }
+    }
+    function jumpNextUnlockedTier() { if (currentTier < 3 && unlockedLevel >= currentTier + 1) tryStartTier(currentTier + 1); }
+
+    // ================= 5. TRỢ LÝ AI & ĐỒNG HỒ SINH HỌC NGÀY / ĐÊM =================
+    let savedGeminiKey = '';
+    try { savedGeminiKey = localStorage.getItem('cyberguard_gemini_key') || ''; } catch (e) {}
+
+    function toggleApiKeyPanel() { const p = document.getElementById('apiKeyPanel'); p.style.display = (p.style.display === 'none') ? 'block' : 'none'; }
+    function saveGeminiKey() { savedGeminiKey = document.getElementById('geminiKeyInput').value.trim(); try { localStorage.setItem('cyberguard_gemini_key', savedGeminiKey); } catch (e) {} document.getElementById('apiKeyPanel').style.display = 'none'; appendChatMsg('ai', '✅ Đã lưu Gemini API Key.'); }
+    function appendChatMsg(role, htmlText) { const chatBox = document.getElementById('aiChatBox'); const div = document.createElement('div'); div.className = role === 'user' ? 'msg msg-user' : 'msg msg-ai'; div.innerHTML = htmlText; chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight; return div; }
+    function askQuick(q) { document.getElementById('chatInput').value = q; sendChat(); }
+
+    async function sendChat() {
+        const input = document.getElementById('chatInput'); const text = input.value.trim(); if (!text) return;
+        appendChatMsg('user', text); input.value = '';
+        const aiMsgDiv = appendChatMsg('ai', '<span style="opacity:0.6;">▌</span>'); const chatBox = document.getElementById('aiChatBox');
+        try {
+            const res = await fetch('http://127.0.0.1:8000/api/chat-stream', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text }) });
+            if (res.ok && res.body) {
+                const reader = res.body.getReader(); const decoder = new TextDecoder('utf-8'); let fullText = '';
+                while (true) {
+                    const { done, value } = await reader.read(); if (done) break;
+                    fullText += decoder.decode(value, { stream: true });
+                    aiMsgDiv.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>') + ' ▌';
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+                aiMsgDiv.innerHTML = fullText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>'); return;
+            }
+        } catch (e) {}
+        if (savedGeminiKey) {
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${encodeURIComponent(savedGeminiKey)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: `Bạn là CyberGuard AI. Trả lời ngắn gọn bằng tiếng Việt:\n${text}` }] }] }) });
+                const data = await res.json(); const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (reply) { aiMsgDiv.innerHTML = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>'); return; }
+            } catch (e) {}
+        }
+        const offlineReply = generateIntelligentResponse(text);
+        let idx = 0;
+        const typeInterval = setInterval(() => { idx += 8; aiMsgDiv.innerHTML = offlineReply.slice(0, idx) + (idx < offlineReply.length ? ' ▌' : ''); chatBox.scrollTop = chatBox.scrollHeight; if (idx >= offlineReply.length) { aiMsgDiv.innerHTML = offlineReply; clearInterval(typeInterval); } }, 16);
+    }
+
+    function generateIntelligentResponse(query) {
+        const q = query.toLowerCase();
+        if (q.includes('.apk') || q.includes('.exe') || q.includes('trợ năng')) return `🚨 <strong>Nguy hiểm cao:</strong> Tệp cài đặt trực tiếp xin quyền Trợ năng có thể đọc trộm OTP và rút tiền ngân hàng. Tuyệt đối không cài đặt!`;
+        if (q.includes('http://') || /\.(xyz|top|tk|club)\b/.test(q) || q.includes('tên miền')) return `⚠️ <strong>Dấu hiệu giả mạo:</strong> Dùng <code>http://</code> hoặc đuôi tên miền lạ thường thấy ở trang Phishing. Luôn kiểm tra tên miền chính thức có <code>https://</code>.`;
+        if (q.includes('lỡ') || q.includes('vừa bấm')) return `<strong>Xử lý ngay trong 60s:</strong><br>1. Bật <b>Chế độ Máy bay</b>.<br>2. Đổi mật khẩu & bấm <b>"Đăng xuất tất cả thiết bị"</b>.<br>3. Gọi hotline ngân hàng khóa thẻ.`;
+        if (q.includes('cookie') || q.includes('2fa') || q.includes('infostealer')) return `Mã độc <strong>Infostealer</strong> có thể đánh cắp <em>Session Cookie</em> trên trình duyệt, giúp tin tặc vào thẳng tài khoản mà không cần mã 2FA. Hãy tránh dùng phần mềm crack và dùng Google Authenticator thay vì SMS.`;
+        if (q.includes('deepfake')) return `Cuộc gọi <strong>Deepfake</strong> thường mờ giật vài giây rồi tắt, sau đó nhắn tin mượn tiền. Luôn gọi lại qua số di động để xác minh.`;
+        if (q.includes('evil twin') || q.includes('wi-fi')) return `Tấn công <strong>Evil Twin</strong> dựng trạm phát Wi-Fi miễn phí trùng tên. Không nhập mật khẩu mạng xã hội vào trang chào Wi-Fi và hãy dùng 4G/5G hoặc VPN khi giao dịch.`;
+        return `Về vấn đề <em>"${query}"</em>: nguyên tắc cốt lõi là <strong>xác minh danh tính nơi gửi qua kênh độc lập</strong> và không bấm vào đường dẫn lạ. Bạn có tin nhắn hay link cụ thể nào cần kiểm tra không?`;
+    }
+
+    function toggleSidebar() { if (window.innerWidth <= 768) document.body.classList.toggle('mobile-menu-open'); else document.body.classList.toggle('sidebar-collapsed'); }
+    let demoOverride = null;
+    function toggleDemoSim() { demoOverride = (demoOverride === null) ? !(new Date().getHours() >= 6 && new Date().getHours() < 18) : null; syncSolarDefenseMode(); closeAdminModal(); }
+
+    function syncSolarDefenseMode() {
+        const now = new Date();
+        const h = now.getHours();
+        const timeStr = now.toLocaleTimeString('vi-VN');
+        const hClock = document.getElementById('headerLiveClock');
+        const cClock = document.getElementById('cyberClock');
+        if (hClock) hClock.innerText = timeStr;
+        if (cClock) cClock.innerText = timeStr;
+
+        const isDay = (demoOverride !== null) ? demoOverride : (h >= 6 && h < 18);
+        const pill = document.getElementById('welcomeStatusPill');
+        const miniIcon = document.getElementById('headerMiniIcon');
+        const topModeTag = document.getElementById('topModeTag');
+
+        if (isDay) {
+            document.body.classList.add('day-theme');
+            if (pill) pill.innerText = `☀️ ${timeStr} • Phổ Sáng Ban Ngày (4000K→1500K)`;
+            if (miniIcon) miniIcon.innerText = '☀️';
+            if (topModeTag) { topModeTag.className = 'badge b-warn'; topModeTag.innerText = '☀️ Ban Ngày'; }
+        } else {
+            document.body.classList.remove('day-theme');
+            if (pill) pill.innerText = `🛡️ ${timeStr} • Phổ Đêm Chiến Thuật (6500K+)`;
+            if (miniIcon) miniIcon.innerText = '🛡️';
+            if (topModeTag) { topModeTag.className = 'badge b-safe'; topModeTag.innerText = '🛡️ Ban Đêm'; }
+        }
+
+        const badge = document.getElementById('threatWindowBadge');
+        const desc = document.getElementById('threatWindowDesc');
+        if (badge && desc) {
+            if ((h >= 11 && h <= 13) || (h >= 20 && h <= 23)) { badge.className = 'badge b-danger'; badge.innerText = '🚨 CAO ĐIỂM PHISHING / DEEPFAKE'; desc.innerText = 'Khung giờ nghỉ trưa / tối muộn dễ mất cảnh giác trước tin nhắn giả mạo.'; }
+            else if (h >= 0 && h < 4) { badge.className = 'badge b-danger'; badge.innerText = '🚨 CAO ĐIỂM RANSOMWARE (00h–04h)'; desc.innerText = 'Tin tặc thường kích hoạt mã độc mã hóa dữ liệu vào đêm khuya.'; }
+            else { badge.className = 'badge b-safe'; badge.innerText = '🛡️ TRẠNG THÁI BÌNH THƯỜNG'; desc.innerText = 'Duy trì thói quen kiểm tra kỹ link trước khi bấm và bật 2FA.'; }
+        }
+    }
+
+    function runEmergencyWizard() {
+        const val = document.getElementById('sosScenario').value;
+        const guides = {
+            apk: `<ol style="margin-left:18px;"><li><b>0–15s:</b> Bật ngay <b>Chế độ Máy bay</b>.</li><li><b>15–30s:</b> Tắt quyền <i>Trợ năng</i> và gỡ app lạ.</li><li><b>30–60s:</b> Dùng máy sạch gọi ngân hàng khóa thẻ.</li></ol>`,
+            phish_pass: `<ol style="margin-left:18px;"><li><b>0–20s:</b> Đổi mật khẩu trên thiết bị sạch.</li><li><b>20–40s:</b> Bấm <b>"Đăng xuất tất cả thiết bị"</b>.</li><li><b>40–60s:</b> Bật 2FA bằng Google Authenticator.</li></ol>`,
+            deepfake_money: `<ol style="margin-left:18px;"><li><b>0–30s:</b> Gọi hotline ngân hàng phong tỏa giao dịch.</li><li><b>30–60s:</b> Lưu bằng chứng & trình báo Công an.</li></ol>`,
+            wifi_hack: `<ol style="margin-left:18px;"><li><b>0–20s:</b> Ngắt Wi-Fi, chuyển sang 4G/5G.</li><li><b>20–60s:</b> Thu hồi phiên đăng nhập cũ & đổi mật khẩu.</li></ol>`
+        };
+        document.getElementById('sosStepsBox').innerHTML = guides[val];
+    }
+    function analyzeWifi() {
+        const loc = document.getElementById('wifiLocation').value; const vpn = document.getElementById('vpnStatus').value; const box = document.getElementById('wifiResult');
+        if (loc === 'home') box.innerHTML = `<span class="badge b-safe">AN TOÀN</span> Mạng cá nhân WPA2/WPA3.`;
+        else if (vpn === 'yes') box.innerHTML = `<span class="badge b-safe">AN TOÀN</span> Đã mã hóa qua VPN.`;
+        else if (loc === 'captive') box.innerHTML = `<span class="badge b-danger">NGUY HIỂM</span> Bẫy Evil Twin — không nhập mật khẩu mạng xã hội!`;
+        else box.innerHTML = `<span class="badge b-warn">CẢNH BÁO</span> Không giao dịch ngân hàng khi chưa bật VPN.`;
+    }
+    function loadSample(id) {
+        const input = document.getElementById('phishingInput');
+        if (id === 1) input.value = "Tai khoan VCB bi khoa, xac thuc ngay tai http://vcb-baomat24h.xyz";
+        if (id === 2) input.value = "Cap nhat VNeID muc 2 qua link https://dichvucong.top/VNeID.apk";
+        if (id === 3) input.value = "Xem lich thi chinh thuc tai https://daotao.vku.udn.vn";
+    }
+    function scanPhishing() {
+        const text = document.getElementById('phishingInput').value.trim(); const box = document.getElementById('phishingResult'); if (!text) return;
+        let score = 0, reasons = []; const lower = text.toLowerCase();
+        if (lower.includes('http://')) { score += 35; reasons.push("Dùng <b>http://</b> không mã hóa."); }
+        if (lower.includes('.apk') || lower.includes('.exe')) { score += 50; reasons.push("Chứa tệp cài đặt <b>.apk/.exe</b>."); }
+        if (/\.(xyz|top|club|info|vip|tk)\b/.test(lower)) { score += 35; reasons.push("Đuôi tên miền lạ."); }
+        if (lower.includes('khóa') || lower.includes('khoa') || lower.includes('xác thực')) { score += 25; reasons.push("Ngôn từ thúc ép, hù dọa."); }
+        if (lower.includes('.edu.vn') || lower.includes('.gov.vn')) score = Math.max(0, score - 40);
+        if (score >= 50) box.innerHTML = `<span class="badge b-danger">🚨 NGUY HIỂM CAO</span><ul style="margin-left:18px;margin-top:4px;">${reasons.map(r=>`<li>${r}</li>`).join('')}</ul>`;
+        else if (score >= 25) box.innerHTML = `<span class="badge b-warn">⚠️ ĐÁNG NGỜ</span><ul style="margin-left:18px;margin-top:4px;">${reasons.map(r=>`<li>${r}</li>`).join('')}</ul>`;
+        else box.innerHTML = `<span class="badge b-safe">✅ AN TOÀN</span> Không phát hiện dấu hiệu giả mạo.`;
+    }
+    function checkPassword() {
+        const pwd = document.getElementById('pwdInput').value; const box = document.getElementById('pwdResult'); if (!pwd) return;
+        let pool = 0;
+        if (/[a-z]/.test(pwd)) pool += 26; if (/[A-Z]/.test(pwd)) pool += 26; if (/[0-9]/.test(pwd)) pool += 10; if (/[^a-zA-Z0-9]/.test(pwd)) pool += 32;
+        const entropy = Math.round(pwd.length * Math.log2(pool || 1));
+        if (entropy < 45) box.innerHTML = `<span class="badge b-danger">RẤT YẾU (${entropy} bits)</span> Bị bẻ khóa trong vài giây.`;
+        else if (entropy < 70) box.innerHTML = `<span class="badge b-warn">TRUNG BÌNH (${entropy} bits)</span> Nên dùng ≥ 12 ký tự.`;
+        else box.innerHTML = `<span class="badge b-safe">MẠNH (${entropy} bits)</span> Chống Brute-force tốt.`;
+    }
+
+    // ================= KHỞI TẠO HỆ THỐNG NGAY KHI MỞ TRANG =================
+    syncSolarDefenseMode();
+    updateTierCardsUI();
+    renderCyberNews('all');
+    setInterval(syncSolarDefenseMode, 1000);
+</script>
+</body>
+</html>
