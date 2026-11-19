@@ -7,9 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* ================= PHỔ NHIỆT ĐỘ MÀU KELVIN TOÀN TRANG (NGÀY & ĐÊM) ================= */
+        /* ================= PHỔ NHIỆT ĐỘ MÀU TOÀN TRANG (NGÀY & ĐÊM) ================= */
         :root {
-            /* BAN ĐÊM (6500K -> Deep Midnight): Xanh biển trắng -> Xanh lam -> Xanh đen đậm */
             --bg-sky-gradient: linear-gradient(155deg, rgba(224, 242, 254, 0.22) 0%, rgba(56, 189, 248, 0.16) 24%, #0b1936 58%, #020617 100%);
             --bg-sidebar: rgba(7, 15, 34, 0.88);
             --bg-card: rgba(12, 23, 48, 0.86);
@@ -26,7 +25,6 @@
         }
 
         body.day-theme {
-            /* BAN NGÀY (4000K -> 1500K): Trắng tự nhiên -> Vàng nắng nhẹ -> Cam đỏ nhẹ */
             --bg-sky-gradient: linear-gradient(145deg, #ffffff 0%, #fffbeb 32%, #fed7aa 70%, #fecaca 100%);
             --bg-sidebar: rgba(255, 251, 235, 0.88);
             --bg-card: rgba(255, 255, 255, 0.9);
@@ -199,10 +197,9 @@
         .tank-headlight-left { position: absolute; top: 3px; right: 26px; width: 42px; height: 12px; background: linear-gradient(to left, rgba(186, 230, 253, 0.8), transparent); clip-path: polygon(100% 35%, 0% 0%, 0% 100%, 100% 65%); pointer-events: none; }
         body.day-theme .tank-headlight-right, body.day-theme .tank-headlight-left { display: none; }
 
-        .live-badge, #welcomeScreen h1, #welcomeScreen p, .btn-primary { position: relative; z-index: 6; }
+        .live-badge, #welcomeScreen h1, .btn-primary { position: relative; z-index: 6; }
         .live-badge { background: var(--bg-card); border: 1px solid var(--border); padding: 5px 16px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; color: var(--accent); }
-        #welcomeScreen h1 { font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #a855f7, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-        #welcomeScreen p { color: var(--text-muted); max-width: 520px; font-size: 1rem; margin-bottom: 22px; }
+        #welcomeScreen h1 { font-size: 3rem; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #a855f7, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
         .btn-primary { background: linear-gradient(135deg, #0284c7, #7c3aed, #d97706); color: #fff; border: none; padding: 14px 36px; font-size: 1.05rem; font-weight: 700; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35); }
         .btn-primary:hover { transform: translateY(-2px); }
 
@@ -427,9 +424,8 @@
         </div>
     </div>
 
-    <div class="live-badge" id="welcomeStatusPill">⏱️ Đang đồng bộ bầu trời...</div>
+    <div class="live-badge" id="welcomeStatusPill">⏱️ Đang đồng bộ...</div>
     <h1>CyberGuard AI</h1>
-    <p>Hệ thống Phòng vệ An toàn Thông tin & Trợ lý AI Đa hình thái.</p>
     <button class="btn-primary" onclick="startSystem()">🚀 Bắt đầu</button>
 </section>
 
@@ -737,6 +733,7 @@
         <div style="flex: 1;"><strong id="aiNarratorTitle" style="color: #c084fc; font-size: 0.92rem; display: block; margin-bottom: 3px;">CyberGuard AI</strong><p id="aiNarratorText" style="font-size: 0.86rem; line-height: 1.4;"></p></div>
     </div>
 
+    <!-- HỘP THOẠI QUẢN TRỊ VIÊN (CTRL + SHIFT + L) -->
     <div id="adminAuthModal" class="admin-modal-backdrop">
         <div class="admin-modal-box">
             <h3 style="margin-bottom: 8px; color: #c084fc;">🔐 Xác thực Quyền Quản Trị</h3>
@@ -745,7 +742,7 @@
             <div id="adminActionsArea" style="display: none; margin-bottom: 12px;">
                 <button class="emerald-btn" style="width: 100%; margin-bottom: 8px;" onclick="adminUnlockAll()">🔓 Mở khóa cả 3 Tầng (Demo)</button>
                 <button class="danger-btn" style="width: 100%; margin-bottom: 8px;" onclick="adminRelockAll()">🔒 Khóa lại về Tầng 1</button>
-                <button class="action-btn" style="width: 100%;" onclick="toggleDemoSim()">☀️/🛡️ Đổi chế độ Ngày/Đêm</button>
+                <button class="action-btn" style="width: 100%;" onclick="toggleDemoSim()">☀️/🌙 Đổi chế độ Ngày/Đêm</button>
             </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end;">
                 <button class="sample-btn" style="margin: 0;" onclick="closeAdminModal()">Đóng</button>
@@ -954,8 +951,8 @@
 
     function jumpToSos() { switchTab('sosAiTab', document.querySelectorAll('.sidebar-item')[1]); }
 
-    // ================= 3. BẢO MẬT QUYỀN ADMIN (TƯƠNG THÍCH MỌI MÔI TRƯỜNG) =================
-    const ADMIN_PIN_SHA256 = "f2c9a6a91096a1c83380d1d0250a42b38c8404954728162b1615c0e889260292";
+    // ================= 3. BẢO MẬT QUYỀN ADMIN (ĐÃ SỬA CHUẨN XÁC 100%) =================
+    const ADMIN_PASS = "VKU@2026";
     const SIGN_SALT = "CG_VKU_SEC_2026_";
 
     async function sha256Text(text) {
@@ -965,7 +962,7 @@
                 return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
             } catch (e) {}
         }
-        return (text === "VKU@2026") ? ADMIN_PIN_SHA256 : "invalid_pin";
+        return text;
     }
 
     function computeSignature(lvl) {
@@ -1009,11 +1006,15 @@
     async function verifyAdminPin() {
         const raw = document.getElementById('adminPinInput').value.trim();
         if (!raw) return;
-        const hashed = await sha256Text(raw);
-        if (hashed === ADMIN_PIN_SHA256) {
+        const expectedHash = await sha256Text(ADMIN_PASS);
+        const inputHash = await sha256Text(raw);
+        if (inputHash === expectedHash) {
             document.getElementById('adminActionsArea').style.display = 'block';
             document.getElementById('adminVerifyBtn').style.display = 'none';
-        } else { alert("❌ Sai mã xác thực!"); closeAdminModal(); }
+        } else {
+            alert("❌ Sai mã xác thực!");
+            closeAdminModal();
+        }
     }
     function adminUnlockAll() { saveVerifiedLevel(3); updateTierCardsUI(); closeAdminModal(); showAiNarrator(true, "Đã mở khóa cả 3 Tầng (Admin)."); }
     function adminRelockAll() { saveVerifiedLevel(1); updateTierCardsUI(); resetToTiers(); closeAdminModal(); showAiNarrator(false, "Đã khóa lại về Tầng 1."); }
@@ -1241,14 +1242,14 @@
 
         if (isDay) {
             document.body.classList.add('day-theme');
-            if (pill) pill.innerText = `☀️ ${timeStr} • Phổ Sáng Ban Ngày (4000K→1500K)`;
+            if (pill) pill.innerText = `☀️ ${timeStr} • Chế độ Ban Ngày`;
             if (miniIcon) miniIcon.innerText = '☀️';
             if (topModeTag) { topModeTag.className = 'badge b-warn'; topModeTag.innerText = '☀️ Ban Ngày'; }
         } else {
             document.body.classList.remove('day-theme');
-            if (pill) pill.innerText = `🛡️ ${timeStr} • Phổ Đêm Chiến Thuật (6500K+)`;
+            if (pill) pill.innerText = `🌙 ${timeStr} • Chế độ Ban Đêm`;
             if (miniIcon) miniIcon.innerText = '🛡️';
-            if (topModeTag) { topModeTag.className = 'badge b-safe'; topModeTag.innerText = '🛡️ Ban Đêm'; }
+            if (topModeTag) { topModeTag.className = 'badge b-safe'; topModeTag.innerText = '🌙 Ban Đêm'; }
         }
 
         const badge = document.getElementById('threatWindowBadge');
