@@ -102,14 +102,14 @@
         .btn-primary { background: linear-gradient(135deg, #0284c7, #7c3aed, #d97706); color: #fff; border: none; padding: 14px 36px; font-size: 1.05rem; font-weight: 700; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35); }
         .btn-primary:hover { transform: translateY(-2px); }
 
-        /* ================= 2. MÀN HÌNH CHẨN ĐOÁN NHANH (KHÔNG ĐẾM NGƯỢC) ================= */
+        /* ================= 2. MÀN HÌNH CHẨN ĐOÁN NHANH (TỰ CHUYỂN SAU 10S NGẦM) ================= */
         #triageScreen {
             display: none; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center;
             padding: 24px; text-align: center; position: relative; z-index: 50;
         }
         .triage-card {
             background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px;
-            padding: 28px 24px; max-width: 680px; width: 100%; box-shadow: var(--shadow);
+            padding: 30px 26px; max-width: 680px; width: 100%; box-shadow: var(--shadow);
             animation: fadeIn 0.35s ease;
         }
         .triage-badge {
@@ -118,11 +118,11 @@
         }
         body.day-theme .triage-badge { color: #6d28d9; }
         .triage-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 18px 0; text-align: left;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 20px; text-align: left;
         }
         .triage-option {
             background: var(--bg-sub); border: 1.5px solid var(--border); border-radius: 14px;
-            padding: 15px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;
+            padding: 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;
             color: var(--text-main); transition: transform 0.2s, border-color 0.2s, background 0.2s;
         }
         .triage-option:hover { transform: translateY(-3px); border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
@@ -147,14 +147,14 @@
         body.sidebar-collapsed .sidebar-item { justify-content: center; padding: 12px 8px; }
         .sidebar-item { display: flex; align-items: center; gap: 12px; width: 100%; background: transparent; border: 1px solid transparent; color: var(--text-main); padding: 11px 12px; border-radius: 12px; cursor: pointer; font-size: 0.9rem; font-weight: 600; text-align: left; margin-bottom: 6px; }
         .sidebar-item:hover { background: rgba(148, 163, 184, 0.1); }
-        .sidebar-item[data-theme="amber"].active { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35); box-shadow: inset 3.5px 0 0 #f59e0b; }
-        body.day-theme .sidebar-item[data-theme="amber"].active { color: #b45309; }
         .sidebar-item[data-theme="purple"].active { background: rgba(168, 85, 247, 0.16); color: #c084fc; border-color: rgba(168, 85, 247, 0.35); box-shadow: inset 3.5px 0 0 #a855f7; }
         body.day-theme .sidebar-item[data-theme="purple"].active { color: #6d28d9; }
         .sidebar-item[data-theme="emerald"].active { background: rgba(16, 185, 129, 0.16); color: #34d399; border-color: rgba(16, 185, 129, 0.35); box-shadow: inset 3.5px 0 0 #10b981; }
         body.day-theme .sidebar-item[data-theme="emerald"].active { color: #047857; }
         .sidebar-item[data-theme="cyan"].active { background: rgba(56, 189, 248, 0.16); color: #38bdf8; border-color: rgba(56, 189, 248, 0.35); box-shadow: inset 3.5px 0 0 #38bdf8; }
         body.day-theme .sidebar-item[data-theme="cyan"].active { color: #0369a1; }
+        .sidebar-item[data-theme="amber"].active { background: rgba(245, 158, 11, 0.16); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35); box-shadow: inset 3.5px 0 0 #f59e0b; }
+        body.day-theme .sidebar-item[data-theme="amber"].active { color: #b45309; }
         .module-logo { width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
         .sidebar-sos-btn { display: flex; align-items: center; gap: 10px; width: 100%; background: linear-gradient(135deg, #f43f5e, #be123c); color: #fff; border: none; padding: 11px 13px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.88rem; }
 
@@ -173,6 +173,37 @@
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px; margin-bottom: 18px; }
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
         .card h2 { font-size: 1.12rem; color: var(--text-main); }
+
+        /* ================= BONG BÓNG TRÒN GỢI Ý KIỂM TRA MỨC ĐỘ CẢNH GIÁC ================= */
+        .vigilance-bubble-wrapper {
+            position: fixed; bottom: 24px; right: 24px; z-index: 950;
+            display: flex; flex-direction: column; align-items: flex-end;
+        }
+        .vigilance-circle-bubble {
+            width: 146px; height: 146px; border-radius: 50%;
+            background: radial-gradient(circle at 30% 25%, #38bdf8, #7c3aed 65%, #4c1d95 100%);
+            border: 2.5px solid rgba(253, 224, 71, 0.85);
+            box-shadow: 0 12px 32px rgba(124, 58, 237, 0.55), inset 0 0 18px rgba(255, 255, 255, 0.35);
+            color: #ffffff; cursor: pointer; padding: 14px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            animation: bubbleFloat 3.4s ease-in-out infinite;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .vigilance-circle-bubble:hover {
+            transform: scale(1.07);
+            box-shadow: 0 16px 40px rgba(245, 158, 11, 0.6), inset 0 0 22px rgba(255, 255, 255, 0.5);
+        }
+        @keyframes bubbleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
+        }
+        .bubble-close-btn {
+            position: absolute; top: -4px; right: -2px; width: 24px; height: 24px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+            font-size: 0.78rem; font-weight: 700; cursor: pointer; display: flex; justify-content: center; align-items: center;
+            z-index: 955;
+        }
+        .bubble-close-btn:hover { color: var(--danger); border-color: var(--danger); }
 
         .tier-selector { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 12px 0; }
         .tier-card { background: var(--bg-sub); border: 2px solid var(--border); border-radius: 14px; padding: 18px; cursor: pointer; text-align: left; }
@@ -276,12 +307,12 @@
     <button class="btn-primary" onclick="startSystem()">🚀 Bắt đầu</button>
 </section>
 
-<!-- ==================== 2. MÀN HÌNH CHẨN ĐOÁN NHANH (KHÔNG ĐẾM NGƯỢC) ==================== -->
+<!-- ==================== 2. MÀN HÌNH CHẨN ĐOÁN NHANH (TỰ CHUYỂN SAU 10S NGẦM) ==================== -->
 <section id="triageScreen">
     <div class="triage-card">
-        <div class="triage-badge">🧭 Trạm Điều Hướng Tình Huống</div>
+        <div class="triage-badge">🧭 Trạm Hỗ Trợ & Chẩn Đoán Nhanh</div>
         <h2 style="font-size: 1.65rem; margin-bottom: 6px;">Bạn đang gặp vấn đề gì?</h2>
-        <p style="color: var(--text-muted); font-size: 0.92rem;">Chọn đúng tình huống bên dưới để hệ thống đưa bạn đến thẳng công cụ xử lý.</p>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">Chọn tình huống bạn đang đối mặt để hệ thống đưa thẳng tới công cụ giải quyết.</p>
 
         <div class="triage-grid">
             <button class="triage-option urgent" onclick="routeFromTriage('sos')">
@@ -296,7 +327,7 @@
                 <span class="triage-icon">🔗</span>
                 <span>
                     <span class="triage-title">Kiểm tra Link, Tin nhắn hoặc Wi-Fi</span>
-                    <span class="triage-sub">Nhận được tin nhắn lạ hoặc đang dùng mạng công cộng.</span>
+                    <span class="triage-sub">Nhận được tin nhắn lạ hoặc đang kết nối Wi-Fi công cộng.</span>
                 </span>
             </button>
 
@@ -304,24 +335,22 @@
                 <span class="triage-icon">🔐</span>
                 <span>
                     <span class="triage-title">Đánh giá Mật khẩu & Giờ cao điểm</span>
-                    <span class="triage-sub">Kiểm tra độ an toàn mật khẩu và cảnh báo theo khung giờ.</span>
+                    <span class="triage-sub">Kiểm tra độ mạnh mật khẩu và cảnh báo theo khung giờ.</span>
                 </span>
             </button>
 
-            <button class="triage-option" onclick="routeFromTriage('game')">
-                <span class="triage-icon">🏆</span>
+            <button class="triage-option" onclick="routeFromTriage('ai')">
+                <span class="triage-icon">🤖</span>
                 <span>
-                    <span class="triage-title">Luyện tập phản xạ phòng vệ</span>
-                    <span class="triage-sub">Thử thách vượt ải 3 tầng tình huống an ninh mạng thực tế.</span>
+                    <span class="triage-title">Hỏi đáp trực tiếp với Trợ lý AI</span>
+                    <span class="triage-sub">Mô tả sự cố bạn đang gặp để được phân tích hướng xử lý.</span>
                 </span>
             </button>
         </div>
-
-        <button class="sample-btn" style="margin-top: 4px;" onclick="routeFromTriage('default')">Vào giao diện chính ➡️</button>
     </div>
 </section>
 
-<!-- ==================== 3. MAIN APP ==================== -->
+<!-- ==================== 3. MAIN APP (ƯU TIÊN XỬ LÝ SỰ CỐ TRƯỚC, TRÒ CHƠI XẾP CUỐI) ==================== -->
 <div id="mainApp">
     <nav class="top-navbar">
         <div class="nav-left">
@@ -339,13 +368,9 @@
 
     <aside class="left-sidebar">
         <div>
-            <button class="sidebar-item active" data-theme="amber" onclick="switchTab('gameTab', this)">
-                <span class="module-logo" style="background: rgba(245, 158, 11, 0.16);">🏆</span>
-                <span class="nav-label">Vượt Ải 3 Tầng</span>
-            </button>
-            <button class="sidebar-item" data-theme="purple" onclick="switchTab('sosAiTab', this)">
+            <button class="sidebar-item active" data-theme="purple" onclick="switchTab('sosAiTab', this)">
                 <span class="module-logo" style="background: rgba(168, 85, 247, 0.18);">🤖</span>
-                <span class="nav-label">Trợ Lý AI & SOS 60s</span>
+                <span class="nav-label">Ứng Cứu 60s & AI</span>
             </button>
             <button class="sidebar-item" data-theme="emerald" onclick="switchTab('wifiPhishTab', this)">
                 <span class="module-logo" style="background: rgba(16, 185, 129, 0.16);">📡</span>
@@ -355,12 +380,107 @@
                 <span class="module-logo" style="background: rgba(56, 189, 248, 0.16);">🔐</span>
                 <span class="nav-label">Mật Khẩu & Giờ Độc</span>
             </button>
+            <button class="sidebar-item" data-theme="amber" onclick="switchTab('gameTab', this)">
+                <span class="module-logo" style="background: rgba(245, 158, 11, 0.16);">🏆</span>
+                <span class="nav-label">Vượt Ải 3 Tầng</span>
+            </button>
         </div>
         <button class="sidebar-sos-btn" onclick="jumpToSos()"><span>🚨</span><span class="sos-text">SOS Khẩn Cấp</span></button>
     </aside>
 
     <main class="main-workspace">
-        <div id="gameTab" class="tab-content active">
+        <!-- TAB 1 (ƯU TIÊN SỐ 1): ỨNG CỨU KHẨN CẤP 60S & TRỢ LÝ AI -->
+        <div id="sosAiTab" class="tab-content active">
+            <div class="grid-2">
+                <div class="card" style="border-top: 3px solid #f43f5e;">
+                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(244, 63, 94, 0.16);">🚨</div><div><h2 style="color: var(--danger);">Ứng Cứu Khẩn Cấp 60s</h2></div></div>
+                    <select id="sosScenario">
+                        <option value="apk">1. Vừa cài tệp .apk lạ trên Android</option>
+                        <option value="phish_pass">2. Vừa nhập mật khẩu / OTP vào web giả</option>
+                        <option value="deepfake_money">3. Vừa chuyển tiền cho kẻ lừa đảo</option>
+                        <option value="wifi_hack">4. Nghi lộ tài khoản qua Wi-Fi công cộng</option>
+                    </select>
+                    <button class="danger-btn" onclick="runEmergencyWizard()">⚡ Kích hoạt Quy trình</button>
+                    <div class="result-box" id="sosStepsBox" style="border-left-color: var(--danger);">Chọn tình huống phía trên để xem hướng dẫn xử lý từng giây.</div>
+                </div>
+
+                <div class="card" style="border-top: 3px solid #a855f7;">
+                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(168, 85, 247, 0.18);">🤖</div><div><h2>Trợ Lý AI An Ninh Mạng</h2></div></div>
+                    <div class="ai-engine-bar">
+                        <span>⚡ <strong>Streaming AI (Python / Offline NLP)</strong></span>
+                        <button class="sample-btn" style="margin: 0;" onclick="toggleApiKeyPanel()">🔑 API Key</button>
+                    </div>
+                    <div id="apiKeyPanel" style="display: none; background: var(--bg-sub); padding: 10px; border-radius: 10px; border: 1px dashed #a855f7; margin-bottom: 10px;">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="password" id="geminiKeyInput" style="margin-bottom: 0;" placeholder="Dán Gemini API Key (AIzaSy...)">
+                            <button class="action-btn" onclick="saveGeminiKey()">Lưu</button>
+                        </div>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <button class="sample-btn" onclick="askQuick('Vừa lỡ bấm link lạ qua SMS thì làm sao?')">Bấm nhầm link</button>
+                        <button class="sample-btn" onclick="askQuick('Cơ chế đánh cắp Cookie vượt 2FA')">Cookie vượt 2FA</button>
+                        <button class="sample-btn" onclick="askQuick('Nhận diện cuộc gọi Deepfake')">Deepfake</button>
+                    </div>
+                    <div class="chat-box" id="aiChatBox"><div class="msg msg-ai">Chào bạn! Hãy mô tả tình huống hoặc dán tin nhắn đáng ngờ để mình hỗ trợ ngay nhé.</div></div>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="chatInput" style="margin-bottom: 0;" placeholder="Nhập câu hỏi..." onkeypress="if(event.key==='Enter') sendChat()">
+                        <button class="action-btn" onclick="sendChat()">Gửi</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: QUÉT WI-FI & LINK -->
+        <div id="wifiPhishTab" class="tab-content">
+            <div class="grid-2">
+                <div class="card" style="border-top: 3px solid #10b981;">
+                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(16, 185, 129, 0.16);">🔗</div><div><h2>Quét Link & Tin Nhắn</h2></div></div>
+                    <div style="margin-bottom: 6px;">
+                        <button class="sample-btn" onclick="loadSample(1)">Mẫu Ngân hàng</button>
+                        <button class="sample-btn" onclick="loadSample(2)">Mẫu .apk</button>
+                        <button class="sample-btn" onclick="loadSample(3)">Link sạch</button>
+                    </div>
+                    <textarea id="phishingInput" rows="3" placeholder="Dán link hoặc tin nhắn vào đây..."></textarea>
+                    <button class="emerald-btn" onclick="scanPhishing()">🛡️ Quét ngay</button>
+                    <div class="result-box" id="phishingResult" style="border-left-color: #10b981;">Sẵn sàng kiểm tra.</div>
+                </div>
+
+                <div class="card" style="border-top: 3px solid #10b981;">
+                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(16, 185, 129, 0.16);">📡</div><div><h2>Kiểm Tra Wi-Fi</h2></div></div>
+                    <select id="wifiLocation">
+                        <option value="home">Mạng gia đình / 4G-5G cá nhân</option>
+                        <option value="cafe_pass">Wi-Fi quán cà phê / trường học</option>
+                        <option value="public_open">Wi-Fi miễn phí không mật khẩu</option>
+                        <option value="captive">Wi-Fi bắt đăng nhập Facebook/Google</option>
+                    </select>
+                    <select id="vpnStatus"><option value="no">Chưa bật VPN</option><option value="yes">Đang bật VPN</option></select>
+                    <button class="emerald-btn" onclick="analyzeWifi()">🔍 Đánh giá</button>
+                    <div class="result-box" id="wifiResult" style="border-left-color: #10b981;">Giao thức hiện tại: <strong id="protocolStatus">...</strong></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: MẬT KHẨU & GIỜ ĐỘC -->
+        <div id="pwdClockTab" class="tab-content">
+            <div class="grid-2">
+                <div class="card" style="border-top: 3px solid #38bdf8;">
+                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(56, 189, 248, 0.16);">🔐</div><div><h2>Đo Độ Mạnh Mật Khẩu</h2></div></div>
+                    <input type="text" id="pwdInput" placeholder="Nhập thử mật khẩu..." oninput="checkPassword()">
+                    <div class="result-box" id="pwdResult">Nhập mật khẩu để tính chỉ số Entropy.</div>
+                </div>
+                <div class="card" style="border-top: 3px solid #38bdf8;">
+                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(56, 189, 248, 0.16);">⏱️</div><div><h2>Cảnh Báo Theo Khung Giờ</h2></div></div>
+                    <div style="background: var(--bg-sub); padding: 14px; border-radius: 12px; text-align: center; margin-bottom: 10px; border: 1px solid var(--border);">
+                        <div id="cyberClock" style="font-size: 2.3rem; font-weight: 800; color: var(--accent);">00:00:00</div>
+                        <div id="threatWindowBadge" class="badge b-warn" style="margin-top: 4px;">...</div>
+                    </div>
+                    <p id="threatWindowDesc" style="font-size: 0.88rem; color: var(--text-muted);"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4 (XẾP CUỐI CÙNG): VƯỢT ẢI 3 TẦNG -->
+        <div id="gameTab" class="tab-content">
             <div class="card" style="border-top: 3px solid #f59e0b;">
                 <div class="section-header-box">
                     <div class="section-big-logo" style="background: rgba(245, 158, 11, 0.16);">🏆</div>
@@ -423,94 +543,17 @@
             </div>
         </div>
 
-        <div id="sosAiTab" class="tab-content">
-            <div class="grid-2">
-                <div class="card" style="border-top: 3px solid #a855f7;">
-                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(168, 85, 247, 0.18);">🤖</div><div><h2>Trợ Lý AI An Ninh Mạng</h2></div></div>
-                    <div class="ai-engine-bar">
-                        <span>⚡ <strong>Streaming AI (Python / Offline NLP)</strong></span>
-                        <button class="sample-btn" style="margin: 0;" onclick="toggleApiKeyPanel()">🔑 API Key</button>
-                    </div>
-                    <div id="apiKeyPanel" style="display: none; background: var(--bg-sub); padding: 10px; border-radius: 10px; border: 1px dashed #a855f7; margin-bottom: 10px;">
-                        <div style="display: flex; gap: 8px;">
-                            <input type="password" id="geminiKeyInput" style="margin-bottom: 0;" placeholder="Dán Gemini API Key (AIzaSy...)">
-                            <button class="action-btn" onclick="saveGeminiKey()">Lưu</button>
-                        </div>
-                    </div>
-                    <div style="margin-bottom: 8px;">
-                        <button class="sample-btn" onclick="askQuick('Vừa lỡ bấm link lạ qua SMS thì làm sao?')">Bấm nhầm link</button>
-                        <button class="sample-btn" onclick="askQuick('Cơ chế đánh cắp Cookie vượt 2FA')">Cookie vượt 2FA</button>
-                        <button class="sample-btn" onclick="askQuick('Nhận diện cuộc gọi Deepfake')">Deepfake</button>
-                    </div>
-                    <div class="chat-box" id="aiChatBox"><div class="msg msg-ai">Chào bạn! Hỏi mình bất kỳ tình huống bảo mật nào nhé.</div></div>
-                    <div style="display: flex; gap: 8px;">
-                        <input type="text" id="chatInput" style="margin-bottom: 0;" placeholder="Nhập câu hỏi..." onkeypress="if(event.key==='Enter') sendChat()">
-                        <button class="action-btn" onclick="sendChat()">Gửi</button>
-                    </div>
-                </div>
-
-                <div class="card" style="border-top: 3px solid #f43f5e;">
-                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(244, 63, 94, 0.16);">🚨</div><div><h2 style="color: var(--danger);">Ứng Cứu Khẩn Cấp 60s</h2></div></div>
-                    <select id="sosScenario">
-                        <option value="apk">1. Vừa cài tệp .apk lạ trên Android</option>
-                        <option value="phish_pass">2. Vừa nhập mật khẩu / OTP vào web giả</option>
-                        <option value="deepfake_money">3. Vừa chuyển tiền cho kẻ lừa đảo</option>
-                        <option value="wifi_hack">4. Nghi lộ tài khoản qua Wi-Fi công cộng</option>
-                    </select>
-                    <button class="danger-btn" onclick="runEmergencyWizard()">⚡ Kích hoạt Quy trình</button>
-                    <div class="result-box" id="sosStepsBox" style="border-left-color: var(--danger);">Chọn tình huống phía trên để xem hướng dẫn xử lý từng giây.</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="wifiPhishTab" class="tab-content">
-            <div class="grid-2">
-                <div class="card" style="border-top: 3px solid #10b981;">
-                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(16, 185, 129, 0.16);">📡</div><div><h2>Kiểm Tra Wi-Fi</h2></div></div>
-                    <select id="wifiLocation">
-                        <option value="home">Mạng gia đình / 4G-5G cá nhân</option>
-                        <option value="cafe_pass">Wi-Fi quán cà phê / trường học</option>
-                        <option value="public_open">Wi-Fi miễn phí không mật khẩu</option>
-                        <option value="captive">Wi-Fi bắt đăng nhập Facebook/Google</option>
-                    </select>
-                    <select id="vpnStatus"><option value="no">Chưa bật VPN</option><option value="yes">Đang bật VPN</option></select>
-                    <button class="emerald-btn" onclick="analyzeWifi()">🔍 Đánh giá</button>
-                    <div class="result-box" id="wifiResult" style="border-left-color: #10b981;">Giao thức hiện tại: <strong id="protocolStatus">...</strong></div>
-                </div>
-                <div class="card" style="border-top: 3px solid #10b981;">
-                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(16, 185, 129, 0.16);">🔗</div><div><h2>Quét Link & Tin Nhắn</h2></div></div>
-                    <div style="margin-bottom: 6px;">
-                        <button class="sample-btn" onclick="loadSample(1)">Mẫu Ngân hàng</button>
-                        <button class="sample-btn" onclick="loadSample(2)">Mẫu .apk</button>
-                        <button class="sample-btn" onclick="loadSample(3)">Link sạch</button>
-                    </div>
-                    <textarea id="phishingInput" rows="3" placeholder="Dán link hoặc tin nhắn vào đây..."></textarea>
-                    <button class="emerald-btn" onclick="scanPhishing()">🛡️ Quét ngay</button>
-                    <div class="result-box" id="phishingResult" style="border-left-color: #10b981;">Sẵn sàng kiểm tra.</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="pwdClockTab" class="tab-content">
-            <div class="grid-2">
-                <div class="card" style="border-top: 3px solid #38bdf8;">
-                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(56, 189, 248, 0.16);">🔐</div><div><h2>Đo Độ Mạnh Mật Khẩu</h2></div></div>
-                    <input type="text" id="pwdInput" placeholder="Nhập thử mật khẩu..." oninput="checkPassword()">
-                    <div class="result-box" id="pwdResult">Nhập mật khẩu để tính chỉ số Entropy.</div>
-                </div>
-                <div class="card" style="border-top: 3px solid #38bdf8;">
-                    <div class="section-header-box"><div class="section-big-logo" style="background: rgba(56, 189, 248, 0.16);">⏱️</div><div><h2>Cảnh Báo Theo Khung Giờ</h2></div></div>
-                    <div style="background: var(--bg-sub); padding: 14px; border-radius: 12px; text-align: center; margin-bottom: 10px; border: 1px solid var(--border);">
-                        <div id="cyberClock" style="font-size: 2.3rem; font-weight: 800; color: var(--accent);">00:00:00</div>
-                        <div id="threatWindowBadge" class="badge b-warn" style="margin-top: 4px;">...</div>
-                    </div>
-                    <p id="threatWindowDesc" style="font-size: 0.88rem; color: var(--text-muted);"></p>
-                </div>
-            </div>
-        </div>
-
         <footer>CyberGuard AI • Khoa Kỹ thuật Máy tính & Điện tử (VKU) • GVHD: TS. Hoàng Hữu Đức</footer>
     </main>
+
+    <!-- VÒNG TRÒN BONG BÓNG GỢI Ý KIỂM TRA MỨC ĐỘ CẢNH GIÁC -->
+    <div class="vigilance-bubble-wrapper" id="vigilanceBubbleWrap">
+        <button class="bubble-close-btn" title="Ẩn gợi ý" onclick="dismissVigilanceBubble()">×</button>
+        <div class="vigilance-circle-bubble" onclick="openVigilanceGame()">
+            <span style="font-size: 1.35rem; margin-bottom: 4px;">🛡️</span>
+            <span style="font-size: 0.76rem; font-weight: 700; line-height: 1.28;">Bạn có muốn xem thử mức độ cảnh giác của mình không?</span>
+        </div>
+    </div>
 
     <div id="aiNarratorBox" class="ai-narrator-overlay">
         <div class="ai-avatar-bot">🤖</div>
@@ -805,14 +848,22 @@
     }
     setInterval(syncSolarDefenseMode, 1000); syncSolarDefenseMode();
 
-    // ================= ĐIỀU HƯỚNG INTRO -> CHẨN ĐOÁN VẤN ĐỀ -> MAIN APP =================
+    // ================= ĐIỀU HƯỚNG INTRO -> CHẨN ĐOÁN (10S NGẦM) -> MAIN APP =================
+    let triageTimeout = null;
+
     function startSystem() {
         document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'none';
         document.getElementById('triageScreen').style.display = 'flex';
+
+        if (triageTimeout) clearTimeout(triageTimeout);
+        triageTimeout = setTimeout(() => {
+            routeFromTriage('default');
+        }, 10000);
     }
 
     function routeFromTriage(choice) {
+        if (triageTimeout) { clearTimeout(triageTimeout); triageTimeout = null; }
         document.getElementById('triageScreen').style.display = 'none';
         document.getElementById('mainApp').style.display = 'block';
         document.getElementById('protocolStatus').innerHTML = window.location.protocol === 'https:'
@@ -820,28 +871,50 @@
             : '<span style="color:var(--warn);">HTTP / Local</span>';
 
         const sidebarBtns = document.querySelectorAll('.sidebar-item');
-        if (choice === 'sos') {
-            switchTab('sosAiTab', sidebarBtns[1]);
-            showAiNarrator(false, "Đã chuyển thẳng đến khu vực Ứng cứu khẩn cấp 60s & Trợ lý AI.");
-        } else if (choice === 'scan') {
-            switchTab('wifiPhishTab', sidebarBtns[2]);
-            showAiNarrator(true, "Đã mở công cụ Quét Link & Kiểm tra Wi-Fi.");
+        // Thứ tự sidebar mới: [0]=Ứng cứu 60s & AI, [1]=Quét Wi-Fi & Link, [2]=Mật khẩu & Giờ độc, [3]=Vượt ải 3 tầng
+        if (choice === 'scan') {
+            switchTab('wifiPhishTab', sidebarBtns[1]);
         } else if (choice === 'pwd') {
-            switchTab('pwdClockTab', sidebarBtns[3]);
+            switchTab('pwdClockTab', sidebarBtns[2]);
+        } else if (choice === 'ai') {
+            switchTab('sosAiTab', sidebarBtns[0]);
+            setTimeout(() => document.getElementById('chatInput').focus(), 100);
         } else {
-            switchTab('gameTab', sidebarBtns[0]);
+            // 'sos' hoặc 'default' sau 10s đều ưu tiên vào khu vực giải quyết sự cố đầu tiên
+            switchTab('sosAiTab', sidebarBtns[0]);
         }
     }
 
     function goWelcome() {
+        if (triageTimeout) { clearTimeout(triageTimeout); triageTimeout = null; }
         hideAiNarrator();
         document.getElementById('mainApp').style.display = 'none';
         document.getElementById('triageScreen').style.display = 'none';
         document.getElementById('welcomeScreen').style.display = 'flex';
     }
 
-    function switchTab(tabId, btn) { hideAiNarrator(); document.body.classList.remove('mobile-menu-open'); document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active'); btn.classList.add('active'); }
-    function jumpToSos() { switchTab('sosAiTab', document.querySelectorAll('.sidebar-item')[1]); }
+    function switchTab(tabId, btn) {
+        hideAiNarrator();
+        document.body.classList.remove('mobile-menu-open');
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+        if (tabId === 'gameTab') dismissVigilanceBubble();
+    }
+
+    function jumpToSos() { switchTab('sosAiTab', document.querySelectorAll('.sidebar-item')[0]); }
+
+    // ================= BONG BÓNG GỢI Ý KIỂM TRA CẢNH GIÁC =================
+    function openVigilanceGame() {
+        dismissVigilanceBubble();
+        const sidebarBtns = document.querySelectorAll('.sidebar-item');
+        switchTab('gameTab', sidebarBtns[3]);
+    }
+    function dismissVigilanceBubble() {
+        const b = document.getElementById('vigilanceBubbleWrap');
+        if (b) b.style.display = 'none';
+    }
 
     function runEmergencyWizard() {
         const val = document.getElementById('sosScenario').value;
