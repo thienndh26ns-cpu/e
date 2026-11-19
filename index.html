@@ -23,7 +23,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; transition: background-color 0.3s ease, color 0.2s ease, border-color 0.2s ease; }
         body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.55; min-height: 100vh; overflow-x: hidden; }
 
-        /* TRANG INTRO NGHỆ THUẬT & PHÒNG THỦ CHIẾN THUẬT */
+        /* ================= 1. TRANG INTRO NGHỆ THUẬT & PHÒNG THỦ CHIẾN THUẬT ================= */
         #welcomeScreen { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px; overflow: hidden; }
         .sky-horizon-backdrop {
             position: absolute; inset: 0; z-index: 0; pointer-events: none;
@@ -102,7 +102,37 @@
         .btn-primary { background: linear-gradient(135deg, #0284c7, #7c3aed, #d97706); color: #fff; border: none; padding: 14px 36px; font-size: 1.05rem; font-weight: 700; border-radius: 999px; cursor: pointer; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.35); }
         .btn-primary:hover { transform: translateY(-2px); }
 
-        /* MAIN APP LAYOUT */
+        /* ================= 2. MÀN HÌNH CHẨN ĐOÁN NHANH (KHÔNG ĐẾM NGƯỢC) ================= */
+        #triageScreen {
+            display: none; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center;
+            padding: 24px; text-align: center; position: relative; z-index: 50;
+        }
+        .triage-card {
+            background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px;
+            padding: 28px 24px; max-width: 680px; width: 100%; box-shadow: var(--shadow);
+            animation: fadeIn 0.35s ease;
+        }
+        .triage-badge {
+            display: inline-block; background: rgba(168, 85, 247, 0.14); border: 1px solid #a855f7;
+            color: #c084fc; padding: 4px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 700; margin-bottom: 12px;
+        }
+        body.day-theme .triage-badge { color: #6d28d9; }
+        .triage-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 18px 0; text-align: left;
+        }
+        .triage-option {
+            background: var(--bg-sub); border: 1.5px solid var(--border); border-radius: 14px;
+            padding: 15px 16px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;
+            color: var(--text-main); transition: transform 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .triage-option:hover { transform: translateY(-3px); border-color: #a855f7; background: rgba(168, 85, 247, 0.1); }
+        .triage-option.urgent { border-left: 4px solid var(--danger); }
+        .triage-option.urgent:hover { border-color: var(--danger); background: rgba(244, 63, 94, 0.12); }
+        .triage-icon { font-size: 1.55rem; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+        .triage-title { font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 3px; }
+        .triage-sub { font-size: 0.8rem; color: var(--text-muted); display: block; }
+
+        /* ================= 3. MAIN APP LAYOUT ================= */
         #mainApp { display: none; }
         .top-navbar { position: fixed; top: 0; left: 0; right: 0; height: 58px; background: var(--bg-header); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 18px; z-index: 200; }
         .nav-left { display: flex; align-items: center; gap: 12px; }
@@ -196,6 +226,7 @@
 </head>
 <body>
 
+<!-- ==================== 1. TRANG INTRO NGHỆ THUẬT & PHÒNG THỦ CHIẾN THUẬT ==================== -->
 <section id="welcomeScreen">
     <div class="sky-horizon-backdrop"></div>
     <div class="distant-celestial"></div>
@@ -245,6 +276,52 @@
     <button class="btn-primary" onclick="startSystem()">🚀 Bắt đầu</button>
 </section>
 
+<!-- ==================== 2. MÀN HÌNH CHẨN ĐOÁN NHANH (KHÔNG ĐẾM NGƯỢC) ==================== -->
+<section id="triageScreen">
+    <div class="triage-card">
+        <div class="triage-badge">🧭 Trạm Điều Hướng Tình Huống</div>
+        <h2 style="font-size: 1.65rem; margin-bottom: 6px;">Bạn đang gặp vấn đề gì?</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">Chọn đúng tình huống bên dưới để hệ thống đưa bạn đến thẳng công cụ xử lý.</p>
+
+        <div class="triage-grid">
+            <button class="triage-option urgent" onclick="routeFromTriage('sos')">
+                <span class="triage-icon">🚨</span>
+                <span>
+                    <span class="triage-title" style="color: var(--danger);">Nghi bị lừa đảo / Hack khẩn cấp</span>
+                    <span class="triage-sub">Vừa bấm link lạ, cài file .apk, lộ OTP hoặc chuyển nhầm tiền.</span>
+                </span>
+            </button>
+
+            <button class="triage-option" onclick="routeFromTriage('scan')">
+                <span class="triage-icon">🔗</span>
+                <span>
+                    <span class="triage-title">Kiểm tra Link, Tin nhắn hoặc Wi-Fi</span>
+                    <span class="triage-sub">Nhận được tin nhắn lạ hoặc đang dùng mạng công cộng.</span>
+                </span>
+            </button>
+
+            <button class="triage-option" onclick="routeFromTriage('pwd')">
+                <span class="triage-icon">🔐</span>
+                <span>
+                    <span class="triage-title">Đánh giá Mật khẩu & Giờ cao điểm</span>
+                    <span class="triage-sub">Kiểm tra độ an toàn mật khẩu và cảnh báo theo khung giờ.</span>
+                </span>
+            </button>
+
+            <button class="triage-option" onclick="routeFromTriage('game')">
+                <span class="triage-icon">🏆</span>
+                <span>
+                    <span class="triage-title">Luyện tập phản xạ phòng vệ</span>
+                    <span class="triage-sub">Thử thách vượt ải 3 tầng tình huống an ninh mạng thực tế.</span>
+                </span>
+            </button>
+        </div>
+
+        <button class="sample-btn" style="margin-top: 4px;" onclick="routeFromTriage('default')">Vào giao diện chính ➡️</button>
+    </div>
+</section>
+
+<!-- ==================== 3. MAIN APP ==================== -->
 <div id="mainApp">
     <nav class="top-navbar">
         <div class="nav-left">
@@ -443,8 +520,8 @@
     <div id="adminAuthModal" class="admin-modal-backdrop">
         <div class="admin-modal-box">
             <h3 style="margin-bottom: 8px; color: #c084fc;">🔐 Xác thực Quyền Quản Trị</h3>
-            <p style="font-size: 0.83rem; color: var(--text-muted); margin-bottom: 12px;">Nhập Mã PIN Admin (VKU2026).</p>
-            <input type="password" id="adminPinInput" placeholder="Nhập mã PIN..." onkeypress="if(event.key==='Enter') verifyAdminPin()">
+            <p style="font-size: 0.83rem; color: var(--text-muted); margin-bottom: 12px;">Khu vực hạn chế. Vui lòng nhập mã xác thực quản trị viên.</p>
+            <input type="password" id="adminPinInput" placeholder="Nhập mã xác thực..." onkeypress="if(event.key==='Enter') verifyAdminPin()">
             <div id="adminActionsArea" style="display: none; margin-bottom: 12px;">
                 <button class="emerald-btn" style="width: 100%; margin-bottom: 8px;" onclick="adminUnlockAll()">🔓 Mở khóa cả 3 Tầng (Demo)</button>
                 <button class="danger-btn" style="width: 100%; margin-bottom: 8px;" onclick="adminRelockAll()">🔒 Khóa lại về Tầng 1</button>
@@ -509,8 +586,14 @@
         ]
     };
 
-    const ADMIN_SECRET_PIN = "VKU2026";
+    // ================= BẢO MẬT QUYỀN ADMIN BẰNG SHA-256 =================
+    const ADMIN_PIN_SHA256 = "f2c9a6a91096a1c83380d1d0250a42b38c8404954728162b1615c0e889260292";
     const SIGN_SALT = "CG_VKU_SEC_2026_";
+
+    async function sha256Text(text) {
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
 
     function computeSignature(lvl) {
         let hash = 0; const str = SIGN_SALT + String(lvl);
@@ -541,13 +624,18 @@
         document.getElementById('adminPinInput').value = '';
         document.getElementById('adminActionsArea').style.display = 'none';
         document.getElementById('adminVerifyBtn').style.display = 'inline-block';
+        document.getElementById('adminPinInput').focus();
     }
     function closeAdminModal() { document.getElementById('adminAuthModal').style.display = 'none'; }
-    function verifyAdminPin() {
-        if (document.getElementById('adminPinInput').value.trim() === ADMIN_SECRET_PIN) {
+
+    async function verifyAdminPin() {
+        const raw = document.getElementById('adminPinInput').value.trim();
+        if (!raw) return;
+        const hashed = await sha256Text(raw);
+        if (hashed === ADMIN_PIN_SHA256) {
             document.getElementById('adminActionsArea').style.display = 'block';
             document.getElementById('adminVerifyBtn').style.display = 'none';
-        } else { alert("❌ Sai mã PIN quản trị!"); closeAdminModal(); }
+        } else { alert("❌ Sai mã xác thực!"); closeAdminModal(); }
     }
     function adminUnlockAll() { saveVerifiedLevel(3); updateTierCardsUI(); closeAdminModal(); showAiNarrator(true, "Đã mở khóa cả 3 Tầng (Admin)."); }
     function adminRelockAll() { saveVerifiedLevel(1); updateTierCardsUI(); resetToTiers(); closeAdminModal(); showAiNarrator(false, "Đã khóa lại về Tầng 1."); }
@@ -717,8 +805,41 @@
     }
     setInterval(syncSolarDefenseMode, 1000); syncSolarDefenseMode();
 
-    function startSystem() { document.getElementById('welcomeScreen').style.display = 'none'; document.getElementById('mainApp').style.display = 'block'; document.getElementById('protocolStatus').innerHTML = window.location.protocol === 'https:' ? '<span style="color:var(--safe);">HTTPS (An toàn)</span>' : '<span style="color:var(--warn);">HTTP / Local</span>'; }
-    function goWelcome() { hideAiNarrator(); document.getElementById('mainApp').style.display = 'none'; document.getElementById('welcomeScreen').style.display = 'flex'; }
+    // ================= ĐIỀU HƯỚNG INTRO -> CHẨN ĐOÁN VẤN ĐỀ -> MAIN APP =================
+    function startSystem() {
+        document.getElementById('welcomeScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('triageScreen').style.display = 'flex';
+    }
+
+    function routeFromTriage(choice) {
+        document.getElementById('triageScreen').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        document.getElementById('protocolStatus').innerHTML = window.location.protocol === 'https:'
+            ? '<span style="color:var(--safe);">HTTPS (An toàn)</span>'
+            : '<span style="color:var(--warn);">HTTP / Local</span>';
+
+        const sidebarBtns = document.querySelectorAll('.sidebar-item');
+        if (choice === 'sos') {
+            switchTab('sosAiTab', sidebarBtns[1]);
+            showAiNarrator(false, "Đã chuyển thẳng đến khu vực Ứng cứu khẩn cấp 60s & Trợ lý AI.");
+        } else if (choice === 'scan') {
+            switchTab('wifiPhishTab', sidebarBtns[2]);
+            showAiNarrator(true, "Đã mở công cụ Quét Link & Kiểm tra Wi-Fi.");
+        } else if (choice === 'pwd') {
+            switchTab('pwdClockTab', sidebarBtns[3]);
+        } else {
+            switchTab('gameTab', sidebarBtns[0]);
+        }
+    }
+
+    function goWelcome() {
+        hideAiNarrator();
+        document.getElementById('mainApp').style.display = 'none';
+        document.getElementById('triageScreen').style.display = 'none';
+        document.getElementById('welcomeScreen').style.display = 'flex';
+    }
+
     function switchTab(tabId, btn) { hideAiNarrator(); document.body.classList.remove('mobile-menu-open'); document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active')); document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active'); btn.classList.add('active'); }
     function jumpToSos() { switchTab('sosAiTab', document.querySelectorAll('.sidebar-item')[1]); }
 
