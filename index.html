@@ -257,7 +257,19 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .section-header-box { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
         .section-big-logo { width: 42px; height: 42px; border-radius: 12px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
-        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 18px; margin-bottom: 18px; }
+
+        /* CHIA 2 CỘT NGANG SONG SONG (TRÁI: SÀNG LỌC NHANH - PHẢI: LAB CHUYÊN SÂU & KIỂM THỬ) */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+            align-items: start;
+        }
+        @media (max-width: 820px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
         .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; box-shadow: var(--shadow); }
         .card h2 { font-size: 1.12rem; color: var(--text-main); }
 
@@ -285,20 +297,23 @@
         }
         .data-loss-alert-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 8px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .data-loss-item {
             background: rgba(220, 38, 38, 0.14);
             border: 1px solid rgba(239, 68, 68, 0.45);
             border-radius: 8px;
             padding: 8px 10px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
         }
         body.day-theme .data-loss-item {
             background: #ffffff;
             border-color: #fca5a5;
+        }
+        body:has(.scanner-card-danger) .vigilance-bubble-wrapper {
+            display: none !important;
         }
 
         /* ================= TRANG CHỦ TIN TỨC AN NINH MẠNG ================= */
@@ -489,7 +504,7 @@
                 <span class="triage-icon">🔗</span>
                 <span>
                     <span class="triage-title">Kiểm tra Link, Ảnh chụp hoặc Wi-Fi</span>
-                    <span class="triage-sub">Quét tin nhắn, ảnh chụp màn hình hoặc kiểm tra Wi-Fi công cộng.</span>
+                    <span class="triage-sub">Sàng lọc link, chạy Sandbox tài khoản giả & quét Radar Wi-Fi.</span>
                 </span>
             </button>
 
@@ -642,42 +657,39 @@
             </div>
         </div>
 
-        <!-- TAB 2: QUÉT WI-FI, LINK ĐA TẦNG & ẢNH CHỤP MÀN HÌNH -->
+        <!-- TAB 2: GIAI ĐOẠN 1 (SÀNG LỌC NHANH) & GIAI ĐOẠN 2 (LAB CHUYÊN SÂU, SANDBOX & RADAR WI-FI) -->
         <div id="wifiPhishTab" class="tab-content">
             <div class="grid-2">
-                <!-- THẺ QUÉT LINK & ẢNH CHỤP MÀN HÌNH (BÁO ĐỘNG ĐỎ TOÀN KHUNG) -->
+                <!-- ==================== CỘT TRÁI: GIAI ĐOẠN 1 - SÀNG LỌC NHANH ==================== -->
                 <div id="phishingScannerCard" class="card" style="border-top: 3px solid #10b981;">
                     <div class="section-header-box" style="justify-content: space-between; flex-wrap: wrap;">
                         <div style="display: flex; align-items: center; gap: 12px;">
                             <div id="scannerHeaderIcon" class="section-big-logo" style="background: rgba(16, 185, 129, 0.16);">🔗</div>
                             <div>
-                                <h2 id="scannerHeaderTitle">Quét Link & Tin Nhắn Đa Tầng</h2>
-                                <p id="scannerHeaderSub" style="font-size: 0.78rem; color: var(--text-muted);">Levenshtein, Punycode, OCR Ảnh & Cảnh báo Dữ liệu Mất</p>
+                                <h2 id="scannerHeaderTitle">1. Sàng Lọc Link & Ảnh Chụp</h2>
+                                <p id="scannerHeaderSub" style="font-size: 0.78rem; color: var(--text-muted);">Kiểm tra nhanh độ độc hại trước khi xuất phân tích sâu</p>
                             </div>
                         </div>
-                        <span id="scannerTopAlertPill" class="badge b-safe">🛡️ ĐANG GIÁM SÁT</span>
+                        <span id="scannerTopAlertPill" class="badge b-safe">🛡️ SÀNG LỌC NHANH</span>
                     </div>
 
-                    <!-- VÙNG QUÉT ĐA TẦNG: OCR + GEMINI VISION AI -->
-                    <div id="ocrDropZone" style="border: 1.5px dashed var(--accent); background: rgba(56, 189, 248, 0.08); border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 10px; position: relative;">
+                    <!-- VÙNG QUÉT ẢNH CHỤP MÀN HÌNH (OCR + GEMINI VISION) -->
+                    <div id="ocrDropZone" style="border: 1.5px dashed var(--accent); background: rgba(56, 189, 248, 0.08); border-radius: 12px; padding: 11px; text-align: center; margin-bottom: 10px;">
                         <input type="file" id="ocrImageInput" accept="image/*" style="display: none;" onchange="handleOcrFileSelect(event)">
                         <div onclick="document.getElementById('ocrImageInput').click()" style="cursor: pointer;">
-                            <div style="font-size: 0.86rem; font-weight: 700; color: var(--accent);">
+                            <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent);">
                                 📸 Quét Ảnh Chụp Màn Hình (Chống bấm nhầm link)
                             </div>
-                            <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 2px;">
-                                Bấm chọn ảnh hoặc nhấn <b>Ctrl + V</b> dán ảnh để tự động đọc chữ, soi Logo & Link ẩn
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                                Bấm chọn ảnh hoặc nhấn <b>Ctrl + V</b> dán ảnh vừa chụp
                             </div>
                         </div>
-
-                        <div id="ocrStatusArea" style="display: none; margin-top: 8px; font-size: 0.78rem; color: var(--warn); font-weight: 600;"></div>
-
-                        <div id="ocrPreviewWrapper" style="display: none; position: relative; margin-top: 8px;">
-                            <img id="ocrPreviewImg" alt="Ảnh xem trước" style="max-height: 125px; margin: 0 auto; border-radius: 8px; border: 1px solid var(--border); display: block;">
-                            <button type="button" class="sample-btn" style="margin-top: 6px; color: var(--danger); font-size: 0.75rem;" onclick="clearOcrImage()">✖ Xóa ảnh này</button>
+                        <div id="ocrStatusArea" style="display: none; margin-top: 6px; font-size: 0.76rem; color: var(--warn); font-weight: 600;"></div>
+                        <div id="ocrPreviewWrapper" style="display: none; margin-top: 8px;">
+                            <img id="ocrPreviewImg" alt="Ảnh xem trước" style="max-height: 110px; margin: 0 auto; border-radius: 8px; border: 1px solid var(--border); display: block;">
+                            <button type="button" class="sample-btn" style="margin-top: 5px; color: var(--danger); font-size: 0.74rem;" onclick="clearOcrImage()">✖ Xóa ảnh</button>
                         </div>
-
-                        <div id="visionAiResultBox" style="display: none; text-align: left; margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--bg-card); border-left: 4px solid #a855f7; font-size: 0.84rem; line-height: 1.45;"></div>
+                        <div id="visionAiResultBox" style="display: none; text-align: left; margin-top: 8px; padding: 9px 11px; border-radius: 9px; background: var(--bg-card); border-left: 4px solid #a855f7; font-size: 0.82rem; line-height: 1.4;"></div>
                     </div>
 
                     <div style="margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 4px;">
@@ -688,48 +700,107 @@
                         <button class="sample-btn" style="color: var(--danger);" onclick="clearPhishingInput()">🗑️ Làm mới</button>
                     </div>
 
-                    <textarea id="phishingInput" rows="3" placeholder="Dán link hoặc tin nhắn vào đây (hoặc dán ảnh chụp màn hình ở khung trên)..."></textarea>
-                    <button id="phishScanBtn" class="emerald-btn" style="width: 100%;" onclick="scanPhishing()">🛡️ Phân Tích Chuyên Sâu Ngay</button>
+                    <textarea id="phishingInput" rows="3" placeholder="Dán link hoặc tin nhắn cần kiểm tra vào đây..."></textarea>
+                    <button id="phishScanBtn" class="emerald-btn" style="width: 100%;" onclick="scanPhishing()">🔍 Kiểm Tra Độ Độc Hại Ngay</button>
 
                     <div class="result-box" id="phishingResult" style="border-left-color: #10b981; margin-top: 12px;">
-                        Sẵn sàng kiểm tra cấu trúc URL, chứng chỉ mã hóa và cảnh báo dữ liệu rủi ro.
+                        Sẵn sàng kiểm tra. Hệ thống sẽ phân loại nhanh An toàn / Độc hại và xuất hồ sơ sang cột Phân tích chuyên sâu.
                     </div>
                 </div>
 
-                <!-- THẺ KIỂM TRA & MÔ PHỎNG LUỒNG WI-FI -->
-                <div class="card" style="border-top: 3px solid #10b981;">
-                    <div class="section-header-box">
-                        <div class="section-big-logo" style="background: rgba(16, 185, 129, 0.16);">📡</div>
-                        <div>
-                            <h2>Kiểm Tra & Mô Phỏng Luồng Wi-Fi</h2>
-                            <p style="font-size: 0.78rem; color: var(--text-muted);">Đánh giá chuẩn mã hóa, phát hiện Evil Twin & đo độ trễ định tuyến</p>
+                <!-- ==================== CỘT PHẢI: GIAI ĐOẠN 2 - LAB CHUYÊN SÂU & KIỂM THỬ ==================== -->
+                <div class="card" id="deepLabCard" style="border-top: 3px solid #38bdf8;">
+                    <div class="section-header-box" style="justify-content: space-between; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div class="section-big-logo" style="background: rgba(56, 189, 248, 0.16);">🔬</div>
+                            <div>
+                                <h2>2. Phân Tích Chuyên Sâu & Kiểm Thử</h2>
+                                <p style="font-size: 0.78rem; color: var(--text-muted);">Mổ xẻ kỹ thuật URL, chạy Sandbox ảo & quét Radar Wi-Fi</p>
+                            </div>
+                        </div>
+                        <span class="badge b-warn">🧪 LAB KIỂM THỬ</span>
+                    </div>
+
+                    <!-- THANH CHUYỂN ĐỔI GIỮA 2 BỘ KIỂM THỬ CHUYÊN SÂU -->
+                    <div style="display: flex; gap: 6px; margin-bottom: 12px; background: var(--bg-sub); padding: 5px; border-radius: 10px; border: 1px solid var(--border);">
+                        <button id="tabDeepLinkBtn" class="action-btn" style="flex: 1; font-size: 0.82rem; padding: 8px;" onclick="switchDeepLabMode('link')">
+                            🧪 Chuyên Sâu Link & Sandbox
+                        </button>
+                        <button id="tabDeepWifiBtn" class="sample-btn" style="flex: 1; margin: 0; font-size: 0.82rem; padding: 8px; font-weight: 700;" onclick="switchDeepLabMode('wifi')">
+                            📡 Radar & Kiểm Thử Wi-Fi
+                        </button>
+                    </div>
+
+                    <!-- CHẾ ĐỘ A: PHÂN TÍCH CHUYÊN SÂU LINK & CHẠY SANDBOX TRỰC TIẾP -->
+                    <div id="deepLinkLabPanel">
+                        <div id="deepLinkPlaceholder" class="result-box" style="border-left-color: var(--accent); margin-top: 0;">
+                            👈 Hãy nhập đường link ở <b>Cột 1 (Sàng Lọc Link)</b> rồi bấm nút <b>"Xuất Phân Tích Chuyên Sâu"</b> để xem báo cáo kỹ thuật và chạy kiểm thử trên tài khoản giả mạo tại đây.
+                        </div>
+
+                        <div id="deepLinkReportContent" style="display: none;">
+                            <div id="deepForensicDetails" style="background: var(--bg-sub); border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-bottom: 12px; font-size: 0.85rem;"></div>
+
+                            <div style="background: #090d16; color: #e2e8f0; border: 1.5px solid #38bdf8; border-radius: 12px; padding: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
+                                    <span style="color: #38bdf8; font-weight: 800; font-size: 0.82rem;">🎭 SANDBOX TÀI KHOẢN GIẢ MẠO (HONEY-ACCOUNT)</span>
+                                    <span style="color: #10b981; font-size: 0.74rem;">● Cô lập IP thật</span>
+                                </div>
+                                <div style="font-size: 0.78rem; color: #94a3b8; margin-bottom: 8px;">
+                                    Hồ sơ mồi nhử: <code>NGUYEN VAN MAU</code> • User: <code>0988000111</code> • OTP ảo: <code>839201</code>
+                                </div>
+                                <div id="inlineSandboxActionArea" style="margin-bottom: 8px;"></div>
+                                <div id="inlineSandboxLog" style="font-family: monospace; font-size: 0.78rem; line-height: 1.45; display: flex; flex-direction: column; gap: 6px;"></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <div>
-                            <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted);">Loại điểm phát Wi-Fi:</label>
-                            <select id="wifiLocation">
-                                <option value="home">🏠 Wi-Fi nhà riêng (WPA2/WPA3)</option>
-                                <option value="cafe_pass">☕ Wi-Fi quán cà phê có mật khẩu</option>
-                                <option value="public_open">🔓 Wi-Fi công cộng không mật khẩu</option>
-                                <option value="twin_ssid">👯 Thấy 2 mạng Wi-Fi trùng tên nhau</option>
-                                <option value="captive_social">🎭 Wi-Fi bắt đăng nhập FB/Google/OTP</option>
-                            </select>
+                    <!-- CHẾ ĐỘ B: BẢNG RADAR WI-FI & KIỂM THỬ THEO TÌNH TRẠNG THỰC TẾ -->
+                    <div id="deepWifiLabPanel" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--accent);">📶 Danh sách mạng Wi-Fi đang sử dụng & xung quanh:</span>
+                            <button class="sample-btn" style="margin: 0; font-size: 0.74rem; font-weight: 700; color: var(--accent);" onclick="refreshWifiRadarTable()">🔄 Quét lại môi trường</button>
                         </div>
-                        <div>
-                            <label style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted);">Lớp bảo vệ bổ sung:</label>
-                            <select id="vpnStatus">
-                                <option value="no">❌ Chưa bật VPN / DNS mã hóa</option>
-                                <option value="yes">🛡️ Đang bật VPN (WireGuard/OpenVPN)</option>
-                            </select>
+
+                        <div style="overflow-x: auto; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-sub);">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--border); color: var(--text-muted); background: rgba(148,163,184,0.08);">
+                                        <th style="padding: 7px 9px;">Tên mạng (SSID)</th>
+                                        <th style="padding: 7px 6px;">Chuẩn bảo mật</th>
+                                        <th style="padding: 7px 6px;">Tình trạng</th>
+                                        <th style="padding: 7px 9px; text-align: right;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wifiRadarTableBody"></tbody>
+                            </table>
                         </div>
-                    </div>
 
-                    <button class="emerald-btn" style="width: 100%;" onclick="analyzeWifiDeep()">🔍 Phân Tích & Chạy Thử Luồng Gói Tin</button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div>
+                                <label style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted);">Mạng đang chọn quét:</label>
+                                <select id="wifiLocation" onchange="analyzeWifiDeep()">
+                                    <option value="current_live">📶 Mạng thiết bị đang kết nối</option>
+                                    <option value="home">🏠 Wi-Fi nhà riêng (WPA2/WPA3)</option>
+                                    <option value="cafe_pass">☕ Wi-Fi quán cà phê có mật khẩu</option>
+                                    <option value="public_open">🔓 Wi-Fi công cộng không mật khẩu</option>
+                                    <option value="twin_ssid">👯 Thấy 2 mạng Wi-Fi trùng tên nhau</option>
+                                    <option value="captive_social">🎭 Wi-Fi bắt đăng nhập FB/Google/OTP</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.76rem; font-weight: 700; color: var(--text-muted);">Lớp bảo vệ bổ sung:</label>
+                                <select id="vpnStatus" onchange="analyzeWifiDeep()">
+                                    <option value="no">❌ Chưa bật VPN / DNS mã hóa</option>
+                                    <option value="yes">🛡️ Đang bật VPN (WireGuard/OpenVPN)</option>
+                                </select>
+                            </div>
+                        </div>
 
-                    <div class="result-box" id="wifiResult" style="border-left-color: #10b981; margin-top: 12px;">
-                        Giao thức trình duyệt: <strong id="protocolStatus">...</strong> • Sẵn sàng kiểm tra định tuyến mạng.
+                        <button class="emerald-btn" style="width: 100%;" onclick="analyzeWifiDeep()">🔍 Phân Tích & Chạy Thử Luồng Gói Tin</button>
+
+                        <div class="result-box" id="wifiResult" style="border-left-color: #10b981; margin-top: 10px;">
+                            Giao thức trình duyệt: <strong id="protocolStatus">...</strong> • Đang đồng bộ kết nối thực tế.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -833,45 +904,6 @@
     <div id="aiNarratorBox" class="ai-narrator-overlay">
         <div class="ai-avatar-bot">🤖</div>
         <div style="flex: 1;"><strong id="aiNarratorTitle" style="color: #c084fc; font-size: 0.92rem; display: block; margin-bottom: 3px;">CyberGuard AI</strong><p id="aiNarratorText" style="font-size: 0.86rem; line-height: 1.4;"></p></div>
-    </div>
-
-    <!-- CỬA SỔ SANDBOX MÔ PHỎNG TẤN CÔNG AN TOÀN TRÊN TÀI KHOẢN GIẢ MẠO -->
-    <div id="sandboxModal" class="admin-modal-backdrop" style="z-index: 2500;">
-        <div style="background: var(--bg-card); border: 2px solid #38bdf8; border-radius: 18px; width: 860px; max-width: 95vw; max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 14px;">
-                <div>
-                    <span class="badge b-warn">🧪 MÔI TRƯỜNG CÔ LẬP (SANDBOX SIMULATOR)</span>
-                    <h3 style="margin-top: 4px; color: var(--accent);">Mô Phỏng Hành Vi Khi Bấm Link Trên Tài Khoản Giả Mạo</h3>
-                </div>
-                <button class="sample-btn" style="font-weight: 700; color: var(--danger);" onclick="closeSandbox()">✖ Đóng Sandbox</button>
-            </div>
-
-            <div class="grid-2" style="margin-bottom: 0;">
-                <div style="background: var(--bg-sub); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px;">
-                    <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 8px; display: flex; justify-content: space-between;">
-                        <span>🌐 Trình duyệt ảo cô lập</span>
-                        <span style="color: var(--safe);">● Đã bật bảo vệ IP thật</span>
-                    </div>
-                    <div id="sbUrlBar" style="background: var(--bg-card); padding: 6px 10px; border-radius: 6px; font-family: monospace; font-size: 0.78rem; color: var(--danger); border: 1px solid rgba(244,63,94,0.4); margin-bottom: 10px; word-break: break-all;"></div>
-
-                    <div style="background: rgba(56, 189, 248, 0.1); border: 1px dashed #38bdf8; border-radius: 8px; padding: 10px; font-size: 0.8rem; margin-bottom: 10px;">
-                        <strong>🎭 Hồ sơ Tài khoản Giả mạo (Honey-Account):</strong><br>
-                        • Chủ tài khoản: <code>NGUYEN VAN MAU (Ảo)</code><br>
-                        • Tên đăng nhập: <code>0988000111</code> | Mật khẩu: <code>Mau@123456</code><br>
-                        • Mã OTP giả lập: <code>839201</code>
-                    </div>
-
-                    <div id="sbFakeScreen" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center;"></div>
-                </div>
-
-                <div style="background: #090d16; color: #e2e8f0; border: 1.5px solid var(--danger); border-radius: 12px; padding: 14px; font-family: monospace; font-size: 0.8rem;">
-                    <div style="color: #f43f5e; font-weight: 800; margin-bottom: 8px; border-bottom: 1px solid #1e293b; padding-bottom: 6px;">
-                        📡 LOG MÁY CHỦ TIN TẶC (NHỮNG GÌ KẺ GIAN LẤY ĐƯỢC)
-                    </div>
-                    <div id="sbAttackerLog" style="display: flex; flex-direction: column; gap: 8px; line-height: 1.45;"></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!-- HỘP THOẠI QUẢN TRỊ VIÊN (CTRL + SHIFT + L) -->
@@ -1014,6 +1046,8 @@
         }
 
         renderCyberNews('all');
+        refreshWifiRadarTable();
+        analyzeWifiDeep();
 
         const sidebarBtns = document.querySelectorAll('.sidebar-item');
         if (choice === 'sos') {
@@ -1049,6 +1083,10 @@
         const targetTab = document.getElementById(tabId);
         if (targetTab) targetTab.classList.add('active');
         if (btn) btn.classList.add('active');
+
+        if (tabId === 'wifiPhishTab') {
+            refreshWifiRadarTable();
+        }
 
         if (tabId === 'gameTab') {
             const b = document.getElementById('vigilanceBubbleWrap');
@@ -1160,7 +1198,7 @@
     function adminUnlockAll() { saveVerifiedLevel(3); updateTierCardsUI(); closeAdminModal(); showAiNarrator(true, "Đã mở khóa cả 3 Tầng (Admin)."); }
     function adminRelockAll() { saveVerifiedLevel(1); updateTierCardsUI(); resetToTiers(); closeAdminModal(); showAiNarrator(false, "Đã khóa lại về Tầng 1."); }
 
-    // ================= 4. QUÉT LINK & TIN NHẮN ĐA TẦNG (BÁO ĐỘNG ĐỎ TOÀN KHUNG) =================
+    // ================= 4. LUỒNG 2 GIAI ĐOẠN: CỘT 1 (SÀNG LỌC) -> CỘT 2 (CHUYÊN SÂU & SANDBOX) =================
     const VN_TRUSTED_ENTITIES = [
         { name: "Vietcombank", domain: "vietcombank.com.vn", keywords: ["vietcombank", "vcb"] },
         { name: "BIDV", domain: "bidv.com.vn", keywords: ["bidv"] },
@@ -1180,6 +1218,8 @@
 
     const HIGH_RISK_TLDS = ["xyz", "top", "club", "info", "vip", "tk", "ml", "ga", "cf", "gq", "icu", "online", "site", "buzz", "work", "click", "link"];
     const SHORTENERS = ["bit.ly", "tinyurl.com", "t.co", "goo.gl", "ow.ly", "is.gd", "buff.ly", "cutt.ly", "rb.gy", "s.id"];
+
+    let latestScanReport = null;
 
     function levenshteinDistance(a, b) {
         const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
@@ -1206,6 +1246,26 @@
         return entropy;
     }
 
+    function switchDeepLabMode(mode) {
+        const linkPanel = document.getElementById('deepLinkLabPanel');
+        const wifiPanel = document.getElementById('deepWifiLabPanel');
+        const btnLink = document.getElementById('tabDeepLinkBtn');
+        const btnWifi = document.getElementById('tabDeepWifiBtn');
+
+        if (mode === 'wifi') {
+            linkPanel.style.display = 'none';
+            wifiPanel.style.display = 'block';
+            btnWifi.className = 'action-btn';
+            btnLink.className = 'sample-btn';
+            refreshWifiRadarTable();
+        } else {
+            wifiPanel.style.display = 'none';
+            linkPanel.style.display = 'block';
+            btnLink.className = 'action-btn';
+            btnWifi.className = 'sample-btn';
+        }
+    }
+
     function resetScannerCardTheme() {
         const card = document.getElementById('phishingScannerCard');
         const icon = document.getElementById('scannerHeaderIcon');
@@ -1219,16 +1279,19 @@
             card.style.borderTop = '3px solid #10b981';
         }
         if (icon) { icon.innerText = '🔗'; icon.style.background = 'rgba(16, 185, 129, 0.16)'; }
-        if (title) { title.innerText = 'Quét Link & Tin Nhắn Đa Tầng'; title.style.color = ''; }
-        if (pill) { pill.className = 'badge b-safe'; pill.innerText = '🛡️ ĐANG GIÁM SÁT'; }
-        if (btn) { btn.className = 'emerald-btn'; btn.innerText = '🛡️ Phân Tích Chuyên Sâu Ngay'; }
+        if (title) { title.innerText = '1. Sàng Lọc Link & Ảnh Chụp'; title.style.color = ''; }
+        if (pill) { pill.className = 'badge b-safe'; pill.innerText = '🛡️ SÀNG LỌC NHANH'; }
+        if (btn) { btn.className = 'emerald-btn'; btn.innerText = '🔍 Kiểm Tra Độ Độc Hại Ngay'; }
         if (box) { box.style.borderLeftColor = '#10b981'; }
     }
 
     function clearPhishingInput() {
         document.getElementById('phishingInput').value = '';
+        latestScanReport = null;
         resetScannerCardTheme();
-        document.getElementById('phishingResult').innerHTML = 'Đã làm mới. Sẵn sàng kiểm tra mẫu mới.';
+        document.getElementById('phishingResult').innerHTML = 'Đã làm mới. Sẵn sàng sàng lọc liên kết tiếp theo.';
+        document.getElementById('deepLinkPlaceholder').style.display = 'block';
+        document.getElementById('deepLinkReportContent').style.display = 'none';
     }
 
     function loadSample(id) {
@@ -1251,46 +1314,48 @@
 
         if (!rawText) {
             resetScannerCardTheme();
-            box.innerHTML = '<span style="color:var(--warn);">⚠️ Vui lòng nhập đường link hoặc dán tin nhắn cần quét.</span>';
+            box.innerHTML = '<span style="color:var(--warn);">⚠️ Vui lòng nhập đường link hoặc dán tin nhắn cần kiểm tra.</span>';
             return;
         }
 
         let riskScore = 0;
+        let quickVerdict = "";
         let findings = [];
         let lossItems = [];
         let officialSuggestion = null;
+        let techMetrics = { protocol: "Không rõ", host: "Không trích xuất được URL", entropy: "N/A", levenshtein: "N/A" };
         const lowerText = rawText.toLowerCase();
 
         const urlRegex = /(https?:\/\/[^\s"'<>]+|(?:[a-zA-Z0-9-]+\.)+(?:com\.vn|gov\.vn|edu\.vn|vn|com|net|org|xyz|top|vip|icu|online|site|tk|ly|co)(?:\/[^\s"'<>]*)?)/gi;
         const matchedUrls = rawText.match(urlRegex) || [];
-
-        let extractedHost = "";
         let fullUrlSample = matchedUrls.length > 0 ? matchedUrls[0] : "http://link-nghi-ngo.xyz";
 
         if (matchedUrls.length > 0) {
             try {
                 const normalized = fullUrlSample.startsWith('http') ? fullUrlSample : 'http://' + fullUrlSample;
                 const parsed = new URL(normalized);
-                extractedHost = parsed.hostname.toLowerCase();
+                const extractedHost = parsed.hostname.toLowerCase();
+                techMetrics.host = extractedHost;
+                techMetrics.protocol = fullUrlSample.toLowerCase().startsWith('https://') ? "HTTPS (Có mã hóa TLS)" : "HTTP (Văn bản thô - Nguy hiểm)";
 
                 if (fullUrlSample.toLowerCase().startsWith('http://')) {
                     riskScore += 30;
-                    findings.push("🔓 <b>Kết nối không mã hóa (HTTP):</b> Dữ liệu đăng nhập truyền đi dạng văn bản thô, dễ bị nghe lén.");
+                    findings.push("🔓 <b>Giao thức HTTP không mã hóa:</b> Dữ liệu đăng nhập truyền đi dạng văn bản thô.");
                 }
                 if (/^\d{1,3}(\.\d{1,3}){3}$/.test(extractedHost)) {
                     riskScore += 45;
-                    findings.push("🚨 <b>Dùng địa chỉ IP trực tiếp:</b> Tổ chức hợp pháp không bao giờ yêu cầu đăng nhập qua dãy số IP.");
+                    findings.push("🚨 <b>Dùng địa chỉ IP trực tiếp:</b> Tổ chức hợp pháp không yêu cầu đăng nhập qua IP.");
                 }
                 if (extractedHost.includes('xn--') || /[^\x00-\x7F]/.test(extractedHost)) {
                     riskScore += 55;
-                    findings.push("🎭 <b>Tấn công Homograph / Punycode (RFC 3492):</b> Tên miền chứa ký tự Unicode giả dạng chữ Latinh.");
+                    findings.push("🎭 <b>Tấn công Homograph / Punycode (RFC 3492):</b> Tên miền dùng ký tự Unicode giả dạng chữ Latinh.");
                 }
 
                 const hostParts = extractedHost.split('.');
                 const tld = hostParts[hostParts.length - 1];
                 if (HIGH_RISK_TLDS.includes(tld)) {
                     riskScore += 35;
-                    findings.push(`⚠️ <b>Đuôi tên miền rủi ro cao (.${tld}):</b> Thường được mua giá rẻ để lập web lừa đảo dùng một lần.`);
+                    findings.push(`⚠️ <b>Đuôi tên miền rủi ro cao (.${tld}):</b> Thường dùng lập web lừa đảo dùng một lần.`);
                 }
                 if (SHORTENERS.some(s => extractedHost === s || extractedHost.endsWith('.' + s))) {
                     riskScore += 25;
@@ -1299,9 +1364,10 @@
 
                 const mainLabel = hostParts.length >= 2 ? hostParts[0] : extractedHost;
                 const entropy = calculateShannonEntropy(mainLabel);
+                techMetrics.entropy = entropy.toFixed(2) + " bits";
                 if (mainLabel.length >= 8 && entropy > 3.6) {
                     riskScore += 20;
-                    findings.push(`🧬 <b>Độ hỗn loạn chuỗi cao (Entropy = ${entropy.toFixed(2)}):</b> Cấu trúc tên miền sinh tự động (DGA).`);
+                    findings.push(`🧬 <b>Độ hỗn loạn chuỗi cao (Entropy = ${entropy.toFixed(2)}):</b> Dấu hiệu tên miền sinh tự động (DGA).`);
                 }
 
                 let isVerifiedOfficial = false;
@@ -1309,7 +1375,8 @@
                     if (extractedHost === entity.domain || extractedHost.endsWith('.' + entity.domain)) {
                         isVerifiedOfficial = true;
                         riskScore = Math.max(0, riskScore - 50);
-                        findings.push(`🛡️ <b>Xác thực tên miền chính chủ:</b> Thuộc hệ thống hợp pháp của <b>${entity.name}</b> (<code>${entity.domain}</code>).`);
+                        techMetrics.levenshtein = `0 (Khớp chính chủ ${entity.name})`;
+                        findings.push(`🛡️ <b>Xác thực chính chủ:</b> Thuộc hệ thống hợp pháp của <b>${entity.name}</b>.`);
                         break;
                     }
                 }
@@ -1324,7 +1391,8 @@
                         if ((dist > 0 && dist <= 2 && cleanHostBase.length >= 4) || hasBrandKeyword) {
                             riskScore += 55;
                             officialSuggestion = entity;
-                            findings.push(`🚨 <b>Phát hiện mạo danh thương hiệu (${entity.name}):</b> Tên miền <code>${extractedHost}</code> cố tình viết gần giống trang thật (Khoảng cách Levenshtein = ${dist}).`);
+                            techMetrics.levenshtein = `${dist} bước biến đổi so với ${entity.domain}`;
+                            findings.push(`🚨 <b>Mạo danh thương hiệu (${entity.name}):</b> Tên miền <code>${extractedHost}</code> cố tình viết gần giống trang thật.`);
                             break;
                         }
                     }
@@ -1335,7 +1403,7 @@
         const isApkFlag = /\.(apk|exe|bat|scr|vbs|msi|cmd)\b/i.test(lowerText);
         if (isApkFlag) {
             riskScore += 65;
-            findings.push("☠️ <b>Chứa tệp cài đặt mã độc (.APK / .EXE):</b> Vượt qua kiểm duyệt của kho ứng dụng chính thức.");
+            findings.push("☠️ <b>Chứa tệp cài đặt mã độc (.APK / .EXE):</b> Vượt qua kiểm duyệt kho ứng dụng.");
             lossItems.push(
                 { icon: "📲", title: "Quyền điều khiển máy", desc: "Chiếm quyền Trợ năng (Accessibility), tự thao tác màn hình từ xa." },
                 { icon: "💬", title: "Toàn bộ tin nhắn OTP", desc: "Đọc trộm mã OTP ngân hàng gửi về SMS để tự động chuyển tiền." },
@@ -1343,102 +1411,167 @@
             );
         }
 
-        const urgencyWords = ["khóa tài khoản", "khoa tai khoan", "tam khoa", "tạm khóa", "xác thực ngay", "xac thuc ngay", "trúng thưởng", "trung thuong", "sinh trắc học", "sinh trac hoc", "triệu tập", "trieu tap", "hoàn phí", "hoan phi", "2 giờ", "24h"];
+        const urgencyWords = ["khóa tài khoản", "khoa tai khoan", "tam khoa", "tạm khóa", "xác thực ngay", "xac thuc ngay", "trúng thưởng", "sinh trắc học", "triệu tập", "hoàn phí"];
         const matchedUrgency = urgencyWords.filter(w => lowerText.includes(w));
         if (matchedUrgency.length > 0) {
             riskScore += Math.min(30, matchedUrgency.length * 15);
-            findings.push(`🧠 <b>Thao túng tâm lý (Social Engineering):</b> Dùng từ ngữ hù dọa (<i>"${matchedUrgency.slice(0, 2).join('", "')}"</i>) ép nạn nhân bấm vội.`);
+            findings.push(`🧠 <b>Thao túng tâm lý:</b> Dùng từ ngữ hù dọa (<i>"${matchedUrgency.slice(0, 2).join('", "')}"</i>) ép bấm vội.`);
         }
 
         riskScore = Math.min(100, Math.max(0, riskScore));
 
         if (riskScore >= 50 && lossItems.length === 0) {
             lossItems.push(
-                { icon: "🔑", title: "Tên đăng nhập & Mật khẩu", desc: "Gửi trực tiếp về máy chủ tin tặc ngay khi bạn bấm Đăng nhập." },
-                { icon: "🔢", title: "Mã xác thực OTP / SmartOTP", desc: "Bot tự động dùng mã OTP vừa nhập để rút tiền trong 3 giây." },
-                { icon: "🌐", title: "Địa chỉ IP & Dấu vết thiết bị", desc: "Lộ vị trí, nhà mạng và loại điện thoại đang sử dụng." }
+                { icon: "🔑", title: "Tên đăng nhập & Mật khẩu", desc: "Gửi trực tiếp về máy chủ tin tặc ngay khi bấm Đăng nhập." },
+                { icon: "🔢", title: "Mã xác thực OTP", desc: "Bot tự động dùng mã OTP vừa nhập để rút tiền trong 3 giây." },
+                { icon: "🌐", title: "IP & Dấu vết thiết bị", desc: "Lộ vị trí, nhà mạng và loại điện thoại đang dùng." }
             );
         }
+
+        latestScanReport = {
+            url: fullUrlSample,
+            riskScore,
+            isApk: isApkFlag,
+            findings,
+            lossItems,
+            officialSuggestion,
+            techMetrics
+        };
 
         resetScannerCardTheme();
 
         if (riskScore >= 50) {
-            // ĐỔI NGUYÊN BẢNG QUÉT SANG MÀU ĐỎ BÁO ĐỘNG
             card.classList.add('scanner-card-danger');
             icon.innerText = '🚨';
             icon.style.background = 'rgba(239, 68, 68, 0.25)';
-            title.innerText = '🚨 CẢNH BÁO NGUY HIỂM: PHÁT HIỆN LINK ĐỘC!';
+            title.innerText = '🚨 KẾT LUẬN: LIÊN KẾT ĐỘC HẠI!';
             title.style.color = 'var(--danger)';
             pill.className = 'badge b-danger';
-            pill.innerText = `☠️ RỦI RO ${riskScore}/100`;
+            pill.innerText = `☠️ ĐỘC HẠI (${riskScore}/100)`;
             btn.className = 'danger-btn';
-            btn.innerText = '🚨 TUYỆT ĐỐI KHÔNG BẤM VÀO LINK NÀY';
+            btn.innerText = '🚨 CẢNH BÁO: KHÔNG TRUY CẬP TRỰC TIẾP';
             box.style.borderLeftColor = 'var(--danger)';
+            quickVerdict = `Phát hiện dấu hiệu lừa đảo / mã độc nghiêm trọng (${findings.length} chỉ dấu bất thường).`;
+        } else if (riskScore >= 25) {
+            card.classList.add('scanner-card-warn');
+            icon.innerText = '⚠️';
+            title.innerText = '⚠️ KẾT LUẬN: ĐÁNG NGỜ';
+            title.style.color = 'var(--warn)';
+            pill.className = 'badge b-warn';
+            pill.innerText = `⚠️ NGHI NGỜ (${riskScore}/100)`;
+            box.style.borderLeftColor = 'var(--warn)';
+            quickVerdict = `Liên kết có yếu tố chưa xác thực an toàn (${findings.length} điểm cần lưu ý).`;
+        } else {
+            pill.className = 'badge b-safe';
+            pill.innerText = `✅ AN TOÀN (${riskScore}/100)`;
+            quickVerdict = `Không phát hiện dấu hiệu giả mạo hay mã độc trong quá trình sàng lọc nhanh.`;
+        }
 
-            let html = `
-                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
-                    <span class="badge b-danger">🚨 NGUY HIỂM CỰC CAO (${riskScore}/100 ĐIỂM)</span>
-                    ${extractedHost ? `<span style="font-family:monospace; font-size:0.78rem; background:var(--bg-card); padding:2px 8px; border-radius:6px; border:1px solid var(--danger); color:var(--danger);">Host: ${extractedHost}</span>` : ''}
-                </div>
-                <div style="width:100%; height:8px; background:rgba(239,68,68,0.2); border-radius:99px; overflow:hidden; margin-bottom:10px;">
-                    <div style="width:${riskScore}%; height:100%; background:var(--danger);"></div>
-                </div>
-                <ul style="margin-left:18px; margin-bottom:12px; font-size:0.86rem;">
-                    ${findings.map(f => `<li>${f}</li>`).join('')}
-                </ul>
-                <div style="background:rgba(220, 38, 38, 0.12); border:1.5px solid var(--danger); border-radius:10px; padding:10px 12px;">
-                    <div style="font-weight:800; color:var(--danger); font-size:0.86rem; margin-bottom:4px;">
-                        💥 NHỮNG THÔNG TIN SẼ BỊ ĐÁNH CẮP NẾU BẠN NHẤN VÀO:
-                    </div>
+        box.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span class="badge ${riskScore >= 50 ? 'b-danger' : (riskScore >= 25 ? 'b-warn' : 'b-safe')}">
+                    ${riskScore >= 50 ? '🚨 ĐỘC HẠI' : (riskScore >= 25 ? '⚠️ ĐÁNG NGỜ' : '✅ AN TOÀN')} • ${riskScore}/100 ĐIỂM
+                </span>
+                <span style="font-family:monospace; font-size:0.76rem; color:var(--text-muted);">${techMetrics.host}</span>
+            </div>
+            <p style="font-size:0.86rem; margin-bottom:10px;">${quickVerdict}</p>
+            <button class="action-btn" style="width:100%;" onclick="exportToDeepAnalysis()">
+                ➡️ Xuất Phân Tích Chuyên Sâu & Chạy Kiểm Thử (Cột 2)
+            </button>
+        `;
+    }
+
+    function exportToDeepAnalysis() {
+        if (!latestScanReport) return;
+        switchDeepLabMode('link');
+
+        document.getElementById('deepLinkPlaceholder').style.display = 'none';
+        document.getElementById('deepLinkReportContent').style.display = 'block';
+
+        const r = latestScanReport;
+        const forensicBox = document.getElementById('deepForensicDetails');
+
+        let html = `
+            <div style="font-weight:800; color:var(--accent); margin-bottom:6px; border-bottom:1px solid var(--border); padding-bottom:5px;">
+                📊 BÁO CÁO KỸ THUẬT CHUYÊN SÂU
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:0.79rem; margin-bottom:8px;">
+                <div>• <b>Host đích:</b> <code>${r.techMetrics.host}</code></div>
+                <div>• <b>Giao thức:</b> ${r.techMetrics.protocol}</div>
+                <div>• <b>Shannon Entropy:</b> ${r.techMetrics.entropy}</div>
+                <div>• <b>Levenshtein:</b> ${r.techMetrics.levenshtein}</div>
+            </div>
+        `;
+
+        if (r.findings.length > 0) {
+            html += `<ul style="margin-left:18px; margin-bottom:8px; font-size:0.83rem;">${r.findings.map(f => `<li>${f}</li>`).join('')}</ul>`;
+        }
+
+        if (r.lossItems.length > 0) {
+            html += `
+                <div style="background:rgba(220,38,38,0.12); border:1px solid var(--danger); border-radius:8px; padding:8px; margin-top:6px;">
+                    <div style="font-weight:800; color:var(--danger); font-size:0.8rem; margin-bottom:4px;">💥 DỮ LIỆU SẼ MẤT NẾU BẤM VÀO LINK THẬT:</div>
                     <div class="data-loss-alert-grid">
-                        ${lossItems.map(item => `
+                        ${r.lossItems.map(item => `
                             <div class="data-loss-item">
-                                <div style="font-weight:700; color:var(--danger); margin-bottom:2px;">${item.icon} ${item.title}</div>
-                                <div style="font-size:0.76rem; line-height:1.35;">${item.desc}</div>
+                                <div style="font-weight:700; color:var(--danger);">${item.icon} ${item.title}</div>
+                                <div style="font-size:0.74rem;">${item.desc}</div>
                             </div>
                         `).join('')}
                     </div>
                 </div>
             `;
+        }
 
-            if (officialSuggestion) {
-                html += `
-                    <div style="margin-top:10px; padding:8px 10px; border-radius:8px; background:rgba(16,185,129,0.14); border:1px solid var(--safe); font-size:0.83rem;">
-                        💡 <b>Địa chỉ chính thức duy nhất của ${officialSuggestion.name}:</b> <code>https://${officialSuggestion.domain}</code>
-                    </div>
-                `;
-            }
+        if (r.officialSuggestion) {
+            html += `<div style="margin-top:8px; padding:6px 9px; border-radius:6px; background:rgba(16,185,129,0.14); border:1px solid var(--safe); font-size:0.8rem;">💡 <b>Trang chính chủ duy nhất:</b> <code>https://${r.officialSuggestion.domain}</code></div>`;
+        }
 
-            html += `
-                <button class="action-btn" style="width:100%; margin-top:10px; font-size:0.83rem;" onclick="openSandboxSimulator('${fullUrlSample.replace(/'/g, "\\'")}', ${isApkFlag}, false)">
-                    🧪 Chạy thử link này trong Sandbox trên Tài khoản Giả mạo
-                </button>
-            `;
-            box.innerHTML = html;
-        } else if (riskScore >= 25) {
-            card.classList.add('scanner-card-warn');
-            icon.innerText = '⚠️';
-            title.innerText = '⚠️ CẢNH BÁO: LIÊN KẾT ĐÁNG NGỜ';
-            title.style.color = 'var(--warn)';
-            pill.className = 'badge b-warn';
-            pill.innerText = `⚠️ RỦI RO ${riskScore}/100`;
-            box.style.borderLeftColor = 'var(--warn)';
+        forensicBox.innerHTML = html;
 
-            box.innerHTML = `
-                <span class="badge b-warn">⚠️ ĐÁNG NGỜ (${riskScore}/100 ĐIỂM)</span>
-                <ul style="margin-left:18px; margin-top:8px; font-size:0.86rem;">
-                    ${findings.map(f => `<li>${f}</li>`).join('')}
-                </ul>
-                <button class="action-btn" style="width:100%; margin-top:10px; font-size:0.83rem;" onclick="openSandboxSimulator('${fullUrlSample.replace(/'/g, "\\'")}', ${isApkFlag}, false)">
-                    🧪 Kiểm thử trong Sandbox trên Tài khoản Giả mạo
-                </button>
-            `;
+        const actionArea = document.getElementById('inlineSandboxActionArea');
+        const logArea = document.getElementById('inlineSandboxLog');
+
+        logArea.innerHTML = `
+            <div style="color:#fbbf24;">[Sẵn sàng] Đã nạp URL <code>${r.url}</code> vào môi trường cách ly.</div>
+        `;
+
+        if (r.riskScore < 25) {
+            actionArea.innerHTML = `<span class="badge b-safe">✅ Liên kết an toàn — Không phát hiện kịch bản đánh cắp dữ liệu.</span>`;
         } else {
-            box.innerHTML = `
-                <span class="badge b-safe">✅ AN TOÀN (${riskScore}/100 ĐIỂM)</span>
-                ${findings.length > 0 ? `<ul style="margin-left:18px; margin-top:8px; font-size:0.86rem;">${findings.map(f => `<li>${f}</li>`).join('')}</ul>` : `<p style="margin-top:8px; font-size:0.86rem;">Không phát hiện chỉ dấu giả mạo tên miền, tệp độc hại hay thủ thuật thao túng tâm lý.</p>`}
+            actionArea.innerHTML = `
+                <button class="danger-btn" style="width:100%; font-size:0.8rem;" onclick="runInlineSandboxTest()">
+                    ▶️ Chạy Kiểm Thử Tấn Công Trên Tài Khoản Giả Mạo
+                </button>
             `;
         }
+    }
+
+    function runInlineSandboxTest() {
+        if (!latestScanReport) return;
+        const logArea = document.getElementById('inlineSandboxLog');
+        const r = latestScanReport;
+
+        logArea.innerHTML = `
+            <div style="color:#fbbf24;">[00:00.1s] ⚡ Trình duyệt ảo truy cập: <code>${r.url}</code></div>
+            <div>• <b>Thu thập tự động:</b> IP 113.161.xx.xx (Proxy ảo) | Thiết bị: ${navigator.platform || 'Mobile/PC'}</div>
+        `;
+
+        setTimeout(() => {
+            if (r.isApk) {
+                logArea.innerHTML += `
+                    <div style="color:#f43f5e;">[00:02.5s] 🚨 PHÁT HIỆN GÓI CÀI ĐẶT MÃ ĐỘC .APK!</div>
+                    <div>• <b>Hành vi:</b> Xin quyền <i>Accessibility (Trợ năng)</i> + Đọc tin nhắn SMS.</div>
+                    <div style="color:#fda4af;">💸 <b>Kết quả kiểm thử:</b> Mã độc chiếm quyền điều khiển màn hình và tự đọc mã OTP ngân hàng!</div>
+                `;
+            } else {
+                logArea.innerHTML += `
+                    <div style="color:#f43f5e;">[00:02.5s] 🚨 GIẢ LẬP NẠN NHÂN NHẬP TÀI KHOẢN MỒI NHỬ!</div>
+                    <div>• <b>Dữ liệu bị gửi về máy chủ tin tặc:</b> User <code>0988000111</code> | Pass <code>Mau@123456</code> | OTP <code>839201</code></div>
+                    <div style="color:#fda4af;">💸 <b>Kết quả kiểm thử:</b> Bot tin tặc đăng nhập vào ngân hàng thật sau 3 giây để rút tiền!</div>
+                `;
+            }
+        }, 450);
     }
 
     // ================= 5. MODULE HYBRID: OCR + GEMINI VISION PHÂN TÍCH LOGO & GIAO DIỆN =================
@@ -1607,95 +1740,128 @@
         if (keyInput) keyInput.focus();
     }
 
-    // ================= 6. MODULE SANDBOX MÔ PHỎNG TÀI KHOẢN GIẢ MẠO =================
-    let currentSandboxUrl = "";
-    let currentSandboxType = "phish";
+    // ================= 6. BẢNG RADAR WI-FI & QUÉT THEO TÌNH TRẠNG THỰC TẾ =================
+    function refreshWifiRadarTable() {
+        const tbody = document.getElementById('wifiRadarTableBody');
+        if (!tbody) return;
 
-    function openSandboxSimulator(urlText, isApk, isSafe) {
-        currentSandboxUrl = urlText || "http://link-dang-ngo.xyz/login";
-        currentSandboxType = isApk ? "apk" : (isSafe ? "safe" : "phish");
+        const isOnline = navigator.onLine;
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const speedInfo = conn ? `${conn.downlink || '?'} Mbps • RTT ${conn.rtt || '?'}ms` : 'Đang hoạt động';
+        const isHttps = window.location.protocol === 'https:';
 
-        document.getElementById('sandboxModal').style.display = 'flex';
-        document.getElementById('sbUrlBar').innerText = currentSandboxUrl;
+        const wifiList = [
+            {
+                id: 'current_live',
+                ssid: isOnline ? `📶 Mạng đang kết nối (${speedInfo})` : '📴 Đang ngoại tuyến (Offline)',
+                security: isHttps ? 'TLS/HTTPS' : 'HTTP/Local',
+                statusBadge: isOnline ? '<span class="badge b-safe">● Đang dùng</span>' : '<span class="badge b-warn">Ngắt kết nối</span>',
+                highlight: true
+            },
+            {
+                id: 'home',
+                ssid: '🏠 Home_Fiber_5G',
+                security: 'WPA2/WPA3-AES',
+                statusBadge: '<span class="badge b-safe">An toàn</span>',
+                highlight: false
+            },
+            {
+                id: 'cafe_pass',
+                ssid: '☕ Highlands_Coffee_Guest',
+                security: 'WPA2-PSK (Chung)',
+                statusBadge: '<span class="badge b-warn">Cảnh giác</span>',
+                highlight: false
+            },
+            {
+                id: 'public_open',
+                ssid: '🔓 Free_Public_WiFi_Open',
+                security: 'OPEN (Không khóa)',
+                statusBadge: '<span class="badge b-danger">Rủi ro cao</span>',
+                highlight: false
+            },
+            {
+                id: 'twin_ssid',
+                ssid: '👯 VKU_Student_Free (Trùng tên)',
+                security: 'Deauth + Clone',
+                statusBadge: '<span class="badge b-danger">Evil Twin</span>',
+                highlight: false
+            },
+            {
+                id: 'captive_social',
+                ssid: '🎭 Airport_VIP_Login_FB',
+                security: 'Captive Portal giả',
+                statusBadge: '<span class="badge b-danger">Bẫy đánh cắp</span>',
+                highlight: false
+            }
+        ];
 
-        const fakeScreen = document.getElementById('sbFakeScreen');
-        const attackerLog = document.getElementById('sbAttackerLog');
-
-        attackerLog.innerHTML = `
-            <div style="color:#fbbf24;">[00:00.1s] ⚡ Nạn nhân vừa nhấp vào liên kết!</div>
-            <div>• <b>IP & Vị trí:</b> 113.161.xx.xx (Đà Nẵng, VN - Qua Proxy ảo)</div>
-            <div>• <b>Thiết bị:</b> ${navigator.platform || 'Mobile/PC'} | Trình duyệt Web</div>
-            <div>• <b>Mục tiêu nhận diện:</b> ${isApk ? 'Phát hiện Android -> Đẩy gói cài đặt mã độc .APK' : 'Giao diện giả mạo thu thập tài khoản & OTP'}</div>
-            <div style="color:#94a3b8; border-top:1px dashed #334155; padding-top:6px;">⏳ Đang chờ nạn nhân tương tác trên trang giả mạo...</div>
-        `;
-
-        if (currentSandboxType === "safe") {
-            fakeScreen.innerHTML = `
-                <div style="color:var(--safe); font-weight:700; margin-bottom:6px;">✅ Cổng Thông Tin Chính Thức</div>
-                <p style="font-size:0.82rem; color:var(--text-muted);">Trang web sử dụng chứng chỉ HTTPS hợp lệ. Dữ liệu được mã hóa đầu cuối.</p>
-            `;
-        } else if (currentSandboxType === "apk") {
-            fakeScreen.innerHTML = `
-                <div style="color:var(--danger); font-weight:800; margin-bottom:6px;">📲 YÊU CẦU TẢI BẢN CẬP NHẬT (.APK)</div>
-                <p style="font-size:0.8rem; margin-bottom:10px;">Trang web tự động tải xuống tệp <code>CapNhat_BaoMat.apk</code> và yêu cầu cấp quyền <b>Trợ năng (Accessibility)</b>.</p>
-                <button class="danger-btn" style="font-size:0.8rem;" onclick="simulateVictimSubmit()">▶️ Mô phỏng bấm "Cài đặt & Cấp quyền"</button>
-            `;
-        } else {
-            fakeScreen.innerHTML = `
-                <div style="color:var(--warn); font-weight:800; margin-bottom:6px;">🏦 CỔNG XÁC THỰC TÀI KHOẢN GIẢ MẠO</div>
-                <p style="font-size:0.78rem; color:var(--text-muted); margin-bottom:8px;">Trang web yêu cầu nhập mật khẩu & mã OTP để mở khóa tài khoản.</p>
-                <button class="danger-btn" style="font-size:0.8rem;" onclick="simulateVictimSubmit()">▶️ Điền tự động Tài khoản Giả mạo để thử</button>
-            `;
-        }
+        tbody.innerHTML = wifiList.map(item => `
+            <tr style="border-bottom: 1px solid var(--border); ${item.highlight ? 'background: rgba(56, 189, 248, 0.12); font-weight: 700;' : ''}">
+                <td style="padding: 7px 9px;">${item.ssid}</td>
+                <td style="padding: 7px 6px; font-family: monospace; font-size: 0.72rem;">${item.security}</td>
+                <td style="padding: 7px 6px;">${item.statusBadge}</td>
+                <td style="padding: 7px 9px; text-align: right;">
+                    <button class="sample-btn" style="margin: 0; padding: 3px 8px; font-size: 0.72rem; color: var(--accent); font-weight: 700;" onclick="selectAndScanWifi('${item.id}')">
+                        Quét ngay
+                    </button>
+                </td>
+            </tr>
+        `).join('');
     }
 
-    function simulateVictimSubmit() {
-        const attackerLog = document.getElementById('sbAttackerLog');
-        if (currentSandboxType === "apk") {
-            attackerLog.innerHTML += `
-                <div style="color:#f43f5e; margin-top:6px;">[00:04.5s] 🚨 CHIẾM QUYỀN THIẾT BỊ THÀNH CÔNG!</div>
-                <div>• <b>Quyền đạt được:</b> Accessibility Service + Đọc SMS</div>
-                <div>• <b>Dữ liệu bị hút về:</b> Toàn bộ tin nhắn OTP ngân hàng, danh bạ, ảnh chụp CCCD trong thư viện.</div>
-                <div style="background:rgba(244,63,94,0.2); padding:6px; border-radius:6px; color:#fda4af;">
-                    💸 <b>Hậu quả thực tế:</b> Mã độc tự động mở app ngân hàng lúc nửa đêm, nhập mật khẩu và tự đọc mã OTP để chuyển sạch tiền!
-                </div>
-            `;
-        } else {
-            attackerLog.innerHTML += `
-                <div style="color:#f43f5e; margin-top:6px;">[00:03.2s] 🚨 ĐÁNH CẮP THÔNG TIN ĐĂNG NHẬP!</div>
-                <div>• <b>User bị lộ:</b> <code>0988000111</code></div>
-                <div>• <b>Password bị lộ:</b> <code>Mau@123456</code></div>
-                <div>• <b>Mã OTP bị chặn:</b> <code>839201</code></div>
-                <div style="background:rgba(244,63,94,0.2); padding:6px; border-radius:6px; color:#fda4af;">
-                    💸 <b>Hậu quả thực tế:</b> Bot tự động của tin tặc đăng nhập ngay vào ngân hàng thật trong 3 giây và rút tiền trước khi nạn nhân kịp nhận ra!
-                </div>
-            `;
-        }
+    function selectAndScanWifi(wifiId) {
+        const selectEl = document.getElementById('wifiLocation');
+        if (selectEl) selectEl.value = wifiId;
+        analyzeWifiDeep();
     }
 
-    function closeSandbox() { document.getElementById('sandboxModal').style.display = 'none'; }
-
-    // ================= 7. KIỂM TRA & MÔ PHỎNG LUỒNG WI-FI CHUYÊN SÂU =================
     async function analyzeWifiDeep() {
         const loc = document.getElementById('wifiLocation').value;
         const vpn = document.getElementById('vpnStatus').value;
         const box = document.getElementById('wifiResult');
+        if (!box) return;
 
-        box.innerHTML = `<span style="color:var(--accent);">⏳ Đang đo độ trễ định tuyến DNS & phân tích cấu trúc kết nối...</span>`;
+        box.innerHTML = `<span style="color:var(--accent);">⏳ Đang đo độ trễ định tuyến DNS & kiểm tra tình trạng kết nối...</span>`;
 
+        const isOnline = navigator.onLine;
         const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        const netType = conn ? `${(conn.effectiveType || '4g').toUpperCase()} (RTT ~${conn.rtt || 50}ms)` : 'Tiêu chuẩn';
+        const netType = conn ? `${(conn.effectiveType || '4g').toUpperCase()} (${conn.downlink || '?'} Mbps • RTT ~${conn.rtt || 50}ms)` : 'Tiêu chuẩn';
+        const isHttps = window.location.protocol === 'https:';
 
         let dnsLatency = "N/A";
         try {
             const t0 = performance.now();
             await fetch('https://1.1.1.1/cdn-cgi/trace', { mode: 'no-cors', cache: 'no-store' });
             dnsLatency = Math.round(performance.now() - t0) + " ms";
-        } catch (e) { dnsLatency = "Bị chặn / Ngoại tuyến"; }
+        } catch (e) {
+            dnsLatency = "Bị chặn / Ngoại tuyến";
+        }
 
         let statusBadge = "", borderCol = "", flowDiagram = "", techExplain = "";
 
-        if (loc === 'captive_social') {
+        if (loc === 'current_live') {
+            if (!isOnline) {
+                statusBadge = `<span class="badge b-warn">📴 THIẾT BỊ ĐANG NGOẠI TUYẾN</span>`;
+                borderCol = "var(--warn)";
+                flowDiagram = `📱 Thiết bị ➔ ❌ Chưa có kết nối Internet`;
+                techExplain = `Thiết bị hiện đang ngắt kết nối mạng (hoặc đang bật Chế độ Máy bay để cô lập mã độc).`;
+            } else if (vpn === 'yes') {
+                statusBadge = `<span class="badge b-safe">🛡️ KẾT NỐI HIỆN TẠI ĐƯỢC BẢO VỆ BỞI VPN</span>`;
+                borderCol = "var(--safe)";
+                flowDiagram = `📱 Thiết bị ➔ 🔒 [Đường hầm VPN mã hóa] ➔ 🌐 Internet (${dnsLatency})`;
+                techExplain = `Đường truyền hiện tại của bạn đang đi qua kênh mã hóa an toàn, ngăn chặn nghe lén nội mạng.`;
+            } else if (isHttps) {
+                statusBadge = `<span class="badge b-safe">✅ MẠNG ĐANG DÙNG ỔN ĐỊNH & MÃ HÓA HTTPS</span>`;
+                borderCol = "var(--safe)";
+                flowDiagram = `📱 Thiết bị ➔ 🔐 Phiên TLS/HTTPS ➔ 🌐 DNS 1.1.1.1 (${dnsLatency})`;
+                techExplain = `Kết nối hiện tại có độ trễ DNS <b>${dnsLatency}</b>, không phát hiện dấu hiệu bị chặn phân giải tên miền. Nếu đang dùng Wi-Fi công cộng, hãy hạn chế đăng nhập ngân hàng.`;
+            } else {
+                statusBadge = `<span class="badge b-warn">⚠️ PHIÊN TRUY CẬP CHƯA MÃ HÓA HTTPS</span>`;
+                borderCol = "var(--warn)";
+                flowDiagram = `📱 Thiết bị ➔ 🔓 Kết nối HTTP ➔ 🌐 Mạng cục bộ`;
+                techExplain = `Trang hiện tại chạy qua giao thức chưa mã hóa. Không nhập mật khẩu nhạy cảm trên các trang HTTP.`;
+            }
+        } else if (loc === 'captive_social') {
             statusBadge = `<span class="badge b-danger">🚨 NGUY HIỂM CỰC CAO • BẪY CAPTIVE PORTAL</span>`;
             borderCol = "var(--danger)";
             flowDiagram = `📱 Thiết bị ➔ 👿 Trang chào giả mạo ➔ 🏴‍☠️ Thu thập Mật khẩu & OTP`;
@@ -1731,16 +1897,16 @@
         box.innerHTML = `
             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px; margin-bottom:8px;">
                 ${statusBadge}
-                <span style="font-size:0.76rem; color:var(--text-muted);">Ping DNS: <b>${dnsLatency}</b> | Mạng: <b>${netType}</b></span>
+                <span style="font-size:0.75rem; color:var(--text-muted);">Ping DNS: <b>${dnsLatency}</b> | Đường truyền: <b>${netType}</b></span>
             </div>
-            <div style="background:var(--bg-card); border:1px dashed var(--border); padding:8px 10px; border-radius:8px; font-family:monospace; font-size:0.79rem; margin-bottom:8px; text-align:center;">
+            <div style="background:var(--bg-card); border:1px dashed var(--border); padding:8px 10px; border-radius:8px; font-family:monospace; font-size:0.78rem; margin-bottom:8px; text-align:center;">
                 ${flowDiagram}
             </div>
-            <p style="font-size:0.85rem; line-height:1.45;">${techExplain}</p>
+            <p style="font-size:0.84rem; line-height:1.45;">${techExplain}</p>
         `;
     }
 
-    // ================= 8. KỊCH BẢN & ĐẤU TRƯỜNG 3 TẦNG =================
+    // ================= 7. KỊCH BẢN & ĐẤU TRƯỜNG 3 TẦNG =================
     const visualScenes = {
         call: { device: "📞 Cuộc gọi số lạ", signal: "⚠️ Giả mạo", svg: `<svg width="84" height="74" viewBox="0 0 90 80" fill="none"><rect x="27" y="6" width="36" height="68" rx="7" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5"/><circle cx="45" cy="28" r="9" fill="#f59e0b"/><path d="M32 48C32 41 58 41 58 48" stroke="#f8fafc" stroke-width="2.5" stroke-linecap="round"/><circle cx="66" cy="18" r="10" fill="#f43f5e"/><text x="63" y="22" fill="#fff" font-size="13" font-weight="bold">!</text></svg>`, caption: "Số lạ tự xưng shipper / cán bộ yêu cầu chuyển khoản gấp.", tag: "+84 9xx.xxx.xxx • Yêu cầu chuyển phí", safe: false },
         sms_apk: { device: "📲 Tin nhắn SMS / Zalo", signal: "🚨 Tệp .APK", svg: `<svg width="84" height="74" viewBox="0 0 90 80" fill="none"><rect x="20" y="12" width="50" height="56" rx="8" fill="#0f172a" stroke="#f43f5e" stroke-width="2.5"/><path d="M45 24V44M37 37L45 45L53 37" stroke="#f43f5e" stroke-width="3" stroke-linecap="round"/><rect x="29" y="51" width="32" height="10" rx="3" fill="#f43f5e"/><text x="34" y="59" fill="#fff" font-size="8" font-weight="bold">.APK</text></svg>`, caption: "Tin nhắn đính kèm tệp cài đặt ngoài kho ứng dụng.", tag: "File: DichVuCong_Update_v2.apk", safe: false },
@@ -1894,7 +2060,7 @@
     }
     function jumpNextUnlockedTier() { if (currentTier < 3 && unlockedLevel >= currentTier + 1) tryStartTier(currentTier + 1); }
 
-    // ================= 9. TRỢ LÝ AI & ĐỒNG HỒ SINH HỌC NGÀY / ĐÊM =================
+    // ================= 8. TRỢ LÝ AI & ĐỒNG HỒ SINH HỌC NGÀY / ĐÊM =================
     let savedGeminiKey = '';
     try { savedGeminiKey = localStorage.getItem('cyberguard_gemini_key') || ''; } catch (e) {}
 
@@ -2007,6 +2173,8 @@
     syncSolarDefenseMode();
     updateTierCardsUI();
     renderCyberNews('all');
+    refreshWifiRadarTable();
+    analyzeWifiDeep();
     setInterval(syncSolarDefenseMode, 1000);
 </script>
 </body>
