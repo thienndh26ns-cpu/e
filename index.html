@@ -8,343 +8,97 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
-       <!-- ================= BẮT ĐẦU PHẦN INTRO KHÔI PHỤC ================= -->
-<style>
-  #cg-intro-screen {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at 16% 12%, #a8c4de 0%, #4b6e96 26%, #182c4e 60%, #0b162b 100%);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: #ffffff;
-    overflow: hidden;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
-  }
+        /* ================= 1. PHỔ NHIỆT ĐỘ MÀU TOÀN TRANG (NGÀY & ĐÊM) ================= */
+        :root {
+            --bg-sky-gradient: linear-gradient(155deg, rgba(224, 242, 254, 0.22) 0%, rgba(56, 189, 248, 0.16) 24%, #0b1936 58%, #020617 100%);
+            --bg-sidebar: rgba(7, 15, 34, 0.92);
+            --bg-card: rgba(12, 23, 48, 0.9);
+            --bg-sub: rgba(15, 29, 60, 0.82);
+            --bg-header: rgba(6, 13, 30, 0.94);
+            --border: rgba(125, 211, 252, 0.24);
+            --text-main: #f0f9ff;
+            --text-muted: #93c5fd;
+            --accent: #38bdf8;
+            --accent-2: #818cf8;
+            --safe: #10b981; --warn: #f59e0b; --danger: #f43f5e;
+            --shadow: 0 8px 26px rgba(2, 6, 23, 0.55);
+            --sidebar-w: 250px;
+        }
 
-  #cg-intro-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-  }
+        body.day-theme {
+            --bg-sky-gradient: linear-gradient(145deg, #f0f2f5 0%, #fffbeb 40%, #fed7aa 80%, #fecaca 100%);
+            --bg-sidebar: rgba(255, 255, 255, 0.94);
+            --bg-card: rgba(255, 255, 255, 0.96);
+            --bg-sub: rgba(248, 250, 252, 0.95);
+            --bg-header: rgba(255, 255, 255, 0.96);
+            --border: rgba(203, 213, 225, 0.85);
+            --text-main: #1c1e21;
+            --text-muted: #65676b;
+            --accent: #0866ff;
+            --accent-2: #7c3aed;
+            --safe: #059669; --warn: #d97706; --danger: #dc2626;
+            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
 
-  /* Các ngôi sao nhỏ trên bầu trời */
-  .cg-star {
-    position: absolute;
-    background: #ffffff;
-    border-radius: 50%;
-    opacity: 0.75;
-    animation: cgTwinkle 3s infinite ease-in-out alternate;
-  }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s ease; }
+        body {
+            background: var(--bg-sky-gradient) !important;
+            background-attachment: fixed !important;
+            color: var(--text-main);
+            line-height: 1.55;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-  /* Khung sân khấu đồ họa phía trên */
-  .cg-stage {
-    position: relative;
-    width: min(680px, 94vw);
-    height: 290px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 22px;
-  }
+        /* ================= 2. INTRO BẦU TRỜI, MÂY, SAO & THÁP CANH ================= */
+        #welcomeScreen { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px; overflow: hidden; }
+        .sky-horizon-backdrop {
+            position: absolute; inset: 0; z-index: 0; pointer-events: none;
+            background: radial-gradient(circle at 84% 10%, rgba(224, 242, 254, 0.32) 0%, rgba(56, 189, 248, 0.14) 30%, transparent 65%);
+        }
+        body.day-theme .sky-horizon-backdrop {
+            background: radial-gradient(circle at 16% 9%, rgba(255, 255, 255, 0.95) 0%, rgba(254, 215, 170, 0.45) 38%, rgba(254, 202, 202, 0.35) 75%, transparent 100%);
+        }
+        .night-stars-layer {
+            position: absolute; inset: 0; z-index: 0; pointer-events: none;
+            background-image:
+                radial-gradient(1.5px 1.5px at 12% 18%, #ffffff 90%, transparent),
+                radial-gradient(2px 2px at 26% 11%, #bae6fd 90%, transparent),
+                radial-gradient(1.2px 1.2px at 38% 24%, #ffffff 90%, transparent),
+                radial-gradient(1.8px 1.8px at 54% 9%, #e0f2fe 90%, transparent),
+                radial-gradient(1.3px 1.3px at 68% 21%, #ffffff 90%, transparent),
+                radial-gradient(2px 2px at 81% 15%, #fde047 90%, transparent),
+                radial-gradient(1.5px 1.5px at 91% 28%, #ffffff 90%, transparent);
+            animation: starTwinkle 4s ease-in-out infinite alternate;
+        }
+        body.day-theme .night-stars-layer { opacity: 0; }
+        @keyframes starTwinkle { 0% { opacity: 0.55; } 100% { opacity: 1; } }
 
-  .cg-scene-svg {
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
+        .distant-celestial {
+            position: absolute; top: 9%; right: 16%; width: 42px; height: 42px; border-radius: 50%; z-index: 1;
+            background: radial-gradient(circle at 35% 35%, #f8fafc 20%, #cbd5e1 75%, #94a3b8 100%);
+            box-shadow: 0 0 28px rgba(226, 232, 240, 0.65), 0 0 60px rgba(56, 189, 248, 0.25);
+        }
+        body.day-theme .distant-celestial {
+            top: 8%; left: 16%; right: auto; width: 46px; height: 46px;
+            background: radial-gradient(circle, #ffffff 15%, #fef08a 55%, #f59e0b 100%);
+            box-shadow: 0 0 40px #fbbf24, 0 0 90px rgba(245, 158, 11, 0.65);
+        }
 
-  .cg-drone-float {
-    animation: cgFloat 3.4s ease-in-out infinite;
-  }
+        .tactical-stage { position: relative; width: 360px; max-width: 94vw; height: 220px; margin: 0 auto 12px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 2; }
+        .watchtower-wrap { position: relative; z-index: 3; width: 92px; height: 105px; margin-bottom: -14px; opacity: 0; animation: towerRise 0.8s ease-out 0.1s forwards; }
+        .shield-svg-wrap { position: relative; z-index: 4; width: 112px; height: 120px; opacity: 0; animation: shieldPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
+        @keyframes towerRise { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes shieldPop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
 
-  .cg-drone-float-delay {
-    animation: cgFloat 3.8s ease-in-out 1.2s infinite;
-  }
+        .welcome-content { position: relative; z-index: 5; max-width: 680px; }
+        .welcome-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px; border-radius: 999px; background: var(--bg-card); border: 1px solid var(--border); color: var(--accent); font-size: 0.82rem; font-weight: 700; margin-bottom: 10px; }
+        .welcome-title { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.6px; margin-bottom: 6px; }
+        .welcome-title span { background: linear-gradient(90deg, var(--accent), #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .welcome-sub { font-size: 0.96rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 20px; }
+        .start-btn { background: linear-gradient(135deg, #0866ff, #7c3aed); color: #fff; border: none; padding: 13px 34px; border-radius: 999px; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 10px 26px rgba(8, 102, 255, 0.38); }
+        .start-btn:hover { transform: translateY(-2px); }
 
-  .cg-shield-pulse {
-    animation: cgShieldHover 4s ease-in-out infinite;
-    transform-origin: 340px 125px;
-  }
-
-  /* Thanh đồng hồ & Chế độ Ban Đêm */
-  .cg-status-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 20px;
-    border-radius: 999px;
-    background: rgba(11, 21, 40, 0.85);
-    border: 1px solid rgba(56, 189, 248, 0.22);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-    font-size: 0.92rem;
-    font-weight: 600;
-    color: #38bdf8;
-    margin-bottom: 18px;
-    letter-spacing: 0.2px;
-  }
-
-  /* Tiêu đề gradient CyberGuard AI */
-  .cg-intro-title {
-    margin: 0 0 14px;
-    font-size: clamp(2.5rem, 6vw, 4rem);
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    background: linear-gradient(90deg, #38bdf8 0%, #818cf8 32%, #c084fc 58%, #f472b6 80%, #fb923c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    line-height: 1.15;
-  }
-
-  .cg-intro-desc {
-    max-width: 620px;
-    margin: 0 16px 30px;
-    text-align: center;
-    font-size: 1rem;
-    line-height: 1.6;
-    color: rgba(226, 232, 240, 0.85);
-  }
-
-  /* Nút Bắt đầu */
-  .cg-start-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 40px;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(90deg, #2563eb 0%, #7c3aed 52%, #f97316 100%);
-    color: #ffffff;
-    font-size: 1.08rem;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 10px 28px rgba(99, 102, 241, 0.45);
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-  }
-
-  .cg-start-btn:hover {
-    transform: translateY(-2px) scale(1.03);
-    box-shadow: 0 14px 34px rgba(124, 58, 237, 0.6);
-  }
-
-  .cg-start-btn:active {
-    transform: translateY(0) scale(0.99);
-  }
-
-  @keyframes cgTwinkle {
-    0% { opacity: 0.3; }
-    100% { opacity: 0.95; }
-  }
-
-  @keyframes cgFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-6px); }
-  }
-
-  @keyframes cgShieldHover {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-4px); }
-  }
-</style>
-
-<div id="cg-intro-screen">
-  <!-- Sao nền -->
-  <span class="cg-star" style="width:3px;height:3px;top:14%;left:20%;"></span>
-  <span class="cg-star" style="width:2px;height:2px;top:11%;left:68%;animation-delay:0.8s;"></span>
-  <span class="cg-star" style="width:3px;height:3px;top:18%;right:14%;animation-delay:1.5s;"></span>
-  <span class="cg-star" style="width:2px;height:2px;top:32%;left:12%;animation-delay:2.1s;"></span>
-
-  <!-- Sân khấu SVG: Đèn rọi, Khiên khóa vàng, 2 Tháp canh, 2 Drone, 2 Xe tuần tra -->
-  <div class="cg-stage">
-    <svg class="cg-scene-svg" viewBox="0 0 680 290" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <!-- Chùm ánh sáng trung tâm -->
-        <linearGradient id="centerBeamGrad" x1="340" y1="0" x2="340" y2="268" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#bae6fd" stop-opacity="0.16" />
-          <stop offset="65%" stop-color="#e0f2fe" stop-opacity="0.48" />
-          <stop offset="100%" stop-color="#fef9c3" stop-opacity="0.88" />
-        </linearGradient>
-
-        <!-- Tia quét từ Drone -->
-        <linearGradient id="droneBeamGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#fde047" stop-opacity="0.55" />
-          <stop offset="100%" stop-color="#fde047" stop-opacity="0" />
-        </linearGradient>
-
-        <!-- Nền khiên -->
-        <linearGradient id="shieldFillGrad" x1="340" y1="52" x2="340" y2="195" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#1e3a6e" />
-          <stop offset="100%" stop-color="#0b172e" />
-        </linearGradient>
-
-        <!-- Viền vàng khiên -->
-        <linearGradient id="shieldGoldStroke" x1="280" y1="52" x2="400" y2="195" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#fde047" />
-          <stop offset="50%" stop-color="#facc15" />
-          <stop offset="100%" stop-color="#f59e0b" />
-        </linearGradient>
-
-        <!-- Bóng đổ dưới mặt đất -->
-        <radialGradient id="groundShadowGrad" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#060d1a" stop-opacity="0.72" />
-          <stop offset="70%" stop-color="#060d1a" stop-opacity="0.28" />
-          <stop offset="100%" stop-color="#060d1a" stop-opacity="0" />
-        </radialGradient>
-
-        <!-- Đèn pha xe tuần tra -->
-        <linearGradient id="roverBeamLeft" x1="0%" y1="50%" x2="100%" y2="50%">
-          <stop offset="0%" stop-color="#fde047" stop-opacity="0.75" />
-          <stop offset="100%" stop-color="#fde047" stop-opacity="0" />
-        </linearGradient>
-        <linearGradient id="roverBeamRight" x1="100%" y1="50%" x2="0%" y2="50%">
-          <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.75" />
-          <stop offset="100%" stop-color="#e0f2fe" stop-opacity="0" />
-        </linearGradient>
-      </defs>
-
-      <!-- Chùm sáng hình thang trung tâm -->
-      <polygon points="185,0 495,0 442,268 238,268" fill="url(#centerBeamGrad)" />
-
-      <!-- Đường chân trời mặt đất -->
-      <line x1="60" y1="268" x2="620" y2="268" stroke="rgba(255,255,255,0.16)" stroke-width="1.2" />
-
-      <!-- Bóng elip dưới khiên -->
-      <ellipse cx="325" cy="248" rx="68" ry="9" fill="url(#groundShadowGrad)" />
-
-      <!-- Drone bên trái -->
-      <g class="cg-drone-float">
-        <polygon points="175,88 153,165 197,165" fill="url(#droneBeamGrad)" />
-        <ellipse cx="175" cy="84" rx="16" ry="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2" />
-        <path d="M167 82 Q175 74 183 82" fill="#334155" stroke="#38bdf8" stroke-width="1" />
-        <circle cx="175" cy="84" r="2.2" fill="#facc15" />
-      </g>
-
-      <!-- Drone bên phải -->
-      <g class="cg-drone-float-delay">
-        <polygon points="498,52 474,138 522,138" fill="url(#droneBeamGrad)" />
-        <ellipse cx="498" cy="48" rx="18" ry="5" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2" />
-        <path d="M489 46 Q498 37 507 46" fill="#334155" stroke="#38bdf8" stroke-width="1" />
-        <circle cx="498" cy="48" r="2.5" fill="#f43f5e" />
-      </g>
-
-      <!-- Tháp canh bên trái -->
-      <g>
-        <line x1="126" y1="184" x2="120" y2="268" stroke="#475569" stroke-width="2" />
-        <line x1="148" y1="184" x2="154" y2="268" stroke="#475569" stroke-width="2" />
-        <line x1="124" y1="205" x2="150" y2="205" stroke="#475569" stroke-width="1.5" />
-        <line x1="123" y1="226" x2="151" y2="226" stroke="#475569" stroke-width="1.5" />
-        <line x1="121" y1="247" x2="153" y2="247" stroke="#475569" stroke-width="1.5" />
-        <rect x="123" y="168" width="28" height="16" rx="2" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
-        <polygon points="120,168 137,156 154,168" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
-        <circle cx="144" cy="176" r="2.6" fill="#fde047" />
-      </g>
-
-      <!-- Tháp canh bên phải -->
-      <g>
-        <line x1="532" y1="184" x2="526" y2="268" stroke="#475569" stroke-width="2" />
-        <line x1="554" y1="184" x2="560" y2="268" stroke="#475569" stroke-width="2" />
-        <line x1="530" y1="205" x2="556" y2="205" stroke="#475569" stroke-width="1.5" />
-        <line x1="529" y1="226" x2="557" y2="226" stroke="#475569" stroke-width="1.5" />
-        <line x1="527" y1="247" x2="559" y2="247" stroke="#475569" stroke-width="1.5" />
-        <rect x="529" y="168" width="28" height="16" rx="2" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
-        <polygon points="526,168 543,156 560,168" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
-        <circle cx="536" cy="176" r="2.6" fill="#fde047" />
-      </g>
-
-      <!-- Xe tuần tra mặt đất bên trái -->
-      <g>
-        <polygon points="262,265 320,261 320,271 262,268" fill="url(#roverBeamLeft)" />
-        <rect x="232" y="262" width="30" height="7" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="1.2" />
-        <rect x="237" y="258" width="18" height="4" rx="1.5" fill="#334155" stroke="#facc15" stroke-width="1" />
-      </g>
-
-      <!-- Xe tuần tra mặt đất bên phải -->
-      <g>
-        <polygon points="424,265 365,261 365,271 424,268" fill="url(#roverBeamRight)" />
-        <rect x="424" y="262" width="30" height="7" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="1.2" />
-        <rect x="431" y="258" width="18" height="4" rx="1.5" fill="#334155" stroke="#38bdf8" stroke-width="1" />
-      </g>
-
-      <!-- Khiên trung tâm viền vàng & Ổ khóa -->
-      <g class="cg-shield-pulse">
-        <path
-          d="M340 48 L398 72 V124 C398 164 373 192 340 206 C307 192 282 164 282 124 V72 L340 48 Z"
-          fill="url(#shieldFillGrad)"
-          stroke="url(#shieldGoldStroke)"
-          stroke-width="4.5"
-          stroke-linejoin="round"
-        />
-        <!-- Quai ổ khóa trắng -->
-        <path
-          d="M323 114 V101 C323 91.6 330.6 84 340 84 C349.4 84 357 91.6 357 101 V114"
-          stroke="#ffffff"
-          stroke-width="4.5"
-          stroke-linecap="round"
-        />
-        <!-- Thân ổ khóa viền vàng -->
-        <rect
-          x="315"
-          y="114"
-          width="50"
-          height="40"
-          rx="8"
-          fill="#0f1e38"
-          stroke="#facc15"
-          stroke-width="4"
-        />
-        <!-- Lỗ khóa vàng -->
-        <circle cx="340" cy="130" r="4.5" fill="#facc15" />
-        <path d="M340 133 L340 142" stroke="#facc15" stroke-width="4" stroke-linecap="round" />
-      </g>
-    </svg>
-  </div>
-
-  <!-- Đồng hồ thời gian thực & Chế độ Ban Đêm -->
-  <div class="cg-status-pill" id="cg-clock-pill">
-    <span>🌙</span>
-    <span id="cg-clock-text">19:43:49 • Chế độ Ban Đêm</span>
-  </div>
-
-  <!-- Tiêu đề & Mô tả -->
-  <h1 class="cg-intro-title">CyberGuard AI</h1>
-  <p class="cg-intro-desc">
-    Nền tảng kiểm tra mã độc thời gian thực, giám sát an toàn Wi-Fi, phân tích hình ảnh lừa đảo và huấn luyện phản xạ an ninh mạng.
-  </p>
-
-  <!-- Nút Bắt đầu -->
-  <button class="cg-start-btn" onclick="closeCyberGuardIntro()">
-    <span>🚀</span>
-    <span>Bắt đầu</span>
-  </button>
-</div>
-
-<script>
-  function updateCyberGuardClock() {
-    const now = new Date();
-    const hours = now.getHours();
-    const timeStr = now.toLocaleTimeString('vi-VN', { hour12: false });
-    const isNight = hours >= 18 || hours < 6;
-    const pill = document.getElementById('cg-clock-pill');
-    if (pill) {
-      pill.innerHTML = `<span>${isNight ? '🌙' : '☀️'}</span><span>${timeStr} • ${isNight ? 'Chế độ Ban Đêm' : 'Chế độ Ban Ngày'}</span>`;
-    }
-  }
-
-  updateCyberGuardClock();
-  setInterval(updateCyberGuardClock, 1000);
-
-  function closeCyberGuardIntro() {
-    const intro = document.getElementById('cg-intro-screen');
-    if (intro) {
-      intro.classList.add('hidden');
-    }
-  }
-</script>
-<!-- ================= KẾT THÚC PHẦN INTRO KHÔI PHỤC ================= -->
         /* ================= 3. MÀN HÌNH PHÂN LUỒNG 5 GIÂY ================= */
         #triageScreen { display: none; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
         .triage-card { width: 640px; max-width: 96vw; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 26px 24px; box-shadow: var(--shadow); }
