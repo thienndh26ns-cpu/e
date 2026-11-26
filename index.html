@@ -2572,13 +2572,13 @@
     </div>
 
     <div class="cgai-chips">
-      <button type="button" class="cgai-chip" onclick="askQuick('Công an gọi bảo tài khoản VNeID bị lỗi, gửi link http://dichvucong-vneid.xyz/capnhat.apk bắt tải về cập nhật gấp.')">📲 Giả mạo VNeID / Tệp .APK</button>
-      <button type="button" class="cgai-chip" onclick="askQuick('Có người nhắn Zalo rủ làm cộng tác viên online nghe nhạc nhận hoa hồng 15%, nạp 500k sẽ hoàn lại 600k ngay.')">💸 Tuyển CTV hoàn tiền</button>
-      <button type="button" class="cgai-chip" onclick="askQuick('Người thân gọi video trên Messenger hình hơi mờ, nói đang kẹt tiền viện phí nhờ chuyển khoản gấp vào số tài khoản lạ.')">🎭 Video Call mượn tiền gấp</button>
-      <button type="button" class="cgai-chip" onclick="askQuick('Shipper gọi báo mình chuyển nhầm tiền vào tài khoản và gửi link http://giaohang-hoantien.top kêu bấm vào hủy gói cước.')">📦 Giả danh Shipper / Chuyển nhầm</button>
+      <button type="button" class="cgai-chip" onclick="cgaiAskQuick('Công an gọi bảo tài khoản VNeID bị lỗi, gửi link http://dichvucong-vneid.xyz/capnhat.apk bắt tải về cập nhật gấp.')">📲 Giả mạo VNeID / Tệp .APK</button>
+      <button type="button" class="cgai-chip" onclick="cgaiAskQuick('Có người nhắn Zalo rủ làm cộng tác viên online nghe nhạc nhận hoa hồng 15%, nạp 500k sẽ hoàn lại 600k ngay.')">💸 Tuyển CTV hoàn tiền</button>
+      <button type="button" class="cgai-chip" onclick="cgaiAskQuick('Người thân gọi video trên Messenger hình hơi mờ, nói đang kẹt tiền viện phí nhờ chuyển khoản gấp vào số tài khoản lạ.')">🎭 Video Call mượn tiền gấp</button>
+      <button type="button" class="cgai-chip" onclick="cgaiAskQuick('Shipper gọi báo mình chuyển nhầm tiền vào tài khoản và gửi link http://giaohang-hoantien.top kêu bấm vào hủy gói cước.')">📦 Giả danh Shipper / Chuyển nhầm</button>
     </div>
 
-    <div class="cgai-messages" id="chatMessages"></div>
+    <div class="cgai-messages" id="chatMessages" style="height:auto;min-height:210px;max-height:430px;"></div>
 
     <div class="cgai-preview-bar" id="cgaiPreviewBar">
       <img id="cgaiPreviewImg" src="" alt="Ảnh chụp màn hình đính kèm" />
@@ -2592,8 +2592,8 @@
     <div class="cgai-input-bar">
       <input type="file" id="cgaiFileInput" accept="image/*" style="display:none;" onchange="cgaiHandleFileSelect(event)" />
       <button type="button" class="cgai-upload-btn" onclick="document.getElementById('cgaiFileInput').click()">📎 Tải / Dán Ảnh</button>
-      <input type="text" id="chatInput" placeholder="Dán tin nhắn nghi ngờ, link lạ hoặc nhấn Ctrl+V để dán ảnh chụp màn hình..." onkeydown="if(event.key==='Enter') sendChat()" />
-      <button type="button" class="cgai-send-btn" id="cgaiSendBtn" onclick="sendChat()">🚀 Phân Tích</button>
+      <input type="text" id="chatInput" placeholder="Dán tin nhắn nghi ngờ, link lạ hoặc nhấn Ctrl+V để dán ảnh chụp màn hình..." onkeydown="if(event.key==='Enter') cgaiSendChat()" />
+      <button type="button" class="cgai-send-btn" id="cgaiSendBtn" onclick="cgaiSendChat()">🚀 Phân Tích</button>
     </div>
   </div>
 </div>
@@ -2816,15 +2816,15 @@
     cgaiRenderWelcome();
   }
 
-  function askQuick(text) {
+  function cgaiAskQuick(text) {
     const input = document.getElementById("chatInput");
     if (input) {
       input.value = text;
-      sendChat();
+      cgaiSendChat();
     }
   }
 
-  async function sendChat() {
+  async function cgaiSendChat() {
     const input = document.getElementById("chatInput");
     const box = document.getElementById("chatMessages");
     const btn = document.getElementById("cgaiSendBtn");
@@ -2833,7 +2833,10 @@
     const text = input.value.trim();
     const imgPayload = cgaiAttachedImage ? { ...cgaiAttachedImage } : null;
 
-    if (!text && !imgPayload) return;
+    if (!text && !imgPayload) {
+      input.focus();
+      return;
+    }
 
     const userBubble = document.createElement("div");
     userBubble.className = "cgai-msg-user";
@@ -2885,6 +2888,8 @@
   }
 
   window.addEventListener("DOMContentLoaded", () => {
+    window.sendChat = cgaiSendChat;
+    window.askQuick = cgaiAskQuick;
     const box = document.getElementById("chatMessages");
     if (!box) return;
     try {
