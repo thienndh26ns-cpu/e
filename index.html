@@ -891,6 +891,275 @@
   }
 </script>
 <!-- ================= KẾT THÚC HƯỚNG 1 (NÂNG CẤP) ================= -->
+                <!-- ================= HƯỚNG 2 (BẢN GỌN) + HƯỚNG 3 (TIN TỰ ĐỘNG) ================= -->
+<style>
+  .cg-compact-vec {
+    background: rgba(11, 21, 40, 0.94);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin: 14px 0;
+  }
+
+  .cg-compact-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .cg-compact-title {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #38bdf8;
+  }
+
+  .cg-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 10px;
+  }
+
+  .cg-cvec-item {
+    background: rgba(6, 13, 26, 0.84);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 11px;
+    padding: 11px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .cg-cvec-item:hover {
+    border-color: rgba(56, 189, 248, 0.42);
+  }
+
+  .cg-cvec-name {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 4px;
+  }
+
+  .cg-cvec-desc {
+    font-size: 0.76rem;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  .cg-cvec-btn {
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 7px;
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    background: rgba(56, 189, 248, 0.12);
+    color: #38bdf8;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cg-cvec-btn:hover {
+    background: rgba(56, 189, 248, 0.24);
+    color: #fff;
+  }
+
+  .cg-live-feed-box {
+    margin: 14px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cg-live-news-card {
+    background: rgba(11, 21, 40, 0.92);
+    border: 1px solid rgba(56, 189, 248, 0.24);
+    border-left: 3px solid #38bdf8;
+    border-radius: 12px;
+    padding: 13px 15px;
+  }
+
+  .cg-live-news-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 0.72rem;
+  }
+
+  .cg-live-news-pill {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  .cg-live-news-title {
+    margin: 0 0 6px;
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #f8fafc;
+    line-height: 1.4;
+  }
+
+  .cg-live-news-desc {
+    margin: 0 0 10px;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+  }
+
+  .cg-live-news-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .cg-news-ai-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    background: rgba(16, 185, 129, 0.14);
+    color: #34d399;
+    font-size: 0.77rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cg-news-ai-btn:hover {
+    background: rgba(16, 185, 129, 0.25);
+  }
+
+  .cg-news-link {
+    font-size: 0.76rem;
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 5px 8px;
+  }
+
+  .cg-news-link:hover {
+    color: #38bdf8;
+    text-decoration: underline;
+  }
+</style>
+
+<!-- HƯỚNG 2: 4 HÌNH THỨC XÂM NHẬP (BẢN RÚT GỌN) -->
+<div class="cg-compact-vec">
+  <div class="cg-compact-head">
+    <h3 class="cg-compact-title">🧬 Nhận Diện Nhanh 4 Hình Thức Xâm Nhập &amp; Kiểm Tra Ngay</h3>
+    <span style="font-size:0.74rem;color:#94a3b8;">Bấm nút để mở công cụ rà soát tương ứng</span>
+  </div>
+  <div class="cg-compact-grid">
+    <div class="cg-cvec-item">
+      <div>
+        <div class="cg-cvec-name">1. Tệp .APK Giả Mạo VNeID</div>
+        <div class="cg-cvec-desc">Chiếm quyền Trợ năng (Accessibility) để đọc màn hình &amp; rút tiền ngầm.</div>
+      </div>
+      <button class="cg-cvec-btn" onclick="cgJumpToTool('Quét Link & Mã Độc')">🛡️ Quét Link tải nghi ngờ ➔</button>
+    </div>
+
+    <div class="cg-cvec-item">
+      <div>
+        <div class="cg-cvec-name">2. Đánh Cắp Session Cookie</div>
+        <div class="cg-cvec-desc">Mã độc ẩn trong phần mềm crack hút phiên đăng nhập vượt qua 2FA.</div>
+      </div>
+      <button class="cg-cvec-btn" onclick="cgJumpToTool('Mật Khẩu & Giờ Độc')">🔐 Kiểm tra bảo mật tài khoản ➔</button>
+    </div>
+
+    <div class="cg-cvec-item">
+      <div>
+        <div class="cg-cvec-name">3. Wi-Fi Giả &amp; Proxy MITM</div>
+        <div class="cg-cvec-desc">Trạm phát Wi-Fi công cộng nghe lén dữ liệu hoặc tráo đổi DNS.</div>
+      </div>
+      <button class="cg-cvec-btn" onclick="cgJumpToTool('Quét Mạng Wi-Fi')">📡 Soi tầng mã hóa Wi-Fi ➔</button>
+    </div>
+
+    <div class="cg-cvec-item">
+      <div>
+        <div class="cg-cvec-name">4. Phishing &amp; Deepfake AI</div>
+        <div class="cg-cvec-desc">Giả giọng nói/khuôn mặt người thân hoặc tên miền ngân hàng gần giống.</div>
+      </div>
+      <button class="cg-cvec-btn" onclick="cgJumpToTool('Trợ Lý AI')">🤖 Hỏi Trợ Lý AI phân tích ➔</button>
+    </div>
+  </div>
+</div>
+
+<!-- HƯỚNG 3: LUỒNG TIN CẢNH BÁO TỰ ĐỘNG TỪ WORKER -->
+<div class="cg-live-feed-box" id="cgLiveNewsFeedContainer"></div>
+
+<script>
+  function cgJumpToTool(tabLabel, prefillText) {
+    const candidates = Array.from(
+      document.querySelectorAll("button, a, .nav-item, .tab-btn, [onclick]")
+    );
+    const target = candidates.find((el) => {
+      const txt = (el.textContent || "").trim();
+      return txt.includes(tabLabel) && !el.classList.contains("cg-cvec-btn") && !el.classList.contains("cg-news-ai-btn");
+    });
+
+    if (target) {
+      target.click();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (prefillText) {
+        setTimeout(() => {
+          const aiInput = document.querySelector("#aiChatInput, #chatInput, textarea[placeholder*='hỏi'], input[placeholder*='hỏi']");
+          if (aiInput) {
+            aiInput.value = prefillText;
+            aiInput.focus();
+          }
+        }, 150);
+      }
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    setTimeout(renderLiveNewsFromWorker, 600);
+  });
+
+  async function renderLiveNewsFromWorker() {
+    const container = document.getElementById("cgLiveNewsFeedContainer");
+    if (!container) return;
+
+    try {
+      const res = await fetch(`https://cyberguard-scanner.thienndh-26ns.workers.dev/threat-stats?t=${Date.now()}`);
+      const data = await res.json();
+      if (!data.ok || !Array.isArray(data.latestNews) || data.latestNews.length === 0) return;
+
+      container.innerHTML = data.latestNews
+        .slice(0, 4)
+        .map((item) => {
+          const safeTitle = (item.title || "").replace(/"/g, "&quot;");
+          const shortDesc = (item.desc || "").slice(0, 175) + ((item.desc || "").length > 175 ? "..." : "");
+          return `
+            <div class="cg-live-news-card">
+              <div class="cg-live-news-top">
+                <span class="cg-live-news-pill">📡 TIN CẢNH BÁO TỰ ĐỘNG • ${item.source || "VnExpress"}</span>
+                <span style="color:#94a3b8;">${item.pubDate || "Cập nhật hôm nay"}</span>
+              </div>
+              <h4 class="cg-live-news-title">${item.title}</h4>
+              <p class="cg-live-news-desc">${shortDesc}</p>
+              <div class="cg-live-news-actions">
+                <button class="cg-news-ai-btn" onclick="cgJumpToTool('Trợ Lý AI', 'Hãy phân tích nguy cơ và cách phòng tránh tình huống này: ${safeTitle}')">
+                  🤖 Nhờ CyberGuard AI phân tích cách phòng tránh ➔
+                </button>
+                ${item.link ? `<a class="cg-news-link" href="${item.link}" target="_blank" rel="noopener">↗ Đọc bản tin gốc</a>` : ""}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    } catch (_) {}
+  }
+</script>
+<!-- ================= KẾT THÚC HƯỚNG 2 & HƯỚNG 3 ================= -->
                 <!-- Thanh lọc bài viết kiểu Facebook -->
                 <div class="card" style="padding:12px 16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
@@ -1505,7 +1774,31 @@
                 </div>
             </div>
         </div>
-
+<!-- ================= HƯỚNG 4: CỔNG TRA CỨU & BÁO CÁO CHÍNH THỐNG ================= -->
+<div style="background:rgba(11,21,40,0.92);border:1px solid rgba(56,189,248,0.22);border-radius:12px;padding:13px 16px;margin:16px 0 10px;">
+  <div style="font-size:0.84rem;font-weight:700;color:#38bdf8;margin-bottom:10px;">
+    🏛️ Cổng Tra Cứu &amp; Tiếp Nhận Báo Cáo Lừa Đảo Chính Thống Tại Việt Nam
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px;font-size:0.78rem;">
+    <a href="https://canhbao.khonggianmang.vn" target="_blank" rel="noopener" style="background:rgba(6,13,26,0.8);border:1px solid rgba(148,163,184,0.18);border-radius:8px;padding:9px 11px;color:#e2e8f0;text-decoration:none;">
+      <strong style="color:#34d399;display:block;">Cổng Cảnh báo NCSC ↗</strong>
+      <span style="color:#94a3b8;font-size:0.72rem;">canhbao.khonggianmang.vn</span>
+    </a>
+    <a href="https://tinnhiemmang.vn" target="_blank" rel="noopener" style="background:rgba(6,13,26,0.8);border:1px solid rgba(148,163,184,0.18);border-radius:8px;padding:9px 11px;color:#e2e8f0;text-decoration:none;">
+      <strong style="color:#38bdf8;display:block;">Tín Nhiệm Mạng QG ↗</strong>
+      <span style="color:#94a3b8;font-size:0.72rem;">Tra cứu web chính thống</span>
+    </a>
+    <a href="https://nca.org.vn" target="_blank" rel="noopener" style="background:rgba(6,13,26,0.8);border:1px solid rgba(148,163,184,0.18);border-radius:8px;padding:9px 11px;color:#e2e8f0;text-decoration:none;">
+      <strong style="color:#fbbf24;display:block;">Hiệp hội An ninh mạng ↗</strong>
+      <span style="color:#94a3b8;font-size:0.72rem;">nca.org.vn • Báo cáo &amp; khuyến nghị</span>
+    </a>
+    <a href="https://chongluadao.vn" target="_blank" rel="noopener" style="background:rgba(6,13,26,0.8);border:1px solid rgba(148,163,184,0.18);border-radius:8px;padding:9px 11px;color:#e2e8f0;text-decoration:none;">
+      <strong style="color:#fb7185;display:block;">Dự án Chống Lừa Đảo ↗</strong>
+      <span style="color:#94a3b8;font-size:0.72rem;">chongluadao.vn • Kiểm tra cộng đồng</span>
+    </a>
+  </div>
+</div>
+<!-- ================= KẾT THÚC HƯỚNG 4 ================= -->
         <footer>CyberGuard AI • Khoa Kỹ thuật Máy tính & Điện tử (VKU) • GVHD: TS. Hoàng Hữu Đức</footer>
     </main>
 
