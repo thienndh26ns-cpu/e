@@ -2263,41 +2263,642 @@
         <!-- ==================== TRANG 5: TRỢ LÝ AI AN NINH MẠNG ==================== -->
         <div id="aiChatTab" class="tab-content">
             <div class="fb-feed-wrap">
-                <div class="card" style="border-top: 3px solid #a855f7;">
-                    <div class="section-header-box">
-                        <div class="section-big-logo" style="background:rgba(168,85,247,0.18);">🤖</div>
-                        <div>
-                            <h2>Trợ Lý AI Chuyên Gia An Ninh Mạng</h2>
-                            <p style="font-size:0.78rem; color:var(--text-muted);">Hỗ trợ phân tích tin nhắn nghi ngờ, kịch bản lừa đảo & tư vấn phòng vệ</p>
-                        </div>
-                    </div>
+               <!-- ================= MODULE TRỢ LÝ AI AN NINH MẠNG TOÀN DIỆN ================= -->
+<style>
+  .cgai-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #e2e8f0;
+  }
 
-                    <div class="ai-engine-bar">
-                        <span>⚡ <strong>Chế độ AI Hybrid (Gemini API / Offline NLP)</strong></span>
-                        <button class="sample-btn" onclick="toggleApiKeyPanel()">🔑 Cài đặt API Key</button>
-                    </div>
-                    <div id="apiKeyPanel" style="display:none; background:var(--bg-sub); padding:12px; border-radius:10px; border:1px dashed #a855f7; margin-bottom:12px;">
-                        <div style="display:flex; gap:8px;">
-                            <input type="password" id="geminiKeyInput" style="margin-bottom:0;" placeholder="Dán Gemini API Key (AIzaSy...)">
-                            <button class="action-btn" onclick="saveGeminiKey()">Lưu</button>
-                        </div>
-                    </div>
+  .cgai-card {
+    background: rgba(11, 21, 40, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.26);
+    border-top: 3px solid #38bdf8;
+    border-radius: 14px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-                    <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px;">
-                        <button class="sample-btn" onclick="askQuick('Vừa lỡ bấm link lạ qua SMS thì làm sao?')">Bấm nhầm link</button>
-                        <button class="sample-btn" onclick="askQuick('Cơ chế đánh cắp Cookie vượt 2FA')">Cookie vượt 2FA</button>
-                        <button class="sample-btn" onclick="askQuick('Nhận diện cuộc gọi Deepfake')">Cuộc gọi Deepfake</button>
-                    </div>
+  .cgai-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    padding-bottom: 10px;
+  }
 
-                    <div class="chat-box" id="aiChatBox">
-                        <div class="msg msg-ai">Chào bạn! Hãy mô tả tình huống hoặc dán nội dung tin nhắn đáng ngờ để mình phân tích ngay nhé.</div>
-                    </div>
+  .cgai-title {
+    margin: 0 0 3px;
+    font-size: 1.08rem;
+    font-weight: 800;
+    color: #f8fafc;
+  }
 
-                    <div style="display:flex; gap:8px;">
-                        <input type="text" id="chatInput" style="margin-bottom:0;" placeholder="Nhập câu hỏi hoặc dán tin nhắn..." onkeypress="if(event.key==='Enter') sendChat()">
-                        <button class="action-btn" onclick="sendChat()">Gửi</button>
-                    </div>
-                </div>
+  .cgai-sub {
+    margin: 0;
+    font-size: 0.79rem;
+    color: #94a3b8;
+  }
+
+  .cgai-clear-btn {
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: #fda4af;
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cgai-clear-btn:hover {
+    background: rgba(244, 63, 94, 0.24);
+    color: #fff;
+  }
+
+  .cgai-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .cgai-chip {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    color: #7dd3fc;
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 0.77rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+
+  .cgai-chip:hover {
+    background: rgba(56, 189, 248, 0.24);
+    color: #fff;
+  }
+
+  .cgai-messages {
+    height: 390px;
+    overflow-y: auto;
+    background: rgba(6, 13, 26, 0.86);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .cgai-msg-user {
+    align-self: flex-end;
+    max-width: 82%;
+    background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 14px 14px 4px 14px;
+    font-size: 0.86rem;
+    line-height: 1.45;
+    word-break: break-word;
+  }
+
+  .cgai-msg-user img {
+    display: block;
+    max-width: 220px;
+    max-height: 160px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  .cgai-msg-bot {
+    align-self: flex-start;
+    width: 100%;
+    max-width: 94%;
+    background: rgba(15, 28, 52, 0.96);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 14px 14px 14px 4px;
+    padding: 13px 15px;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+
+  .cgai-risk-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .cgai-risk-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+  }
+
+  .cgai-meter-bg {
+    width: 100%;
+    height: 7px;
+    background: rgba(148, 163, 184, 0.16);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .cgai-meter-bar {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.35s ease;
+  }
+
+  .cgai-section-label {
+    font-size: 0.76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 9px 0 4px;
+  }
+
+  .cgai-list {
+    margin: 0;
+    padding-left: 18px;
+    color: #cbd5e1;
+    font-size: 0.82rem;
+  }
+
+  .cgai-list li {
+    margin-bottom: 4px;
+  }
+
+  .cgai-url-pill {
+    background: rgba(6, 13, 26, 0.88);
+    border: 1px solid rgba(244, 63, 94, 0.32);
+    border-radius: 8px;
+    padding: 7px 10px;
+    margin-top: 6px;
+    font-size: 0.78rem;
+  }
+
+  .cgai-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 11px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
+  }
+
+  .cgai-btn-copy {
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(52, 211, 153, 0.38);
+    color: #34d399;
+    border-radius: 8px;
+    padding: 6px 11px;
+    font-size: 0.77rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .cgai-btn-copy:hover {
+    background: rgba(16, 185, 129, 0.28);
+    color: #fff;
+  }
+
+  .cgai-btn-sos {
+    background: linear-gradient(90deg, #e11d48 0%, #f97316 100%);
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.77rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .cgai-preview-bar {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    background: rgba(6, 13, 26, 0.92);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 10px;
+    padding: 7px 10px;
+  }
+
+  .cgai-preview-bar img {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .cgai-input-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(6, 13, 26, 0.92);
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    border-radius: 11px;
+    padding: 6px 8px;
+  }
+
+  .cgai-upload-btn {
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+    border-radius: 8px;
+    padding: 8px 11px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .cgai-upload-btn:hover {
+    background: rgba(56, 189, 248, 0.26);
+    color: #fff;
+  }
+
+  #chatInput {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+    font-size: 0.88rem;
+    padding: 8px 4px !important;
+    margin: 0 !important;
+    outline: none;
+  }
+
+  .cgai-send-btn {
+    background: linear-gradient(90deg, #0284c7 0%, #10b981 100%);
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .cgai-send-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+</style>
+
+<div class="cgai-wrap">
+  <div class="cgai-card">
+    <div class="cgai-header">
+      <div>
+        <h2 class="cgai-title">🤖 Trợ Lý AI Phân Tích Rủi Ro Toàn Diện (Co-Pilot)</h2>
+        <p class="cgai-sub">Dán tin nhắn nghi ngờ, đường link lạ hoặc <strong>dán trực tiếp ảnh chụp màn hình (Ctrl+V)</strong> để AI bóc tách dấu hiệu lừa đảo.</p>
+      </div>
+      <button type="button" class="cgai-clear-btn" onclick="cgaiClearHistory()">🗑️ Xóa lịch sử</button>
+    </div>
+
+    <div class="cgai-chips">
+      <button type="button" class="cgai-chip" onclick="askQuick('Công an gọi bảo tài khoản VNeID bị lỗi, gửi link http://dichvucong-vneid.xyz/capnhat.apk bắt tải về cập nhật gấp.')">📲 Giả mạo VNeID / Tệp .APK</button>
+      <button type="button" class="cgai-chip" onclick="askQuick('Có người nhắn Zalo rủ làm cộng tác viên online nghe nhạc nhận hoa hồng 15%, nạp 500k sẽ hoàn lại 600k ngay.')">💸 Tuyển CTV hoàn tiền</button>
+      <button type="button" class="cgai-chip" onclick="askQuick('Người thân gọi video trên Messenger hình hơi mờ, nói đang kẹt tiền viện phí nhờ chuyển khoản gấp vào số tài khoản lạ.')">🎭 Video Call mượn tiền gấp</button>
+      <button type="button" class="cgai-chip" onclick="askQuick('Shipper gọi báo mình chuyển nhầm tiền vào tài khoản và gửi link http://giaohang-hoantien.top kêu bấm vào hủy gói cước.')">📦 Giả danh Shipper / Chuyển nhầm</button>
+    </div>
+
+    <div class="cgai-messages" id="chatMessages"></div>
+
+    <div class="cgai-preview-bar" id="cgaiPreviewBar">
+      <img id="cgaiPreviewImg" src="" alt="Ảnh chụp màn hình đính kèm" />
+      <div style="flex:1;font-size:0.79rem;color:#cbd5e1;">
+        <strong style="color:#38bdf8;display:block;">Đã đính kèm ảnh chụp màn hình</strong>
+        <span id="cgaiPreviewName">san-sang-phan-tich.jpg</span>
+      </div>
+      <button type="button" class="cgai-clear-btn" onclick="cgaiRemoveImage()">✕ Gỡ ảnh</button>
+    </div>
+
+    <div class="cgai-input-bar">
+      <input type="file" id="cgaiFileInput" accept="image/*" style="display:none;" onchange="cgaiHandleFileSelect(event)" />
+      <button type="button" class="cgai-upload-btn" onclick="document.getElementById('cgaiFileInput').click()">📎 Tải / Dán Ảnh</button>
+      <input type="text" id="chatInput" placeholder="Dán tin nhắn nghi ngờ, link lạ hoặc nhấn Ctrl+V để dán ảnh chụp màn hình..." onkeydown="if(event.key==='Enter') sendChat()" />
+      <button type="button" class="cgai-send-btn" id="cgaiSendBtn" onclick="sendChat()">🚀 Phân Tích</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CGAI_WORKER_URL = "https://cyberguard-scanner.thienndh-26ns.workers.dev";
+  const CGAI_HISTORY_KEY = "cyberguard_ai_chat_history_v1";
+  let cgaiAttachedImage = null; // { base64, mimeType, name }
+
+  function cgaiEscapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function cgaiResizeImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 1024;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxW) {
+            h = Math.round((h * maxW) / w);
+            w = maxW;
+          }
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+          resolve({
+            base64: dataUrl,
+            mimeType: "image/jpeg",
+            name: file.name || "anh-chup-man-hinh.jpg"
+          });
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function cgaiHandleFileSelect(event) {
+    const file = event.target?.files?.[0];
+    if (!file) return;
+    try {
+      cgaiAttachedImage = await cgaiResizeImageToBase64(file);
+      cgaiShowImagePreview();
+    } catch (_) {
+      alert("Không đọc được tệp ảnh này, vui lòng thử ảnh khác.");
+    }
+    event.target.value = "";
+  }
+
+  function cgaiShowImagePreview() {
+    const bar = document.getElementById("cgaiPreviewBar");
+    const imgEl = document.getElementById("cgaiPreviewImg");
+    const nameEl = document.getElementById("cgaiPreviewName");
+    if (!bar || !cgaiAttachedImage) return;
+    imgEl.src = cgaiAttachedImage.base64;
+    nameEl.textContent = cgaiAttachedImage.name;
+    bar.style.display = "flex";
+  }
+
+  function cgaiRemoveImage() {
+    cgaiAttachedImage = null;
+    const bar = document.getElementById("cgaiPreviewBar");
+    if (bar) bar.style.display = "none";
+  }
+
+  document.addEventListener("paste", async (event) => {
+    const chatTab = document.getElementById("aiChatTab");
+    if (!chatTab || window.getComputedStyle(chatTab).display === "none") return;
+    const items = event.clipboardData?.items || [];
+    for (const item of items) {
+      if (item.type && item.type.startsWith("image/")) {
+        const file = item.getAsFile();
+        if (file) {
+          cgaiAttachedImage = await cgaiResizeImageToBase64(file);
+          cgaiShowImagePreview();
+        }
+        break;
+      }
+    }
+  });
+
+  function cgaiOpenEmergencySos() {
+    const candidates = document.querySelectorAll("button, .nav-item, [onclick]");
+    for (const el of candidates) {
+      const txt = (el.textContent || "").toLowerCase();
+      const oc = (el.getAttribute("onclick") || "").toLowerCase();
+      if (txt.includes("sos") || oc.includes("sos")) {
+        el.click();
+        return;
+      }
+    }
+    alert("Hãy mở ngay tab 'SOS Khẩn Cấp 60s' trên thanh menu bên trái để thực hiện khóa tài khoản!");
+  }
+
+  function cgaiCopyFamilyWarning(btnEl, encodedText) {
+    const text = decodeURIComponent(encodedText);
+    navigator.clipboard?.writeText(text);
+    const oldText = btnEl.textContent;
+    btnEl.textContent = "✅ Đã copy tin cảnh báo!";
+    setTimeout(() => {
+      btnEl.textContent = oldText;
+    }, 2200);
+  }
+
+  function cgaiRenderBotCard(data) {
+    const a = data.analysis || {};
+    const score = Math.max(0, Math.min(100, Number(a.riskScore) || 0));
+    const scannedUrls = Array.isArray(data.scannedUrls) ? data.scannedUrls : [];
+
+    let color = "#34d399";
+    let bgBadge = "rgba(16, 185, 129, 0.16)";
+    if (score >= 70) {
+      color = "#fb7185";
+      bgBadge = "rgba(244, 63, 94, 0.2)";
+    } else if (score >= 35) {
+      color = "#fbbf24";
+      bgBadge = "rgba(245, 158, 11, 0.2)";
+    }
+
+    const urlHtml =
+      scannedUrls.length > 0
+        ? `<div class="cgai-section-label">🔗 Kết quả quét ngầm đường link trong tin nhắn</div>` +
+          scannedUrls
+            .map(
+              (u) => `
+            <div class="cgai-url-pill">
+              <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+                <code style="color:#38bdf8;word-break:break-all;">${cgaiEscapeHtml(u.url)}</code>
+                <strong style="color:${u.riskScore >= 60 ? "#fb7185" : u.riskScore >= 25 ? "#fbbf24" : "#34d399"};">${cgaiEscapeHtml(u.verdict)} (${u.riskScore}%)</strong>
+              </div>
+              <div style="color:#94a3b8;margin-top:3px;">${(u.flags || []).map((f) => cgaiEscapeHtml(f)).join(" • ")}</div>
+            </div>`
+            )
+            .join("")
+        : "";
+
+    const flagsHtml = (a.redFlags || [])
+      .map((item) => `<li>${cgaiEscapeHtml(item)}</li>`)
+      .join("");
+
+    const actionsHtml = (a.actions || [])
+      .map((item) => `<li>${cgaiEscapeHtml(item)}</li>`)
+      .join("");
+
+    const warningEncoded = encodeURIComponent(
+      a.familyWarning ||
+        `⚠️ CẢNH BÁO LỪA ĐẢO: Phát hiện dấu hiệu "${a.scamType}". Mọi người tuyệt đối không bấm link lạ, không cài tệp .APK và không chuyển tiền!`
+    );
+
+    const sosBtnHtml =
+      score >= 70
+        ? `<button type="button" class="cgai-btn-sos" onclick="cgaiOpenEmergencySos()">🚨 Mở Quy Trình SOS 60s Ngay</button>`
+        : "";
+
+    return `
+      <div class="cgai-msg-bot">
+        <div class="cgai-risk-head">
+          <span class="cgai-risk-badge" style="background:${bgBadge};color:${color};border:1px solid ${color};">
+            MỨC RỦI RO: ${score}% — ${cgaiEscapeHtml(a.riskLevel || "ĐÃ PHÂN TÍCH")}
+          </span>
+          <span style="font-size:0.73rem;color:#64748b;">Bộ phân tích: ${cgaiEscapeHtml(data.engine || "CyberGuard AI")}</span>
+        </div>
+
+        <div class="cgai-meter-bg">
+          <div class="cgai-meter-bar" style="width:${score}%;background:${color};"></div>
+        </div>
+
+        <div style="font-weight:700;color:#f8fafc;margin-bottom:4px;">📌 Nhận diện kịch bản: <span style="color:${color};">${cgaiEscapeHtml(a.scamType || "Kiểm tra an ninh")}</span></div>
+        <div style="color:#e2e8f0;">${cgaiEscapeHtml(a.summary || "")}</div>
+
+        ${urlHtml}
+
+        ${flagsHtml ? `<div class="cgai-section-label">🚩 Dấu hiệu nhận biết</div><ul class="cgai-list">${flagsHtml}</ul>` : ""}
+        ${actionsHtml ? `<div class="cgai-section-label">🛡️ Hành động bảo vệ ngay</div><ul class="cgai-list">${actionsHtml}</ul>` : ""}
+
+        <div class="cgai-card-actions">
+          <button type="button" class="cgai-btn-copy" onclick="cgaiCopyFamilyWarning(this, '${warningEncoded}')">📋 Copy cảnh báo gửi gia đình</button>
+          ${sosBtnHtml}
+        </div>
+      </div>
+    `;
+  }
+
+  function cgaiRenderWelcome() {
+    const box = document.getElementById("chatMessages");
+    if (!box) return;
+    box.innerHTML = `
+      <div class="cgai-msg-bot">
+        <strong style="color:#38bdf8;display:block;margin-bottom:4px;">🛡️ Xin chào! Tôi là Trợ Lý AI Chuyên Gia của CyberGuard.</strong>
+        <span style="color:#cbd5e1;font-size:0.83rem;">Bạn có thể dán bất kỳ <strong>tin nhắn SMS/Zalo đáng ngờ</strong>, <strong>đường link lạ</strong> hoặc bấm <strong>📎 Tải / Dán Ảnh (Ctrl+V)</strong> ảnh chụp màn hình vào đây. Hệ thống sẽ tự động quét ngầm đường link và chấm điểm mức độ rủi ro ngay lập tức.</span>
+      </div>
+    `;
+  }
+
+  function cgaiSaveHistory() {
+    try {
+      const box = document.getElementById("chatMessages");
+      if (box) localStorage.setItem(CGAI_HISTORY_KEY, box.innerHTML);
+    } catch (_) {}
+  }
+
+  function cgaiClearHistory() {
+    try {
+      localStorage.removeItem(CGAI_HISTORY_KEY);
+    } catch (_) {}
+    cgaiRemoveImage();
+    cgaiRenderWelcome();
+  }
+
+  function askQuick(text) {
+    const input = document.getElementById("chatInput");
+    if (input) {
+      input.value = text;
+      sendChat();
+    }
+  }
+
+  async function sendChat() {
+    const input = document.getElementById("chatInput");
+    const box = document.getElementById("chatMessages");
+    const btn = document.getElementById("cgaiSendBtn");
+    if (!input || !box) return;
+
+    const text = input.value.trim();
+    const imgPayload = cgaiAttachedImage ? { ...cgaiAttachedImage } : null;
+
+    if (!text && !imgPayload) return;
+
+    const userBubble = document.createElement("div");
+    userBubble.className = "cgai-msg-user";
+    userBubble.innerHTML =
+      (imgPayload ? `<img src="${imgPayload.base64}" alt="Ảnh đính kèm" />` : "") +
+      `<div>${cgaiEscapeHtml(text || "(Gửi ảnh chụp màn hình để phân tích)")}</div>`;
+    box.appendChild(userBubble);
+
+    input.value = "";
+    cgaiRemoveImage();
+
+    const loadingBubble = document.createElement("div");
+    loadingBubble.className = "cgai-msg-bot";
+    loadingBubble.innerHTML = `<span style="color:#38bdf8;">⏳ Đang bóc tách nội dung, soi ngầm đường link và đối chiếu kịch bản lừa đảo...</span>`;
+    box.appendChild(loadingBubble);
+    box.scrollTop = box.scrollHeight;
+
+    if (btn) btn.disabled = true;
+
+    try {
+      const res = await fetch(`${CGAI_WORKER_URL}/ai-analyze`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: text,
+          imageBase64: imgPayload ? imgPayload.base64 : "",
+          mimeType: imgPayload ? imgPayload.mimeType : "image/jpeg"
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || "Không nhận được phản hồi từ Worker.");
+      }
+
+      loadingBubble.outerHTML = cgaiRenderBotCard(data);
+    } catch (err) {
+      loadingBubble.outerHTML = `
+        <div class="cgai-msg-bot" style="border-color:rgba(244,63,94,0.4);">
+          <strong style="color:#fb7185;">⚠️ Tạm thời mất kết nối máy chủ AI (${cgaiEscapeHtml(err.message)})</strong>
+          <div style="color:#cbd5e1;font-size:0.82rem;margin-top:4px;">Nguyên tắc an toàn: Tuyệt đối không bấm vào đường link lạ, không cài tệp .APK ngoài CH Play và gọi điện thoại trực tiếp để xác minh trước khi chuyển tiền.</div>
+        </div>
+      `;
+    } finally {
+      if (btn) btn.disabled = false;
+      box.scrollTop = box.scrollHeight;
+      cgaiSaveHistory();
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const box = document.getElementById("chatMessages");
+    if (!box) return;
+    try {
+      const saved = localStorage.getItem(CGAI_HISTORY_KEY);
+      if (saved && saved.trim()) {
+        box.innerHTML = saved;
+        box.scrollTop = box.scrollHeight;
+        return;
+      }
+    } catch (_) {}
+    cgaiRenderWelcome();
+  });
+</script>
+<!-- ================= KẾT THÚC MODULE TRỢ LÝ AI AN NINH MẠNG ================= -->
             </div>
         </div>
 
