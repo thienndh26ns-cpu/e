@@ -509,7 +509,388 @@
                         <span class="metric-sub">Chặn 99% dò mật khẩu</span>
                     </div>
                 </div>
+<!-- ================= HƯỚNG 1 (NÂNG CẤP): THỐNG KÊ CHÍNH THỐNG + CISA KEV LIVE ================= -->
+<style>
+  .cg-stat-section {
+    background: rgba(11, 21, 40, 0.94);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin: 14px 0;
+  }
 
+  .cg-stat-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+
+  .cg-stat-title {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cg-stat-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cg-stat-source-pill {
+    font-size: 0.75rem;
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.14);
+    border: 1px solid rgba(52, 211, 153, 0.32);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .cg-stat-refresh-btn {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: #38bdf8;
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .cg-stat-refresh-btn:hover {
+    background: rgba(56, 189, 248, 0.26);
+  }
+
+  .cg-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .cg-stat-box {
+    background: rgba(6, 13, 26, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 12px;
+    padding: 13px 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .cg-stat-box.live-box {
+    border-color: rgba(56, 189, 248, 0.32);
+  }
+
+  .cg-stat-tag {
+    font-size: 0.71rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .cg-badge-fixed {
+    background: rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+  }
+
+  .cg-badge-live {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+  }
+
+  .cg-stat-num {
+    font-size: 1.26rem;
+    font-weight: 800;
+    margin-bottom: 5px;
+  }
+
+  .cg-stat-desc {
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+    margin-bottom: 8px;
+  }
+
+  .cg-stat-ref {
+    font-size: 0.74rem;
+    color: #38bdf8;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .cg-stat-ref:hover {
+    text-decoration: underline;
+  }
+
+  .cg-vector-bars {
+    background: rgba(6, 13, 26, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    border-radius: 12px;
+    padding: 13px 15px;
+  }
+
+  .cg-vector-bars-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .cg-vector-bars-title {
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .cg-vector-bars-meta {
+    font-size: 0.74rem;
+    color: #38bdf8;
+  }
+
+  .cg-bar-row {
+    margin-bottom: 9px;
+  }
+
+  .cg-bar-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .cg-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    margin-bottom: 4px;
+    gap: 8px;
+  }
+
+  .cg-bar-track {
+    width: 100%;
+    height: 7px;
+    background: rgba(148, 163, 184, 0.16);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .cg-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.5s ease;
+  }
+
+  .cg-kev-ticker {
+    margin-top: 11px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(148, 163, 184, 0.2);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    color: #94a3b8;
+  }
+
+  .cg-kev-chip {
+    background: rgba(244, 63, 94, 0.14);
+    border: 1px solid rgba(251, 113, 133, 0.32);
+    color: #fda4af;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: Consolas, monospace;
+    font-size: 0.74rem;
+  }
+</style>
+
+<div class="cg-stat-section">
+  <div class="cg-stat-header">
+    <h3 class="cg-stat-title">📊 Toàn Cảnh An Ninh Mạng: Báo Cáo Việt Nam &amp; Dữ Liệu Sống CISA</h3>
+    <div class="cg-stat-controls">
+      <span class="cg-stat-source-pill" id="cgLiveStatStatus">⏳ Đang đồng bộ CISA KEV &amp; RSS...</span>
+      <button class="cg-stat-refresh-btn" onclick="loadLiveThreatStats()">↻ Làm mới số liệu</button>
+    </div>
+  </div>
+
+  <div class="cg-stat-grid">
+    <!-- Thẻ 1: Báo cáo chính thức Bộ Công an / Chính phủ -->
+    <div class="cg-stat-box">
+      <div>
+        <div class="cg-stat-tag">
+          <span>Thiệt hại lừa đảo tại VN</span>
+          <span class="cg-badge-fixed">Báo cáo kỳ</span>
+        </div>
+        <div class="cg-stat-num" style="color:#fb7185;">&gt; 6.000 Tỷ VNĐ</div>
+        <div class="cg-stat-desc">Thiệt hại trong 11 tháng (cả năm 2025 vượt 8.000 tỷ đồng; giai đoạn 2020–2025 gần 40.000 tỷ đồng).</div>
+      </div>
+      <a class="cg-stat-ref" href="https://baochinhphu.vn/du-bao-nam-2026-muc-do-tinh-vi-cua-cac-hinh-thuc-lua-dao-truc-tuyen-se-tang-102260107101756364.htm" target="_blank" rel="noopener">↗ Nguồn: Cổng TTĐT Chính phủ / Bộ Công an</a>
+    </div>
+
+    <!-- Thẻ 2: Khảo sát chính thức NCA -->
+    <div class="cg-stat-box">
+      <div>
+        <div class="cg-stat-tag">
+          <span>Tỷ lệ nạn nhân khảo sát</span>
+          <span class="cg-badge-fixed">Khảo sát NCA</span>
+        </div>
+        <div class="cg-stat-num" style="color:#34d399;">0,18% (1/555)</div>
+        <div class="cg-stat-desc">Giảm từ mức 0,45% nhờ xác thực sinh trắc học ngân hàng (khảo sát 60.300 người dùng toàn quốc).</div>
+      </div>
+      <a class="cg-stat-ref" href="https://www.nca.org.vn/news" target="_blank" rel="noopener">↗ Nguồn: Hiệp hội An ninh mạng Quốc gia (NCA)</a>
+    </div>
+
+    <!-- Thẻ 3: Dữ liệu thời gian thực từ CISA KEV -->
+    <div class="cg-stat-box live-box">
+      <div>
+        <div class="cg-stat-tag">
+          <span>Lỗ hổng đang bị khai thác</span>
+          <span class="cg-badge-live">● LIVE CISA KEV</span>
+        </div>
+        <div class="cg-stat-num" style="color:#fbbf24;" id="cgKevTotalNum">-- Lỗ hổng</div>
+        <div class="cg-stat-desc" id="cgKevRecentDesc">Đang tải danh mục lỗ hổng Zero-Day/CVE bị tin tặc khai thác thực tế từ CISA Hoa Kỳ...</div>
+      </div>
+      <a class="cg-stat-ref" href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">↗ Nguồn: CISA Known Exploited Vulnerabilities</a>
+    </div>
+
+    <!-- Thẻ 4: Tín hiệu tin tức bảo mật quét thực tế qua Worker -->
+    <div class="cg-stat-box live-box">
+      <div>
+        <div class="cg-stat-tag">
+          <span>Cảnh báo &amp; Vụ việc mới quét</span>
+          <span class="cg-badge-live">● LIVE WORKER</span>
+        </div>
+        <div class="cg-stat-num" style="color:#38bdf8;" id="cgLiveArticleNum">-- Tin cảnh báo</div>
+        <div class="cg-stat-desc" id="cgLiveArticleDesc">Tự động phân tích từ luồng tin VnExpress Số hóa &amp; The Hacker News để tính tỷ lệ xu hướng.</div>
+      </div>
+      <a class="cg-stat-ref" href="https://canhbao.khonggianmang.vn" target="_blank" rel="noopener">↗ Cổng Cảnh báo NCSC Việt Nam</a>
+    </div>
+  </div>
+
+  <!-- Biểu đồ thanh ngang tự động tính % từ Worker -->
+  <div class="cg-vector-bars">
+    <div class="cg-vector-bars-head">
+      <span class="cg-vector-bars-title">📈 Cơ Cấu Nhóm Chiêu Thức Tấn Công &amp; Lừa Đảo (Tự Động Cân Bằng Theo Tin Mới)</span>
+      <span class="cg-vector-bars-meta" id="cgTrendUpdateTime">Đang tính tỷ lệ thực tế...</span>
+    </div>
+
+    <div id="cgTrendBarsContainer">
+      <div class="cg-bar-row">
+        <div class="cg-bar-label"><span>1. Giả mạo cơ quan chức năng (VNeID, Thuế), tệp .APK &amp; Khai thác lỗ hổng</span><span>38%</span></div>
+        <div class="cg-bar-track"><div class="cg-bar-fill" style="width:38%;background:#fb7185;"></div></div>
+      </div>
+      <div class="cg-bar-row">
+        <div class="cg-bar-label"><span>2. Tuyển cộng tác viên online, sàn đầu tư tài chính / tiền ảo giả</span><span>28%</span></div>
+        <div class="cg-bar-track"><div class="cg-bar-fill" style="width:28%;background:#fbbf24;"></div></div>
+      </div>
+      <div class="cg-bar-row">
+        <div class="cg-bar-label"><span>3. Giả mạo ngân hàng, ví điện tử gửi link Phishing đánh cắp OTP / Cookie</span><span>22%</span></div>
+        <div class="cg-bar-track"><div class="cg-bar-fill" style="width:22%;background:#38bdf8;"></div></div>
+      </div>
+      <div class="cg-bar-row">
+        <div class="cg-bar-label"><span>4. Deepfake AI giả giọng nói/khuôn mặt &amp; Chiếm quyền tài khoản MXH</span><span>12%</span></div>
+        <div class="cg-bar-track"><div class="cg-bar-fill" style="width:12%;background:#a78bfa;"></div></div>
+      </div>
+    </div>
+
+    <div class="cg-kev-ticker" id="cgKevLatestList">
+      <span>🚨 CVE mới bị thêm vào CISA KEV:</span>
+      <span class="cg-kev-chip">Đang đồng bộ dữ liệu...</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CG_STATS_WORKER_URL = "https://cyberguard-scanner.thienndh-26ns.workers.dev";
+
+  window.addEventListener("DOMContentLoaded", () => {
+    loadLiveThreatStats();
+  });
+
+  async function loadLiveThreatStats() {
+    const statusEl = document.getElementById("cgLiveStatStatus");
+    if (statusEl) statusEl.textContent = "⏳ Đang đồng bộ CISA KEV & RSS...";
+
+    try {
+      const res = await fetch(`${CG_STATS_WORKER_URL}/threat-stats?t=${Date.now()}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!data.ok) throw new Error(data.error || "Dữ liệu không hợp lệ");
+
+      document.getElementById("cgKevTotalNum").textContent =
+        `${data.cisaKev.totalCount.toLocaleString("vi-VN")} Lỗ hổng`;
+      document.getElementById("cgKevRecentDesc").textContent =
+        `Có thêm ${data.cisaKev.recent30Days} lỗ hổng nghiêm trọng mới bị tin tặc khai thác trong 30 ngày qua (Bản KEV: ${data.cisaKev.catalogVersion}).`;
+
+      document.getElementById("cgLiveArticleNum").textContent =
+        `${data.liveSignals.matchedSecurityArticles} / ${data.liveSignals.scannedArticles} Tin`;
+      document.getElementById("cgLiveArticleDesc").textContent =
+        `Phát hiện ${data.liveSignals.matchedSecurityArticles} bài cảnh báo tấn công & lừa đảo trong ${data.liveSignals.scannedArticles} bản tin công nghệ mới nhất.`;
+
+      const barsContainer = document.getElementById("cgTrendBarsContainer");
+      if (barsContainer && Array.isArray(data.trendDistribution)) {
+        barsContainer.innerHTML = data.trendDistribution
+          .map(
+            (item) => `
+            <div class="cg-bar-row">
+              <div class="cg-bar-label">
+                <span>${item.label}</span>
+                <strong>${item.percent}%</strong>
+              </div>
+              <div class="cg-bar-track">
+                <div class="cg-bar-fill" style="width:${item.percent}%;background:${item.color};"></div>
+              </div>
+            </div>
+          `
+          )
+          .join("");
+      }
+
+      const kevListEl = document.getElementById("cgKevLatestList");
+      if (kevListEl && Array.isArray(data.cisaKev.latestCves)) {
+        const chips = data.cisaKev.latestCves
+          .map(
+            (c) =>
+              `<span class="cg-kev-chip" title="${c.vendor} ${c.product}">${c.cveID} (${c.vendor} • ${c.dateAdded})</span>`
+          )
+          .join("");
+        kevListEl.innerHTML = `<span>🚨 CVE mới nhất trong CISA KEV:</span>${chips}`;
+      }
+
+      const timeStr = new Date(data.updatedAt).toLocaleTimeString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      if (statusEl) statusEl.textContent = `✔ Đã đồng bộ dữ liệu sống lúc ${timeStr}`;
+      document.getElementById("cgTrendUpdateTime").textContent =
+        `Tỷ lệ tự động tính lúc ${timeStr}`;
+    } catch (err) {
+      if (statusEl) {
+        statusEl.textContent = "⚠️ Chưa nối được /threat-stats (kiểm tra Deploy Worker)";
+      }
+    }
+  }
+</script>
+<!-- ================= KẾT THÚC HƯỚNG 1 (NÂNG CẤP) ================= -->
                 <!-- Thanh lọc bài viết kiểu Facebook -->
                 <div class="card" style="padding:12px 16px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
