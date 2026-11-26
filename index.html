@@ -8,97 +8,696 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
-        /* ================= 1. PHỔ NHIỆT ĐỘ MÀU TOÀN TRANG (NGÀY & ĐÊM) ================= */
-        :root {
-            --bg-sky-gradient: linear-gradient(155deg, rgba(224, 242, 254, 0.22) 0%, rgba(56, 189, 248, 0.16) 24%, #0b1936 58%, #020617 100%);
-            --bg-sidebar: rgba(7, 15, 34, 0.92);
-            --bg-card: rgba(12, 23, 48, 0.9);
-            --bg-sub: rgba(15, 29, 60, 0.82);
-            --bg-header: rgba(6, 13, 30, 0.94);
-            --border: rgba(125, 211, 252, 0.24);
-            --text-main: #f0f9ff;
-            --text-muted: #93c5fd;
-            --accent: #38bdf8;
-            --accent-2: #818cf8;
-            --safe: #10b981; --warn: #f59e0b; --danger: #f43f5e;
-            --shadow: 0 8px 26px rgba(2, 6, 23, 0.55);
-            --sidebar-w: 250px;
-        }
+        <!-- ================= INTRO CYBERGUARD AI (BẦU TRỜI ĐÊM, MÂY BÓNG RÂM, PHẢN LỰC & TRỰC THĂNG) ================= -->
+<style>
+  #cg-intro-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 82% 14%, #3b5b88 0%, #1d355e 28%, #0e1d3b 62%, #050b18 100%);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #ffffff;
+    overflow: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
 
-        body.day-theme {
-            --bg-sky-gradient: linear-gradient(145deg, #f0f2f5 0%, #fffbeb 40%, #fed7aa 80%, #fecaca 100%);
-            --bg-sidebar: rgba(255, 255, 255, 0.94);
-            --bg-card: rgba(255, 255, 255, 0.96);
-            --bg-sub: rgba(248, 250, 252, 0.95);
-            --bg-header: rgba(255, 255, 255, 0.96);
-            --border: rgba(203, 213, 225, 0.85);
-            --text-main: #1c1e21;
-            --text-muted: #65676b;
-            --accent: #0866ff;
-            --accent-2: #7c3aed;
-            --safe: #059669; --warn: #d97706; --danger: #dc2626;
-            --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-        }
+  #cg-intro-screen.day-mode {
+    background: radial-gradient(circle at 18% 12%, #ffffff 0%, #bae6fd 32%, #7dd3fc 65%, #38bdf8 100%);
+    color: #0f172a;
+  }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; transition: background-color 0.25s ease, color 0.2s ease, border-color 0.2s ease; }
-        body {
-            background: var(--bg-sky-gradient) !important;
-            background-attachment: fixed !important;
-            color: var(--text-main);
-            line-height: 1.55;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+  #cg-intro-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
 
-        /* ================= 2. INTRO BẦU TRỜI, MÂY, SAO & THÁP CANH ================= */
-        #welcomeScreen { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px; overflow: hidden; }
-        .sky-horizon-backdrop {
-            position: absolute; inset: 0; z-index: 0; pointer-events: none;
-            background: radial-gradient(circle at 84% 10%, rgba(224, 242, 254, 0.32) 0%, rgba(56, 189, 248, 0.14) 30%, transparent 65%);
-        }
-        body.day-theme .sky-horizon-backdrop {
-            background: radial-gradient(circle at 16% 9%, rgba(255, 255, 255, 0.95) 0%, rgba(254, 215, 170, 0.45) 38%, rgba(254, 202, 202, 0.35) 75%, transparent 100%);
-        }
-        .night-stars-layer {
-            position: absolute; inset: 0; z-index: 0; pointer-events: none;
-            background-image:
-                radial-gradient(1.5px 1.5px at 12% 18%, #ffffff 90%, transparent),
-                radial-gradient(2px 2px at 26% 11%, #bae6fd 90%, transparent),
-                radial-gradient(1.2px 1.2px at 38% 24%, #ffffff 90%, transparent),
-                radial-gradient(1.8px 1.8px at 54% 9%, #e0f2fe 90%, transparent),
-                radial-gradient(1.3px 1.3px at 68% 21%, #ffffff 90%, transparent),
-                radial-gradient(2px 2px at 81% 15%, #fde047 90%, transparent),
-                radial-gradient(1.5px 1.5px at 91% 28%, #ffffff 90%, transparent);
-            animation: starTwinkle 4s ease-in-out infinite alternate;
-        }
-        body.day-theme .night-stars-layer { opacity: 0; }
-        @keyframes starTwinkle { 0% { opacity: 0.55; } 100% { opacity: 1; } }
+  /* Lớp sao đêm */
+  .cg-stars {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 10% 15%, #ffffff 90%, transparent),
+      radial-gradient(2px 2px at 24% 9%, #bae6fd 90%, transparent),
+      radial-gradient(1.3px 1.3px at 39% 21%, #ffffff 90%, transparent),
+      radial-gradient(1.8px 1.8px at 56% 11%, #e0f2fe 90%, transparent),
+      radial-gradient(1.4px 1.4px at 71% 24%, #ffffff 90%, transparent),
+      radial-gradient(2.2px 2.2px at 88% 19%, #fde047 90%, transparent),
+      radial-gradient(1.5px 1.5px at 93% 31%, #ffffff 90%, transparent),
+      radial-gradient(1.2px 1.2px at 16% 34%, #cbd5e1 90%, transparent);
+    animation: cgStarTwinkle 3.6s ease-in-out infinite alternate;
+  }
 
-        .distant-celestial {
-            position: absolute; top: 9%; right: 16%; width: 42px; height: 42px; border-radius: 50%; z-index: 1;
-            background: radial-gradient(circle at 35% 35%, #f8fafc 20%, #cbd5e1 75%, #94a3b8 100%);
-            box-shadow: 0 0 28px rgba(226, 232, 240, 0.65), 0 0 60px rgba(56, 189, 248, 0.25);
-        }
-        body.day-theme .distant-celestial {
-            top: 8%; left: 16%; right: auto; width: 46px; height: 46px;
-            background: radial-gradient(circle, #ffffff 15%, #fef08a 55%, #f59e0b 100%);
-            box-shadow: 0 0 40px #fbbf24, 0 0 90px rgba(245, 158, 11, 0.65);
-        }
+  #cg-intro-screen.day-mode .cg-stars {
+    opacity: 0;
+  }
 
-        .tactical-stage { position: relative; width: 360px; max-width: 94vw; height: 220px; margin: 0 auto 12px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; z-index: 2; }
-        .watchtower-wrap { position: relative; z-index: 3; width: 92px; height: 105px; margin-bottom: -14px; opacity: 0; animation: towerRise 0.8s ease-out 0.1s forwards; }
-        .shield-svg-wrap { position: relative; z-index: 4; width: 112px; height: 120px; opacity: 0; animation: shieldPop 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards; }
-        @keyframes towerRise { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes shieldPop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+  /* Mặt trăng & lớp bóng râm mây che phủ */
+  .cg-celestial-wrap {
+    position: absolute;
+    top: 7%;
+    right: 13%;
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(circle at 32% 32%, #ffffff 15%, #e2e8f0 58%, #94a3b8 100%);
+    box-shadow: 0 0 36px rgba(226, 232, 240, 0.7), 0 0 85px rgba(56, 189, 248, 0.32);
+    overflow: hidden;
+  }
 
-        .welcome-content { position: relative; z-index: 5; max-width: 680px; }
-        .welcome-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 15px; border-radius: 999px; background: var(--bg-card); border: 1px solid var(--border); color: var(--accent); font-size: 0.82rem; font-weight: 700; margin-bottom: 10px; }
-        .welcome-title { font-size: 2.5rem; font-weight: 900; letter-spacing: -0.6px; margin-bottom: 6px; }
-        .welcome-title span { background: linear-gradient(90deg, var(--accent), #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .welcome-sub { font-size: 0.96rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 20px; }
-        .start-btn { background: linear-gradient(135deg, #0866ff, #7c3aed); color: #fff; border: none; padding: 13px 34px; border-radius: 999px; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 10px 26px rgba(8, 102, 255, 0.38); }
-        .start-btn:hover { transform: translateY(-2px); }
+  /* Miệng núi lửa mờ trên mặt trăng */
+  .cg-celestial-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 62% 38%, rgba(100, 116, 139, 0.25) 0 8px, transparent 9px),
+      radial-gradient(circle at 44% 64%, rgba(100, 116, 139, 0.2) 0 11px, transparent 12px),
+      radial-gradient(circle at 70% 68%, rgba(100, 116, 139, 0.18) 0 6px, transparent 7px);
+  }
 
+  /* Bóng râm của đám mây trôi ngang qua mặt trăng */
+  .cg-moon-cloud-shadow {
+    position: absolute;
+    top: 18%;
+    left: -90%;
+    width: 140%;
+    height: 64%;
+    background: radial-gradient(ellipse at center, rgba(6, 13, 28, 0.72) 20%, rgba(6, 13, 28, 0.35) 55%, transparent 78%);
+    filter: blur(4px);
+    animation: cgMoonShadowPass 16s linear infinite;
+  }
+
+  #cg-intro-screen.day-mode .cg-celestial-wrap {
+    right: auto;
+    left: 13%;
+    background: radial-gradient(circle, #ffffff 20%, #fef08a 60%, #f59e0b 100%);
+    box-shadow: 0 0 48px #fde047, 0 0 100px rgba(245, 158, 11, 0.65);
+  }
+
+  #cg-intro-screen.day-mode .cg-celestial-wrap::before,
+  #cg-intro-screen.day-mode .cg-moon-cloud-shadow {
+    opacity: 0;
+  }
+
+  /* Lớp mây bầu trời & bóng râm mây */
+  .cg-sky-clouds {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 55%;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .cg-cloud-drift-slow {
+    animation: cgCloudDrift 28s ease-in-out infinite alternate;
+  }
+
+  .cg-cloud-drift-mid {
+    animation: cgCloudDriftReverse 22s ease-in-out infinite alternate;
+  }
+
+  /* Bóng râm mây phủ xuống không gian phía dưới */
+  .cg-ground-cloud-shade {
+    position: absolute;
+    top: 22%;
+    left: 10%;
+    width: 80%;
+    height: 45%;
+    background: radial-gradient(ellipse at 72% 20%, rgba(3, 8, 20, 0.46) 0%, rgba(5, 12, 28, 0.22) 45%, transparent 72%);
+    filter: blur(22px);
+    pointer-events: none;
+    z-index: 2;
+    animation: cgShadeSway 16s ease-in-out infinite alternate;
+  }
+
+  /* Lớp tiêm kích phản lực tầm cao (4 chiếc) */
+  .cg-airspace-layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  .cg-jet-flight {
+    opacity: 0;
+    animation: cgJetFlyAcross 15s linear infinite;
+  }
+
+  .cg-jet-1 { animation-delay: 0s; }
+  .cg-jet-2 { animation-delay: 0.7s; }
+  .cg-jet-3 { animation-delay: 1.4s; }
+  .cg-jet-4 { animation-delay: 2.1s; }
+
+  /* Trực thăng tuần tra tầm trung (2 chiếc) */
+  .cg-heli-left-patrol {
+    animation: cgHeliPatrolL 11s ease-in-out infinite alternate;
+  }
+
+  .cg-heli-right-patrol {
+    animation: cgHeliPatrolR 12.5s ease-in-out infinite alternate;
+  }
+
+  .cg-rotor-spin {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: cgRotorBlur 0.14s linear infinite;
+  }
+
+  .cg-heli-beam-sweep {
+    transform-box: fill-box;
+    transform-origin: top center;
+    animation: cgBeamSweep 4.2s ease-in-out infinite alternate;
+  }
+
+  .cg-heli-beam-sweep-alt {
+    transform-box: fill-box;
+    transform-origin: top center;
+    animation: cgBeamSweep 4.8s ease-in-out infinite alternate-reverse;
+  }
+
+  #cg-intro-screen.day-mode .cg-night-beam {
+    opacity: 0.15;
+  }
+
+  /* Khung sân khấu trung tâm */
+  .cg-stage {
+    position: relative;
+    z-index: 4;
+    width: min(720px, 95vw);
+    height: 295px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    margin-bottom: 18px;
+  }
+
+  .cg-scene-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .cg-drone-float {
+    animation: cgFloat 3.4s ease-in-out infinite;
+  }
+
+  .cg-drone-float-delay {
+    animation: cgFloat 3.8s ease-in-out 1.2s infinite;
+  }
+
+  .cg-shield-pulse {
+    animation: cgShieldHover 4s ease-in-out infinite;
+  }
+
+  /* Thanh đồng hồ & Chế độ Ban Đêm */
+  .cg-status-pill {
+    position: relative;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: rgba(10, 19, 38, 0.86);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.38);
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #38bdf8;
+    margin-bottom: 16px;
+    letter-spacing: 0.2px;
+  }
+
+  #cg-intro-screen.day-mode .cg-status-pill {
+    background: rgba(255, 255, 255, 0.9);
+    color: #0284c7;
+    border-color: rgba(2, 132, 199, 0.3);
+  }
+
+  /* Tiêu đề gradient CyberGuard AI */
+  .cg-intro-title {
+    position: relative;
+    z-index: 5;
+    margin: 0 0 12px;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(90deg, #38bdf8 0%, #818cf8 32%, #c084fc 58%, #f472b6 80%, #fb923c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    line-height: 1.15;
+  }
+
+  .cg-intro-desc {
+    position: relative;
+    z-index: 5;
+    max-width: 620px;
+    margin: 0 16px 28px;
+    text-align: center;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(226, 232, 240, 0.88);
+  }
+
+  #cg-intro-screen.day-mode .cg-intro-desc {
+    color: #334155;
+  }
+
+  /* Nút Bắt đầu */
+  .cg-start-btn {
+    position: relative;
+    z-index: 5;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #2563eb 0%, #7c3aed 52%, #f97316 100%);
+    color: #ffffff;
+    font-size: 1.08rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 28px rgba(99, 102, 241, 0.45);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  .cg-start-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 14px 34px rgba(124, 58, 237, 0.6);
+  }
+
+  /* Keyframes chuyển động */
+  @keyframes cgStarTwinkle {
+    0% { opacity: 0.35; }
+    100% { opacity: 1; }
+  }
+
+  @keyframes cgMoonShadowPass {
+    0% { transform: translateX(0%); }
+    50% { transform: translateX(115%); }
+    100% { transform: translateX(220%); }
+  }
+
+  @keyframes cgCloudDrift {
+    0% { transform: translateX(-18px); }
+    100% { transform: translateX(24px); }
+  }
+
+  @keyframes cgCloudDriftReverse {
+    0% { transform: translateX(20px); }
+    100% { transform: translateX(-22px); }
+  }
+
+  @keyframes cgShadeSway {
+    0% { transform: translateX(-25px) scale(0.96); opacity: 0.75; }
+    100% { transform: translateX(30px) scale(1.04); opacity: 1; }
+  }
+
+  @keyframes cgJetFlyAcross {
+    0% {
+      transform: translate(-180px, 35px) rotate(-6deg);
+      opacity: 0;
+    }
+    8% {
+      opacity: 0.95;
+    }
+    85% {
+      opacity: 0.95;
+    }
+    100% {
+      transform: translate(1580px, -110px) rotate(-6deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes cgHeliPatrolL {
+    0% { transform: translate(0px, 0px); }
+    50% { transform: translate(65px, -7px); }
+    100% { transform: translate(120px, 3px); }
+  }
+
+  @keyframes cgHeliPatrolR {
+    0% { transform: translate(0px, 0px); }
+    50% { transform: translate(-65px, -8px); }
+    100% { transform: translate(-120px, 2px); }
+  }
+
+  @keyframes cgRotorBlur {
+    0% { transform: scaleX(1); }
+    50% { transform: scaleX(0.18); }
+    100% { transform: scaleX(1); }
+  }
+
+  @keyframes cgBeamSweep {
+    0% { transform: rotate(-11deg); }
+    100% { transform: rotate(11deg); }
+  }
+
+  @keyframes cgFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-6px); }
+  }
+
+  @keyframes cgShieldHover {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-4px); }
+  }
+</style>
+
+<div id="cg-intro-screen">
+  <!-- 1. Sao đêm -->
+  <div class="cg-stars"></div>
+
+  <!-- 2. Mặt trăng có bóng râm mây trôi ngang -->
+  <div class="cg-celestial-wrap">
+    <div class="cg-moon-cloud-shadow"></div>
+  </div>
+
+  <!-- 3. Bóng râm mây đổ xuống không gian -->
+  <div class="cg-ground-cloud-shade"></div>
+
+  <!-- 4. Các đám mây quanh mặt trăng & bầu trời (có lớp bóng râm đáy mây) -->
+  <svg class="cg-sky-clouds" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMin slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="cloudTopGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#cbd5e1" stop-opacity="0.34" />
+        <stop offset="60%" stop-color="#64748b" stop-opacity="0.24" />
+        <stop offset="100%" stop-color="#091124" stop-opacity="0.58" />
+      </linearGradient>
+      <linearGradient id="cloudMoonShadowGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#94a3b8" stop-opacity="0.32" />
+        <stop offset="55%" stop-color="#1e293b" stop-opacity="0.55" />
+        <stop offset="100%" stop-color="#020617" stop-opacity="0.78" />
+      </linearGradient>
+    </defs>
+
+    <!-- Cụm mây vắt ngang phía dưới/cạnh mặt trăng bên phải (tạo bóng râm đậm) -->
+    <g class="cg-cloud-drift-slow">
+      <!-- Bóng râm mây hắt xuống -->
+      <ellipse cx="1215" cy="146" rx="135" ry="26" fill="rgba(2, 6, 23, 0.55)" />
+      <!-- Khối mây chính cạnh mặt trăng -->
+      <path d="M1085 136 C1085 116 1108 104 1130 109 C1144 86 1184 82 1206 102 C1228 92 1262 100 1272 118 C1298 118 1318 130 1318 144 L1085 144 Z" fill="url(#cloudMoonShadowGrad)" />
+      <!-- Dải mây mỏng phía trên mặt trăng -->
+      <path d="M1165 62 C1178 48 1212 46 1230 58 C1248 52 1274 58 1280 68 L1158 68 Z" fill="url(#cloudTopGrad)" />
+    </g>
+
+    <!-- Cụm mây phía trái bầu trời -->
+    <g class="cg-cloud-drift-mid">
+      <ellipse cx="260" cy="128" rx="145" ry="24" fill="rgba(2, 6, 23, 0.42)" />
+      <path d="M120 122 C120 102 145 92 168 98 C184 74 228 72 250 92 C274 82 310 90 322 108 C348 108 370 118 370 130 L120 130 Z" fill="url(#cloudTopGrad)" />
+    </g>
+
+    <!-- Cụm mây mỏng giữa trời -->
+    <g class="cg-cloud-drift-slow">
+      <ellipse cx="720" cy="88" rx="115" ry="16" fill="rgba(2, 6, 23, 0.32)" />
+      <path d="M615 84 C625 68 655 62 678 70 C695 54 732 54 750 68 C772 62 798 70 808 84 Z" fill="url(#cloudTopGrad)" />
+    </g>
+  </svg>
+
+  <!-- 5. Không phận: 4 Máy bay phản lực tầm cao + 2 Trực thăng rọi đèn tầm trung -->
+  <svg class="cg-airspace-layer" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Vệt khói & lửa động cơ phản lực -->
+      <linearGradient id="jetContrailGrad" x1="0%" y1="50%" x2="100%" y2="50%">
+        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0" />
+        <stop offset="75%" stop-color="#bae6fd" stop-opacity="0.35" />
+        <stop offset="100%" stop-color="#f97316" stop-opacity="0.9" />
+      </linearGradient>
+
+      <!-- Đèn rọi trực thăng ban đêm -->
+      <linearGradient id="heliSpotlightGrad" x1="0.5" y1="0" x2="0.5" y2="1">
+        <stop offset="0%" stop-color="#fef08a" stop-opacity="0.72" />
+        <stop offset="45%" stop-color="#bae6fd" stop-opacity="0.28" />
+        <stop offset="100%" stop-color="#bae6fd" stop-opacity="0" />
+      </linearGradient>
+
+      <!-- Mẫu 1 chiếc tiêm kích phản lực -->
+      <g id="cg-fighter-jet">
+        <!-- Vệt khói phản lực phía sau -->
+        <polygon points="-130,5 0,3 0,7 -130,5" fill="url(#jetContrailGrad)" />
+        <!-- Lửa đuôi -->
+        <ellipse cx="-2" cy="5" rx="5" ry="2.2" fill="#fb923c" />
+        <!-- Cánh tam giác & thân tiêm kích -->
+        <polygon points="0,5 12,1 26,5 12,9" fill="#94a3b8" />
+        <polygon points="6,5 16,-4 20,5" fill="#64748b" />
+        <path d="M2 5 L34 5 L24 3 L6 3 Z" fill="#e2e8f0" />
+        <!-- Buồng lái phát sáng nhẹ -->
+        <ellipse cx="22" cy="4.2" rx="4" ry="1.3" fill="#38bdf8" />
+      </g>
+    </defs>
+
+    <!-- 4 CHIẾC TIÊM KÍCH PHẢN LỰC BAY ĐỘI HÌNH TẦM CAO -->
+    <use href="#cg-fighter-jet" x="0" y="95" class="cg-jet-flight cg-jet-1" />
+    <use href="#cg-fighter-jet" x="0" y="132" transform="scale(0.92)" class="cg-jet-flight cg-jet-2" />
+    <use href="#cg-fighter-jet" x="0" y="74" transform="scale(0.86)" class="cg-jet-flight cg-jet-3" />
+    <use href="#cg-fighter-jet" x="0" y="156" transform="scale(0.82)" class="cg-jet-flight cg-jet-4" />
+
+    <!-- TRỰC THĂNG TUẦN TRA TẦM TRUNG 1 (BÊN TRÁI - RỌI ĐÈN BAN ĐÊM) -->
+    <g class="cg-heli-left-patrol">
+      <!-- Chùm đèn pha rọi quét xuống -->
+      <polygon points="292,262 215,470 355,470" fill="url(#heliSpotlightGrad)" class="cg-night-beam cg-heli-beam-sweep" />
+      <!-- Cánh quạt đuôi -->
+      <line x1="234" y1="242" x2="234" y2="256" stroke="#94a3b8" stroke-width="2" />
+      <!-- Đuôi trực thăng -->
+      <polygon points="234,249 266,246 266,253" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+      <!-- Thân trực thăng -->
+      <rect x="262" y="241" width="34" height="15" rx="7" fill="#0f172a" stroke="#38bdf8" stroke-width="1.4" />
+      <!-- Kính buồng lái -->
+      <path d="M284 242 Q296 242 296 251 L284 251 Z" fill="#38bdf8" fill-opacity="0.45" />
+      <!-- Càng đáp -->
+      <line x1="268" y1="256" x2="266" y2="261" stroke="#94a3b8" stroke-width="1.3" />
+      <line x1="288" y1="256" x2="290" y2="261" stroke="#94a3b8" stroke-width="1.3" />
+      <line x1="260" y1="261" x2="296" y2="261" stroke="#94a3b8" stroke-width="1.5" />
+      <!-- Trục & cánh quạt chính đang quay -->
+      <line x1="279" y1="236" x2="279" y2="241" stroke="#cbd5e1" stroke-width="2" />
+      <ellipse cx="279" cy="236" rx="34" ry="2.2" fill="#e2e8f0" fill-opacity="0.75" class="cg-rotor-spin" />
+      <!-- Đèn pha mũi & đèn tín hiệu -->
+      <circle cx="293" cy="256" r="2.6" fill="#fef08a" />
+      <circle cx="235" cy="248" r="2" fill="#f43f5e" />
+    </g>
+
+    <!-- TRỰC THĂNG TUẦN TRA TẦM TRUNG 2 (BÊN PHẢI - RỌI ĐÈN BAN ĐÊM) -->
+    <g class="cg-heli-right-patrol">
+      <!-- Chùm đèn pha rọi quét xuống -->
+      <polygon points="1132,282 1065,495 1205,495" fill="url(#heliSpotlightGrad)" class="cg-night-beam cg-heli-beam-sweep-alt" />
+      <!-- Cánh quạt đuôi -->
+      <line x1="1190" y1="262" x2="1190" y2="276" stroke="#94a3b8" stroke-width="2" />
+      <!-- Đuôi trực thăng -->
+      <polygon points="1190,269 1158,266 1158,273" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+      <!-- Thân trực thăng -->
+      <rect x="1128" y="261" width="34" height="15" rx="7" fill="#0f172a" stroke="#38bdf8" stroke-width="1.4" />
+      <!-- Kính buồng lái -->
+      <path d="M1140 262 Q1128 262 1128 271 L1140 271 Z" fill="#38bdf8" fill-opacity="0.45" />
+      <!-- Càng đáp -->
+      <line x1="1136" y1="276" x2="1134" y2="281" stroke="#94a3b8" stroke-width="1.3" />
+      <line x1="1156" y1="276" x2="1158" y2="281" stroke="#94a3b8" stroke-width="1.3" />
+      <line x1="1128" y1="281" x2="1164" y2="281" stroke="#94a3b8" stroke-width="1.5" />
+      <!-- Trục & cánh quạt chính đang quay -->
+      <line x1="1145" y1="256" x2="1145" y2="261" stroke="#cbd5e1" stroke-width="2" />
+      <ellipse cx="1145" cy="256" rx="34" ry="2.2" fill="#e2e8f0" fill-opacity="0.75" class="cg-rotor-spin" />
+      <!-- Đèn pha mũi & đèn tín hiệu -->
+      <circle cx="1131" cy="276" r="2.6" fill="#fef08a" />
+      <circle cx="1189" cy="268" r="2" fill="#10b981" />
+    </g>
+  </svg>
+
+  <!-- 6. Sân khấu trung tâm: Đèn rọi, Khiên khóa vàng, 2 Tháp canh, 2 Drone, 2 Xe tuần tra -->
+  <div class="cg-stage">
+    <svg class="cg-scene-svg" viewBox="0 0 680 290" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="centerBeamGrad" x1="340" y1="0" x2="340" y2="268" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#bae6fd" stop-opacity="0.16" />
+          <stop offset="65%" stop-color="#e0f2fe" stop-opacity="0.48" />
+          <stop offset="100%" stop-color="#fef9c3" stop-opacity="0.88" />
+        </linearGradient>
+
+        <linearGradient id="droneBeamGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#fde047" stop-opacity="0.55" />
+          <stop offset="100%" stop-color="#fde047" stop-opacity="0" />
+        </linearGradient>
+
+        <linearGradient id="shieldFillGrad" x1="340" y1="52" x2="340" y2="195" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#1e3a6e" />
+          <stop offset="100%" stop-color="#0b172e" />
+        </linearGradient>
+
+        <linearGradient id="shieldGoldStroke" x1="280" y1="52" x2="400" y2="195" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#fde047" />
+          <stop offset="50%" stop-color="#facc15" />
+          <stop offset="100%" stop-color="#f59e0b" />
+        </linearGradient>
+
+        <radialGradient id="groundShadowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#060d1a" stop-opacity="0.72" />
+          <stop offset="70%" stop-color="#060d1a" stop-opacity="0.28" />
+          <stop offset="100%" stop-color="#060d1a" stop-opacity="0" />
+        </radialGradient>
+
+        <linearGradient id="roverBeamLeft" x1="0%" y1="50%" x2="100%" y2="50%">
+          <stop offset="0%" stop-color="#fde047" stop-opacity="0.75" />
+          <stop offset="100%" stop-color="#fde047" stop-opacity="0" />
+        </linearGradient>
+        <linearGradient id="roverBeamRight" x1="100%" y1="50%" x2="0%" y2="50%">
+          <stop offset="0%" stop-color="#e0f2fe" stop-opacity="0.75" />
+          <stop offset="100%" stop-color="#e0f2fe" stop-opacity="0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Chùm sáng trung tâm -->
+      <polygon points="185,0 495,0 442,268 238,268" fill="url(#centerBeamGrad)" />
+
+      <!-- Đường chân trời mặt đất -->
+      <line x1="60" y1="268" x2="620" y2="268" stroke="rgba(255,255,255,0.18)" stroke-width="1.2" />
+
+      <!-- Bóng elip dưới khiên -->
+      <ellipse cx="325" cy="248" rx="68" ry="9" fill="url(#groundShadowGrad)" />
+
+      <!-- Drone bên trái -->
+      <g class="cg-drone-float">
+        <polygon points="175,88 153,165 197,165" fill="url(#droneBeamGrad)" />
+        <ellipse cx="175" cy="84" rx="16" ry="4.5" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2" />
+        <path d="M167 82 Q175 74 183 82" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+        <circle cx="175" cy="84" r="2.2" fill="#facc15" />
+      </g>
+
+      <!-- Drone bên phải -->
+      <g class="cg-drone-float-delay">
+        <polygon points="498,52 474,138 522,138" fill="url(#droneBeamGrad)" />
+        <ellipse cx="498" cy="48" rx="18" ry="5" fill="#1e293b" stroke="#38bdf8" stroke-width="1.2" />
+        <path d="M489 46 Q498 37 507 46" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+        <circle cx="498" cy="48" r="2.5" fill="#f43f5e" />
+      </g>
+
+      <!-- Tháp canh bên trái -->
+      <g>
+        <line x1="126" y1="184" x2="120" y2="268" stroke="#475569" stroke-width="2" />
+        <line x1="148" y1="184" x2="154" y2="268" stroke="#475569" stroke-width="2" />
+        <line x1="124" y1="205" x2="150" y2="205" stroke="#475569" stroke-width="1.5" />
+        <line x1="123" y1="226" x2="151" y2="226" stroke="#475569" stroke-width="1.5" />
+        <line x1="121" y1="247" x2="153" y2="247" stroke="#475569" stroke-width="1.5" />
+        <rect x="123" y="168" width="28" height="16" rx="2" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
+        <polygon points="120,168 137,156 154,168" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
+        <circle cx="144" cy="176" r="2.6" fill="#fde047" />
+      </g>
+
+      <!-- Tháp canh bên phải -->
+      <g>
+        <line x1="532" y1="184" x2="526" y2="268" stroke="#475569" stroke-width="2" />
+        <line x1="554" y1="184" x2="560" y2="268" stroke="#475569" stroke-width="2" />
+        <line x1="530" y1="205" x2="556" y2="205" stroke="#475569" stroke-width="1.5" />
+        <line x1="529" y1="226" x2="557" y2="226" stroke="#475569" stroke-width="1.5" />
+        <line x1="527" y1="247" x2="559" y2="247" stroke="#475569" stroke-width="1.5" />
+        <rect x="529" y="168" width="28" height="16" rx="2" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
+        <polygon points="526,168 543,156 560,168" fill="#0f172a" stroke="#38bdf8" stroke-width="1.6" />
+        <circle cx="536" cy="176" r="2.6" fill="#fde047" />
+      </g>
+
+      <!-- Xe tuần tra bên trái -->
+      <g>
+        <polygon points="262,265 320,261 320,271 262,268" fill="url(#roverBeamLeft)" />
+        <rect x="232" y="262" width="30" height="7" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="1.2" />
+        <rect x="237" y="258" width="18" height="4" rx="1.5" fill="#334155" stroke="#facc15" stroke-width="1" />
+      </g>
+
+      <!-- Xe tuần tra bên phải -->
+      <g>
+        <polygon points="424,265 365,261 365,271 424,268" fill="url(#roverBeamRight)" />
+        <rect x="424" y="262" width="30" height="7" rx="3" fill="#1e293b" stroke="#94a3b8" stroke-width="1.2" />
+        <rect x="431" y="258" width="18" height="4" rx="1.5" fill="#334155" stroke="#38bdf8" stroke-width="1" />
+      </g>
+
+      <!-- Khiên trung tâm viền vàng & Ổ khóa -->
+      <g class="cg-shield-pulse">
+        <path
+          d="M340 48 L398 72 V124 C398 164 373 192 340 206 C307 192 282 164 282 124 V72 L340 48 Z"
+          fill="url(#shieldFillGrad)"
+          stroke="url(#shieldGoldStroke)"
+          stroke-width="4.5"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M323 114 V101 C323 91.6 330.6 84 340 84 C349.4 84 357 91.6 357 101 V114"
+          stroke="#ffffff"
+          stroke-width="4.5"
+          stroke-linecap="round"
+        />
+        <rect
+          x="315"
+          y="114"
+          width="50"
+          height="40"
+          rx="8"
+          fill="#0f1e38"
+          stroke="#facc15"
+          stroke-width="4"
+        />
+        <circle cx="340" cy="130" r="4.5" fill="#facc15" />
+        <path d="M340 133 L340 142" stroke="#facc15" stroke-width="4" stroke-linecap="round" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- 7. Đồng hồ thời gian thực & Chế độ Ngày / Đêm -->
+  <div class="cg-status-pill" id="cg-clock-pill">
+    <span>🌙</span>
+    <span>19:43:49 • Chế độ Ban Đêm</span>
+  </div>
+
+  <!-- 8. Tiêu đề, mô tả & nút Bắt đầu -->
+  <h1 class="cg-intro-title">CyberGuard AI</h1>
+  <p class="cg-intro-desc">
+    Nền tảng kiểm tra mã độc thời gian thực, giám sát an toàn Wi-Fi, phân tích hình ảnh lừa đảo và huấn luyện phản xạ an ninh mạng.
+  </p>
+
+  <button class="cg-start-btn" onclick="closeCyberGuardIntro()">
+    <span>🚀</span>
+    <span>Bắt đầu</span>
+  </button>
+</div>
+
+<script>
+  function updateCyberGuardClock() {
+    const now = new Date();
+    const hours = now.getHours();
+    const timeStr = now.toLocaleTimeString('vi-VN', { hour12: false });
+    const isNight = hours >= 18 || hours < 6;
+
+    const screen = document.getElementById('cg-intro-screen');
+    const pill = document.getElementById('cg-clock-pill');
+
+    if (screen) {
+      screen.classList.toggle('day-mode', !isNight);
+    }
+    if (pill) {
+      pill.innerHTML = `<span>${isNight ? '🌙' : '☀️'}</span><span>${timeStr} • ${isNight ? 'Chế độ Ban Đêm' : 'Chế độ Ban Ngày'}</span>`;
+    }
+  }
+
+  updateCyberGuardClock();
+  setInterval(updateCyberGuardClock, 1000);
+
+  function closeCyberGuardIntro() {
+    const intro = document.getElementById('cg-intro-screen');
+    if (intro) {
+      intro.classList.add('hidden');
+    }
+  }
+</script>
+<!-- ================= KẾT THÚC INTRO CYBERGUARD AI ================= -->
         /* ================= 3. MÀN HÌNH PHÂN LUỒNG 5 GIÂY ================= */
         #triageScreen { display: none; min-height: 100vh; flex-direction: column; justify-content: center; align-items: center; padding: 24px; }
         .triage-card { width: 640px; max-width: 96vw; background: var(--bg-card); border: 1px solid var(--border); border-radius: 18px; padding: 26px 24px; box-shadow: var(--shadow); }
