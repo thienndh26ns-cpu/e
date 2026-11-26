@@ -3,772 +3,1073 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CyberGuard AI — Hệ Thống Phòng Vệ An Ninh Mạng</title>
+  <title>CyberGuard AI Pro — Hệ Thống Phòng Vệ & Ứng Cứu An Ninh Mạng</title>
   <style>
     :root {
-      --bg: #f4f6fb;
-      --surface: #ffffff;
-      --surface-alt: #f8fafc;
-      --text: #0f172a;
-      --text-muted: #475569;
+      --bg-main: #f3f6fc;
+      --bg-card: #ffffff;
+      --bg-sub: #f8fafc;
+      --bg-hover: #eff6ff;
+      --text-main: #0f172a;
+      --text-sub: #475569;
+      --text-muted: #64748b;
       --border: #e2e8f0;
       --primary: #1d4ed8;
-      --primary-hover: #1e40af;
+      --primary-dark: #1e3a8a;
+      --primary-light: #dbeafe;
+      --accent: #0284c7;
       --danger: #dc2626;
+      --danger-bg: #fef2f2;
       --warning: #d97706;
+      --warning-bg: #fffbeb;
       --success: #16a34a;
-      --shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      --success-bg: #f0fdf4;
+      --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
     }
 
     body.dark-mode {
-      --bg: #0b1120;
-      --surface: #111827;
-      --surface-alt: #1e293b;
-      --text: #f1f5f9;
+      --bg-main: #090d16;
+      --bg-card: #111827;
+      --bg-sub: #1e293b;
+      --bg-hover: #1e3a8a33;
+      --text-main: #f8fafc;
+      --text-sub: #cbd5e1;
       --text-muted: #94a3b8;
       --border: #334155;
       --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --primary-dark: #60a5fa;
+      --primary-light: #1e3a8a;
+      --accent: #38bdf8;
+      --danger: #ef4444;
+      --danger-bg: #450a0a;
+      --warning: #f59e0b;
+      --warning-bg: #451a03;
+      --success: #22c55e;
+      --success-bg: #052e16;
+      --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.55);
     }
 
     * {
       box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
     }
 
     body {
       margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      transition: background 0.25s, color 0.25s;
+      background: var(--bg-main);
+      color: var(--text-main);
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
+    /* TOPBAR HEADER */
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 100;
-      height: 64px;
-      background: var(--surface);
+      z-index: 200;
+      height: 68px;
+      background: var(--bg-card);
       border-bottom: 1px solid var(--border);
-      padding: 0 20px;
+      padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-sm);
     }
 
     .topbar-left, .topbar-right {
       display: flex;
       align-items: center;
+      gap: 14px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 20px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
       gap: 12px;
     }
 
-    .menu-toggle {
-      display: none;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 20px;
-      padding: 4px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .brand {
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #1d4ed8, #0284c7);
+      color: #fff;
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.3);
     }
 
-    .brand-icon { font-size: 28px; }
-    .brand strong { display: block; font-size: 17px; color: var(--primary); }
-    .brand small { font-size: 11.5px; color: var(--text-muted); }
-
-    .status-pill {
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 20px;
+    .brand-text strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: -0.3px;
+      color: var(--primary);
     }
-    .status-pill.safe { background: #dcfce7; color: #166534; }
-    .status-pill.danger { background: #fee2e2; color: #991b1b; }
 
-    .pill-btn {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-weight: 600;
-      font-size: 12.5px;
-      cursor: pointer;
+    .brand-text span {
+      font-size: 12px;
+      color: var(--text-muted);
     }
-    .pill-btn:hover { border-color: var(--primary); }
 
-    .app-layout {
+    .clock-pill {
       display: flex;
-      min-height: calc(100vh - 64px);
+      align-items: center;
+      gap: 8px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+
+    .clock-pill.safe {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: rgba(22, 163, 74, 0.25);
+    }
+
+    .clock-pill.danger {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color: rgba(220, 38, 38, 0.3);
+      animation: pulseWarn 2s infinite;
+    }
+
+    @keyframes pulseWarn {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.78; }
+    }
+
+    .header-action-btn {
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .header-action-btn:hover {
+      border-color: var(--primary);
+      background: var(--bg-hover);
+    }
+
+    /* SHELL LAYOUT */
+    .shell {
+      display: flex;
+      min-height: calc(100vh - 68px);
     }
 
     .sidebar {
-      width: 265px;
-      background: var(--surface);
+      width: 280px;
+      background: var(--bg-card);
       border-right: 1px solid var(--border);
-      padding: 18px 14px;
+      padding: 20px 14px;
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
     }
 
-    .nav-group-title {
+    .nav-section-label {
       font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.6px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
       color: var(--text-muted);
-      padding: 0 10px 8px;
+      padding: 6px 12px;
+      margin-top: 6px;
     }
 
-    .nav-btn {
+    .nav-item {
       width: 100%;
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 11px 12px;
+      gap: 12px;
+      padding: 12px 14px;
       margin-bottom: 4px;
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       background: transparent;
-      color: var(--text);
+      color: var(--text-main);
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       text-align: left;
-      transition: 0.2s;
+      transition: all 0.2s;
     }
-    .nav-btn:hover { background: var(--surface-alt); }
-    .nav-btn.active { background: var(--primary); color: #ffffff; font-weight: 600; }
-    .nav-btn.danger-nav.active { background: var(--danger); }
 
-    .privacy-box {
+    .nav-item:hover {
+      background: var(--bg-hover);
+    }
+
+    .nav-item.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.25);
+    }
+
+    .nav-item.sos-item.active {
+      background: var(--danger);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.28);
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .privacy-card {
       margin-top: auto;
-      padding: 12px;
-      border-radius: 10px;
-      background: var(--surface-alt);
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: var(--bg-sub);
       border: 1px solid var(--border);
       font-size: 12px;
-      color: var(--text-muted);
+      color: var(--text-sub);
     }
-    .privacy-box strong { display: block; color: var(--text); margin-bottom: 4px; }
-    .privacy-box p { margin: 0; line-height: 1.45; }
 
-    .main-content {
+    .privacy-card strong {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--success);
+      margin-bottom: 5px;
+      font-size: 12.5px;
+    }
+
+    .privacy-card p {
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* MAIN CONTENT AREA */
+    .workspace {
       flex: 1;
-      padding: 26px 32px;
-      max-width: 1120px;
+      padding: 28px 36px;
+      max-width: 1180px;
     }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; animation: fadeIn 0.2s ease; }
+    .view-panel {
+      display: none;
+    }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+    .view-panel.active {
+      display: block;
+      animation: slideUp 0.22s ease;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(6px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .panel-header h1 { margin: 0 0 6px; font-size: 23px; }
-    .panel-header p { margin: 0 0 20px; color: var(--text-muted); font-size: 14.5px; }
+    .view-header {
+      margin-bottom: 22px;
+    }
 
-    .sub-tabs { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-    .sub-tab {
-      padding: 8px 16px;
-      border-radius: 8px;
+    .view-header h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .view-header p {
+      margin: 0;
+      color: var(--text-sub);
+      font-size: 14.5px;
+    }
+
+    /* CARDS & GRIDS */
+    .card {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      margin: 0 0 14px;
+      font-size: 16.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+
+    .stat-tile {
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .stat-tile span {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .stat-tile strong {
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    /* MODE SWITCHER TABS */
+    .mode-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn {
+      padding: 9px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-main);
       font-weight: 600;
       font-size: 13.5px;
       cursor: pointer;
-    }
-    .sub-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
+      transition: 0.2s;
     }
 
-    .sample-bar {
+    .mode-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    /* INPUTS & BUTTONS */
+    .sample-strip {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
       font-size: 12.5px;
       color: var(--text-muted);
     }
 
-    .chip-btn {
-      padding: 4px 10px;
-      border-radius: 16px;
+    .sample-chip {
+      padding: 5px 12px;
+      border-radius: 999px;
       border: 1px solid var(--border);
-      background: var(--surface-alt);
-      color: var(--text);
+      background: var(--bg-sub);
+      color: var(--text-main);
       font-size: 12px;
       cursor: pointer;
+      transition: 0.15s;
     }
-    .chip-btn:hover { border-color: var(--primary); }
 
-    .input-row { display: flex; gap: 10px; }
+    .sample-chip:hover {
+      border-color: var(--primary);
+      background: var(--bg-hover);
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+    }
 
     input[type="text"], textarea, select {
       width: 100%;
-      padding: 11px 14px;
-      border-radius: 10px;
+      padding: 12px 15px;
+      border-radius: var(--radius-md);
       border: 1px solid var(--border);
-      background: var(--surface-alt);
-      color: var(--text);
+      background: var(--bg-sub);
+      color: var(--text-main);
       font-size: 14px;
-      margin-bottom: 10px;
+      outline: none;
+      margin-bottom: 12px;
     }
-    .input-row input { margin-bottom: 0; }
 
-    .primary-btn {
-      padding: 11px 20px;
+    input[type="text"]:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    .input-group input {
+      margin-bottom: 0;
+    }
+
+    .btn-primary {
+      padding: 12px 22px;
       border: none;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       background: var(--primary);
       color: #fff;
       font-weight: 600;
       font-size: 14px;
       cursor: pointer;
       white-space: nowrap;
+      transition: 0.2s;
     }
-    .primary-btn:hover { background: var(--primary-hover); }
 
-    .dropzone {
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+      border: none;
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .drop-area {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 32px 20px;
+      padding: 36px 20px;
       border: 2px dashed var(--primary);
-      border-radius: 12px;
-      background: var(--surface-alt);
+      border-radius: var(--radius-lg);
+      background: var(--bg-sub);
       text-align: center;
       cursor: pointer;
+      transition: 0.2s;
     }
-    .drop-icon { font-size: 36px; margin-bottom: 8px; }
-    .dropzone span { font-size: 12.5px; color: var(--text-muted); margin-top: 6px; max-width: 520px; }
 
-    .result-area { margin-top: 16px; font-size: 14px; line-height: 1.55; }
+    .drop-area:hover {
+      background: var(--bg-hover);
+    }
 
-    .report-box {
-      padding: 16px;
-      border-radius: 12px;
+    .drop-area .icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .drop-area span {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      max-width: 560px;
+    }
+
+    .output-zone {
+      margin-top: 18px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .verdict-card {
+      padding: 18px;
+      border-radius: var(--radius-md);
       border-left: 5px solid var(--primary);
-      background: var(--surface-alt);
+      background: var(--bg-sub);
     }
-    .report-box.danger { border-left-color: var(--danger); }
-    .report-box.warning { border-left-color: var(--warning); }
-    .report-box.safe { border-left-color: var(--success); }
 
-    .metrics-grid {
+    .verdict-card.danger { border-left-color: var(--danger); background: var(--danger-bg); }
+    .verdict-card.warning { border-left-color: var(--warning); background: var(--warning-bg); }
+    .verdict-card.safe { border-left-color: var(--success); background: var(--success-bg); }
+
+    .kpi-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 12px 0;
+      gap: 12px;
+      margin: 14px 0;
     }
-    .metric-card {
-      background: var(--surface);
+
+    .kpi-box {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      padding: 10px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: var(--radius-sm);
       font-size: 12.5px;
     }
 
-    .grid-2, .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-
     .news-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+      gap: 18px;
     }
-    .news-card {
-      background: var(--surface);
+
+    .news-item {
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: var(--shadow);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    .news-tag {
+
+    .news-badge {
       display: inline-block;
       font-size: 11px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: #fee2e2;
-      color: #b91c1c;
-      margin-bottom: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      margin-bottom: 10px;
     }
 
-    .hotline-list { padding-left: 18px; line-height: 2; }
+    .timer-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      background: var(--danger-bg);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      color: var(--danger);
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
 
-    .phone-mockup {
-      max-width: 440px;
-      margin: 0 auto 18px;
+    .sim-device {
+      max-width: 450px;
+      margin: 0 auto 20px;
       border: 3px solid #334155;
-      border-radius: 22px;
-      background: var(--surface-alt);
+      border-radius: 24px;
+      background: var(--bg-sub);
       overflow: hidden;
+      box-shadow: var(--shadow-md);
     }
-    .phone-header {
-      background: #1e293b;
-      color: #fff;
-      padding: 10px 16px;
+
+    .sim-bar {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 12px 18px;
       font-size: 13px;
       font-weight: 600;
+      display: flex;
+      justify-content: space-between;
     }
-    .phone-body { padding: 16px; font-size: 13.5px; }
 
-    .arena-options {
+    .sim-screen {
+      padding: 18px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .choice-stack {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      max-width: 640px;
+      max-width: 680px;
       margin: 0 auto;
     }
-    .arena-opt-btn {
-      padding: 12px 16px;
+
+    .choice-btn {
+      padding: 14px 18px;
       text-align: left;
-      border-radius: 10px;
+      border-radius: var(--radius-md);
       border: 1px solid var(--border);
-      background: var(--surface-alt);
-      color: var(--text);
+      background: var(--bg-sub);
+      color: var(--text-main);
       font-size: 14px;
       cursor: pointer;
+      transition: 0.15s;
     }
-    .arena-opt-btn:hover { border-color: var(--primary); }
 
-    @media (max-width: 820px) {
-      .menu-toggle { display: block; }
+    .choice-btn:hover {
+      border-color: var(--primary);
+      background: var(--bg-hover);
+    }
+
+    .meter-track {
+      height: 10px;
+      width: 100%;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .meter-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    @media (max-width: 900px) {
+      .mobile-menu-btn { display: block; }
       .sidebar {
         position: fixed;
-        left: -280px;
-        top: 64px;
+        left: -290px;
+        top: 68px;
         bottom: 0;
-        z-index: 99;
-        transition: 0.25s;
+        z-index: 150;
+        transition: 0.25s ease;
       }
       .sidebar.open { left: 0; }
-      .grid-2, .form-grid, .metrics-grid { grid-template-columns: 1fr; }
-      .input-row { flex-direction: column; }
-      .main-content { padding: 18px; }
+      .grid-2, .grid-3, .grid-4, .kpi-row { grid-template-columns: 1fr; }
+      .input-group { flex-direction: column; }
+      .workspace { padding: 20px; }
     }
   </style>
 </head>
-    <body>
+<body>
   <!-- THANH ĐIỀU HƯỚNG TRÊN CÙNG -->
   <header class="topbar">
     <div class="topbar-left">
-      <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-      <div class="brand">
-        <span class="brand-icon">🛡️</span>
-        <div>
-          <strong>CyberGuard AI</strong>
-          <small data-i18n="brandSub">Nền tảng Phòng vệ & Ứng cứu Lừa đảo</small>
+      <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+      <div class="brand-box">
+        <div class="brand-logo">🛡️</div>
+        <div class="brand-text">
+          <strong>CyberGuard AI Pro</strong>
+          <span data-i18n="brandSubtitle">Hệ thống Phòng vệ & Ứng cứu An ninh mạng Đa lớp</span>
         </div>
       </div>
     </div>
 
     <div class="topbar-right">
-      <div id="timeThreatBadge" class="status-pill safe">
-        <span id="liveClock">00:00:00</span> • <span id="hourRiskLabel" data-i18n="hourNormal">Khung giờ bình thường</span>
+      <div id="clockStatusPill" class="clock-pill safe">
+        <span id="liveTimeDisplay">00:00:00</span> • <span id="toxicHourText" data-i18n="hourSafe">Khung giờ ổn định</span>
       </div>
-      <button class="pill-btn" id="langSwitchBtn" onclick="toggleLanguage()">🌐 EN</button>
-      <button class="pill-btn" id="themeSwitchBtn" onclick="toggleTheme()">☀️ / 🌙</button>
+      <button class="header-action-btn" id="btnLangToggle" onclick="switchLanguage()">🌐 EN</button>
+      <button class="header-action-btn" onclick="toggleDarkMode()">☀️ / 🌙</button>
     </div>
   </header>
 
-  <div class="app-layout">
-    <!-- MENU BÊN TRÁI PHÂN NHÓM RÕ RÀNG -->
+  <div class="shell">
+    <!-- MENU BÊN TRÁI -->
     <aside class="sidebar" id="sidebar">
-      <div class="nav-group-title" data-i18n="groupEmergency">🚨 ỨNG CỨU KHẨN CẤP</div>
-      <button class="nav-btn active" onclick="openTab('tab-scanner', this)">
-        <span>🔍</span> <span data-i18n="navScanner">Quét Link & File Virus</span>
+      <div class="nav-section-label" data-i18n="secEmergency">🚨 ỨNG CỨU KHẨN CẤP</div>
+      <button class="nav-item active" onclick="navigateView('view-scanner', this)">
+        <span>🔍</span> <span data-i18n="menuScanner">Quét Link & File Virus</span>
+        <span class="nav-badge">AI+VT</span>
       </button>
-      <button class="nav-btn" onclick="openTab('tab-sos60s', this)">
-        <span>⚡</span> <span data-i18n="navSos60">Ứng Cứu 60s & AI</span>
+      <button class="nav-item" onclick="navigateView('view-rescue', this)">
+        <span>⚡</span> <span data-i18n="menuRescue">Ứng Cứu 60s & Phân Tích</span>
       </button>
-      <button class="nav-btn danger-nav" onclick="openTab('tab-report', this)">
-        <span>🆘</span> <span data-i18n="navReport">SOS & Đơn Trình Báo</span>
-      </button>
-
-      <div class="nav-group-title" style="margin-top: 18px;" data-i18n="groupPrevention">🛡️ PHÒNG NGỪA & RÈN LUYỆN</div>
-      <button class="nav-btn" onclick="openTab('tab-news', this)">
-        <span>🌐</span> <span data-i18n="navNews">Tin Tức Cảnh Báo</span>
-      </button>
-      <button class="nav-btn" onclick="openTab('tab-password', this)">
-        <span>🔐</span> <span data-i18n="navPwd">Mật Khẩu & Entropy</span>
-      </button>
-      <button class="nav-btn" onclick="openTab('tab-arena', this)">
-        <span>🎯</span> <span data-i18n="navArena">Đấu Trường Mô Phỏng</span>
+      <button class="nav-item sos-item" onclick="navigateView('view-sos', this)">
+        <span>🆘</span> <span data-i18n="menuSos">SOS & Đơn Trình Báo</span>
       </button>
 
-      <div class="privacy-box">
-        <strong data-i18n="privacyTitle">🔒 Cam kết Bảo mật</strong>
-        <p data-i18n="privacyDesc">Mật khẩu và tệp tin được xử lý 100% cục bộ trên trình duyệt (Client-side), không lưu trữ lên máy chủ.</p>
+      <div class="nav-section-label" data-i18n="secPrevention">🛡️ PHÒNG NGỪA & RÈN LUYỆN</div>
+      <button class="nav-item" onclick="navigateView('view-news', this)">
+        <span>🌐</span> <span data-i18n="menuNews">Trung Tâm Tin Tức</span>
+      </button>
+      <button class="nav-item" onclick="navigateView('view-password', this)">
+        <span>🔐</span> <span data-i18n="menuPassword">Mật Khẩu & Entropy</span>
+      </button>
+      <button class="nav-item" onclick="navigateView('view-arena', this)">
+        <span>🎯</span> <span data-i18n="menuArena">Đấu Trường Mô Phỏng</span>
+      </button>
+
+      <div class="privacy-card">
+        <strong data-i18n="privHeading">🔒 Cam kết Zero-Knowledge</strong>
+        <p data-i18n="privBody">Mật khẩu và tệp tin được băm & tính toán 100% cục bộ trên trình duyệt (Client-side), tuyệt đối không lưu trữ trên máy chủ.</p>
       </div>
     </aside>
 
-    <!-- KHU VỰC NỘI DUNG CHÍNH -->
-    <main class="main-content">
+    <!-- KHU VỰC LÀM VIỆC CHÍNH -->
+    <main class="workspace">
 
-      <!-- TAB 1: QUÉT LINK & FILE VIRUS ĐA LỚP -->
-      <section id="tab-scanner" class="tab-panel active">
-        <div class="panel-header">
-          <h1 data-i18n="scanTitle">🔍 Trung Tâm Quét Link & Mã Độc Đa Lớp</h1>
-          <p data-i18n="scanSub">Kết hợp phân tích Heuristic (Levenshtein, Entropy) và 70+ Engine diệt virus qua VirusTotal & Google Safe Browsing.</p>
+      <!-- MODULE 1: TRUNG TÂM QUÉT LINK, FILE VIRUS & WI-FI -->
+      <section id="view-scanner" class="view-panel active">
+        <div class="view-header">
+          <h1 data-i18n="titleScanner">🔍 Trung Tâm Phân Tích URL, Mã Độc & Wi-Fi Đa Lớp</h1>
+          <p data-i18n="subScanner">Kết hợp thuật toán Heuristic (Levenshtein Distance, Shannon Entropy) cùng 70+ Engine diệt virus từ VirusTotal & Google Safe Browsing.</p>
         </div>
 
-        <div class="sub-tabs">
-          <button class="sub-tab active" onclick="switchScannerMode('url', this)" data-i18n="subUrl">🔗 Quét Liên Kết (URL)</button>
-          <button class="sub-tab" onclick="switchScannerMode('file', this)" data-i18n="subFile">🦠 Quét File Virus (SHA-256)</button>
-          <button class="sub-tab" onclick="switchScannerMode('wifi', this)" data-i18n="subWifi">📡 Kiểm Tra Wi-Fi (Evil Twin)</button>
+        <div class="grid-4" style="margin-bottom: 18px;">
+          <div class="stat-tile"><span data-i18n="kpiEngine">Engine Diệt Virus</span><strong>70+ Engines</strong></div>
+          <div class="stat-tile"><span data-i18n="kpiAlgo">Thuật toán Cục bộ</span><strong>Levenshtein + Entropy</strong></div>
+          <div class="stat-tile"><span data-i18n="kpiHash">Quét Tệp Tin</span><strong>SHA-256 Client</strong></div>
+          <div class="stat-tile"><span data-i18n="kpiRdap">Truy vết Hạ tầng</span><strong>RDAP + Redirect</strong></div>
         </div>
 
-        <!-- CHẾ ĐỘ A: QUÉT URL -->
-        <div id="mode-url" class="card">
-          <div class="sample-bar">
-            <span data-i18n="sampleLabel">Mẫu thử nhanh:</span>
-            <button class="chip-btn" onclick="fillUrlSample('http://vietcombank-xacthuc24h.xyz/login')">🏦 Mạo danh Bank</button>
-            <button class="chip-btn" onclick="fillUrlSample('https://dichvucong-capnhat.top/VNeID_v2.apk')">📲 Link tải .APK</button>
-            <button class="chip-btn" onclick="fillUrlSample('https://m0mo.vn/nhan-tien')">🎭 Sai 1 ký tự</button>
-            <button class="chip-btn" onclick="fillUrlSample('https://vietcombank.com.vn')">✅ Trang chính chủ</button>
+        <div class="mode-bar">
+          <button class="mode-btn active" onclick="setScannerSubMode('url', this)" data-i18n="tabUrl">🔗 Quét Liên Kết (URL)</button>
+          <button class="mode-btn" onclick="setScannerSubMode('file', this)" data-i18n="tabFile">🦠 Quét File Virus (SHA-256)</button>
+          <button class="mode-btn" onclick="setScannerSubMode('wifi', this)" data-i18n="tabWifi">📡 Kiểm Tra Wi-Fi (Evil Twin)</button>
+        </div>
+
+        <!-- CHẾ ĐỘ 1: QUÉT URL -->
+        <div id="submode-url" class="card">
+          <div class="sample-strip">
+            <span data-i18n="sampleTitle">Kịch bản kiểm thử nhanh:</span>
+            <button class="sample-chip" onclick="runSampleUrl('http://vietcombank-xacthuc24h.xyz/login')">🏦 Giả mạo Ngân hàng</button>
+            <button class="sample-chip" onclick="runSampleUrl('https://dichvucong-capnhat.top/VNeID_v2.apk')">📲 Tải tệp .APK độc hại</button>
+            <button class="sample-chip" onclick="runSampleUrl('https://m0mo.vn/qua-tang')">🎭 Sai 1 ký tự (Typosquatting)</button>
+            <button class="sample-chip" onclick="runSampleUrl('https://vietcombank.com.vn')">✅ Tên miền chính chủ</button>
           </div>
 
-          <div class="input-row">
-            <input type="text" id="urlInput" placeholder="Dán đường link nghi ngờ vào đây (VD: http://vietcombank-xacthuc.xyz)..." />
-            <button class="primary-btn" id="btnScanUrl" onclick="handleUrlScan()" data-i18n="btnScan">Phân Tích Ngay</button>
+          <div class="input-group">
+            <input type="text" id="urlScanInput" placeholder="Nhập hoặc dán đường link nghi ngờ (VD: http://vietcombank-xacthuc.xyz)..." />
+            <button class="btn-primary" onclick="executeUrlScan()" data-i18n="btnRunScan">Quét Đa Lớp Ngay</button>
           </div>
-
-          <div id="urlResultContainer" class="result-area"></div>
+          <div id="urlScanOutput" class="output-zone"></div>
         </div>
 
-        <!-- CHẾ ĐỘ B: QUÉT FILE VIRUS BẰNG SHA-256 -->
-        <div id="mode-file" class="card" style="display: none;">
-          <label class="dropzone" for="malwareFileInput">
-            <input type="file" id="malwareFileInput" hidden onchange="handleFileScan(event)" />
-            <div class="drop-icon">📂</div>
-            <strong data-i18n="dropTitle">Bấm để chọn tệp nghi ngờ (.apk, .exe, .zip, .pdf...)</strong>
-            <span data-i18n="dropSub">Hệ thống chỉ tính mã băm SHA-256 trên máy bạn và đối chiếu cơ sở dữ liệu mã độc — tuyệt đối không upload tệp.</span>
+        <!-- CHẾ ĐỘ 2: QUÉT FILE VIRUS SHA-256 -->
+        <div id="submode-file" class="card" style="display: none;">
+          <label class="drop-area" for="fileHashInput">
+            <input type="file" id="fileHashInput" hidden onchange="executeFileHashScan(event)" />
+            <div class="icon">🧬</div>
+            <strong data-i18n="dropHead">Chọn tệp tin nghi ngờ (.apk, .exe, .bat, .zip, .pdf...)</strong>
+            <span data-i18n="dropDesc">Trình duyệt tự tính chữ ký số SHA-256 cục bộ và gửi mã băm đi đối chiếu cơ sở dữ liệu mã độc toàn cầu — không bao giờ tải tệp gốc lên mạng.</span>
           </label>
-          <div id="fileResultContainer" class="result-area"></div>
+          <div id="fileScanOutput" class="output-zone"></div>
         </div>
 
-        <!-- CHẾ ĐỘ C: KIỂM TRA WI-FI -->
-        <div id="mode-wifi" class="card" style="display: none;">
-          <div class="form-grid">
+        <!-- CHẾ ĐỘ 3: KIỂM TRA WI-FI EVIL TWIN -->
+        <div id="submode-wifi" class="card" style="display: none;">
+          <div class="grid-2">
             <div>
-              <label data-i18n="wifiEnvLabel">Tình trạng mạng Wi-Fi hiện tại:</label>
-              <select id="wifiCondition" onchange="evaluateWifiRisk()">
-                <option value="home">🏠 Wi-Fi nhà riêng (Mã hóa WPA2 / WPA3)</option>
-                <option value="cafe">☕ Wi-Fi quán cà phê có mật khẩu</option>
-                <option value="open">🔓 Wi-Fi công cộng mở (Không mật khẩu)</option>
-                <option value="twin">👯 Xuất hiện 2 mạng Wi-Fi trùng tên nhau (Evil Twin)</option>
-                <option value="captive">🎭 Bắt đăng nhập Facebook / Google / OTP để vào mạng</option>
+              <label style="font-weight:600; display:block; margin-bottom:6px;">Đặc điểm mạng Wi-Fi bạn đang thấy:</label>
+              <select id="wifiScenarioSelect" onchange="evaluateWifiSecurity()">
+                <option value="home">🏠 Wi-Fi Gia đình / Văn phòng (Mã hóa WPA2 / WPA3)</option>
+                <option value="cafe">☕ Wi-Fi Quán cà phê / Khách sạn có mật khẩu chung</option>
+                <option value="open">🔓 Wi-Fi Công cộng mở (Không yêu cầu mật khẩu)</option>
+                <option value="twin">👯 Xuất hiện 2 điểm phát Wi-Fi trùng tên nhau (Evil Twin)</option>
+                <option value="portal">🎭 Trang chào bắt đăng nhập Facebook / Google / OTP ngân hàng</option>
               </select>
             </div>
             <div>
-              <label data-i18n="wifiVpnLabel">Lớp bảo vệ đường truyền:</label>
-              <select id="wifiVpn" onchange="evaluateWifiRisk()">
-                <option value="no">❌ Chưa bật VPN / DNS mã hóa</option>
-                <option value="yes">🛡️ Đang bật VPN & chỉ truy cập HTTPS</option>
+              <label style="font-weight:600; display:block; margin-bottom:6px;">Biện pháp bảo vệ đang bật trên thiết bị:</label>
+              <select id="wifiShieldSelect" onchange="evaluateWifiSecurity()">
+                <option value="none">❌ Không bật VPN / Dùng DNS mặc định</option>
+                <option value="vpn">🛡️ Đang bật VPN mã hóa toàn bộ lưu lượng</option>
               </select>
             </div>
           </div>
-          <div id="wifiResultContainer" class="result-area"></div>
+          <div id="wifiScanOutput" class="output-zone"></div>
         </div>
       </section>
+      <!-- MODULE 2: ỨNG CỨU 60S & AI BÓC TÁCH THAO TÚNG TÂM LÝ -->
+      <section id="view-rescue" class="view-panel">
+        <div class="view-header">
+          <h1 data-i18n="titleRescue">⚡ Ứng Cứu Khẩn Cấp 60 Giây & AI Phân Tích Tâm Lý</h1>
+          <p data-i18n="subRescue">Phản ứng theo từng mốc giây vàng để cô lập thiệt hại và bóc tách kịch bản thao túng tâm lý.</p>
+        </div>
 
-      <!-- TAB 2: ỨNG CỨU 60S & AI PHÂN TÍCH TÂM LÝ -->
-      <section id="tab-sos60s" class="tab-panel">
-        <div class="panel-header">
-          <h1 data-i18n="sos60Title">⚡ Ứng Cứu Khẩn Cấp 60 Giây & Trợ Lý AI</h1>
-          <p data-i18n="sos60Sub">Xử lý sự cố theo từng giây và phân tích chiêu thức thao túng tâm lý trong tin nhắn/cuộc gọi.</p>
+        <div class="timer-banner">
+          <span>⏱️ BỘ ĐẾM PHẢN ỨNG KHẨN CẤP 60 GIÂY: <span id="rescueCountdown">60</span>s</span>
+          <button class="btn-danger" onclick="startRescueTimer()">▶ Kích Hoạt Đếm Ngược</button>
         </div>
 
         <div class="grid-2">
           <div class="card">
-            <h3 data-i18n="emergencyStepsTitle">⏱️ Quy Trình Chặn Đứng Thiệt Hại</h3>
-            <select id="incidentType" onchange="renderEmergencyChecklist()">
-              <option value="apk">1. Vừa tải và cài tệp .APK lạ trên điện thoại Android</option>
-              <option value="otp">2. Vừa nhập mật khẩu ngân hàng / mã OTP vào web lạ</option>
-              <option value="transfer">3. Vừa chuyển tiền cho kẻ giả danh Công an / Shipper</option>
-              <option value="social">4. Nghi bị chiếm quyền Facebook / Zalo</option>
+            <h3 class="card-title">🛠️ Bước 1: Chọn Tình Huống Sự Cố Đang Gặp Phải</h3>
+            <select id="rescueScenarioSelect" onchange="renderRescueSteps()">
+              <option value="apk">1. Vừa tải và cài tệp .APK lạ (VNeID / Dịch vụ công / Thuế giả)</option>
+              <option value="otp">2. Vừa nhập mật khẩu ngân hàng / mã OTP vào trang web lạ</option>
+              <option value="money">3. Vừa chuyển khoản cho đối tượng giả danh Công an / Shipper</option>
+              <option value="account">4. Nghi ngờ bị chiếm quyền tài khoản Facebook / Zalo / Gmail</option>
             </select>
-            <div id="checklistOutput" class="result-area"></div>
+            <div id="rescueStepsOutput" class="output-zone"></div>
           </div>
 
           <div class="card">
-            <h3 data-i18n="aiAnalyzeTitle">🧠 AI Bóc Tách Thao Túng Tâm Lý</h3>
-            <textarea id="scamMessageInput" rows="4" placeholder="Dán nội dung tin nhắn hoặc lời thoại cuộc gọi đáng ngờ vào đây..."></textarea>
-            <button class="primary-btn" style="width: 100%;" onclick="analyzeScamPsychology()" data-i18n="btnAnalyzeMsg">Phân Tích Mức Độ Thao Túng</button>
-            <div id="aiPsychOutput" class="result-area"></div>
+            <h3 class="card-title">🧠 Bước 2: AI Bóc Tách Thao Túng Tâm Lý Tin Nhắn</h3>
+            <textarea id="psychInputText" rows="5" placeholder="Dán nội dung tin nhắn SMS, Zalo hoặc lời thoại cuộc gọi đe dọa vào đây để AI phân tích..."></textarea>
+            <button class="btn-primary" style="width:100%;" onclick="runPsychologyAnalysis()">Phân Tích Mức Độ Thao Túng</button>
+            <div id="psychAnalysisOutput" class="output-zone"></div>
           </div>
         </div>
       </section>
 
-      <!-- TAB 3: SOS KHẨN CẤP & TẠO ĐƠN TRÌNH BÁO -->
-      <section id="tab-report" class="tab-panel">
-        <div class="panel-header">
-          <h1 data-i18n="reportTitle">🆘 Đường Dây Nóng & Xuất Đơn Trình Báo Nhanh</h1>
-          <p data-i18n="reportSub">Tra cứu kênh tiếp nhận chính thức của Bộ Công an và tạo nhanh mẫu đơn trình báo sự cố lừa đảo.</p>
+      <!-- MODULE 3: SOS KHẨN CẤP & TẠO ĐƠN TRÌNH BÁO -->
+      <section id="view-sos" class="view-panel">
+        <div class="view-header">
+          <h1 data-i18n="titleSos">🆘 Đường Dây Nóng Quốc Gia & Xuất Đơn Trình Báo Nhanh</h1>
+          <p data-i18n="subSos">Kết nối ngay các đầu mối tiếp nhận tố giác tội phạm công nghệ cao và xuất mẫu đơn trình báo chuẩn.</p>
         </div>
 
         <div class="grid-2">
           <div class="card">
-            <h3>📞 Kênh Tiếp Nhận Chính Thức</h3>
-            <ul class="hotline-list">
-              <li><strong>Đường dây nóng Bộ Công an (Cục A05):</strong> <code>069.219.4053</code></li>
-              <li><strong>Cảnh sát Phản ứng nhanh:</strong> <code>113</code></li>
-              <li><strong>Cổng cảnh báo An toàn thông tin VN:</strong> <code>canhbao.ncsc.gov.vn</code></li>
-              <li><strong>Tổng đài hỗ trợ Chống Lừa Đảo:</strong> <code>chongluadao.vn</code></li>
-            </ul>
+            <h3 class="card-title">📞 Đầu Mối Tiếp Nhận Chính Thức (24/7)</h3>
+            <div class="stat-tile" style="margin-bottom:10px;">
+              <span>Cục An ninh mạng & Phòng chống tội phạm sử dụng CNC (A05 - Bộ Công an)</span>
+              <strong>069.219.4053</strong>
+            </div>
+            <div class="stat-tile" style="margin-bottom:10px;">
+              <span>Tổng đài Cảnh sát Phản ứng nhanh Quốc gia</span>
+              <strong>113</strong>
+            </div>
+            <div class="stat-tile" style="margin-bottom:10px;">
+              <span>Cổng cảnh báo An toàn thông tin Việt Nam (NCSC)</span>
+              <strong>canhbao.ncsc.gov.vn</strong>
+            </div>
+            <div class="stat-tile">
+              <span>Dự án Phi lợi nhuận Chống Lừa Đảo</span>
+              <strong>chongluadao.vn</strong>
+            </div>
           </div>
 
           <div class="card">
-            <h3>📝 Tạo Nhanh Đơn Trình Báo Sự Cố</h3>
-            <input type="text" id="repName" placeholder="Họ và tên người trình báo..." />
-            <input type="text" id="repPhone" placeholder="Số điện thoại liên hệ..." />
-            <input type="text" id="repScammer" placeholder="Số tài khoản / SĐT / Link của đối tượng lừa đảo..." />
-            <input type="text" id="repAmount" placeholder="Số tiền thiệt hại (nếu có)..." />
-            <button class="primary-btn" style="width: 100%;" onclick="generatePoliceReport()">📄 Xuất Nội Dung Đơn Trình Báo</button>
-            <div id="reportOutput" class="result-area"></div>
+            <h3 class="card-title">📝 Trình Tạo Nhanh Đơn Trình Báo Sự Việc</h3>
+            <input type="text" id="sosFullName" placeholder="Họ và tên người làm đơn..." />
+            <input type="text" id="sosCitizenId" placeholder="Số CCCD / CMND..." />
+            <input type="text" id="sosPhone" placeholder="Số điện thoại liên hệ của bạn..." />
+            <input type="text" id="sosSuspectInfo" placeholder="STK ngân hàng / SĐT / Link lừa đảo của đối tượng..." />
+            <input type="text" id="sosLossAmount" placeholder="Tổng số tiền bị chiếm đoạt (VD: 15.000.000 VNĐ)..." />
+            <button class="btn-primary" style="width:100%;" onclick="buildIncidentReport()">📄 Tạo Mẫu Đơn Trình Báo Chuẩn</button>
+            <div id="sosReportOutput" class="output-zone"></div>
           </div>
         </div>
       </section>
 
-      <!-- TAB 4: TIN TỨC CẢNH BÁO -->
-      <section id="tab-news" class="tab-panel">
-        <div class="panel-header">
-          <h1 data-i18n="newsTitle">🌐 Bản Tin Tình Báo An Ninh Mạng</h1>
-          <p data-i18n="newsSub">Cập nhật các chiến dịch tấn công mới nhất tại Việt Nam và quốc tế.</p>
+      <!-- MODULE 4: TRUNG TÂM TIN TỨC CẢNH BÁO -->
+      <section id="view-news" class="view-panel">
+        <div class="view-header">
+          <h1 data-i18n="titleNews">🌐 Bản Tin Tình Báo Mối Đe Dọa An Ninh Mạng</h1>
+          <p data-i18n="subNews">Tổng hợp các chiến dịch tấn công lừa đảo trực tuyến và mã độc mới nhất được ghi nhận.</p>
         </div>
-        <div id="newsGrid" class="news-grid"></div>
+        <div id="newsFeedGrid" class="news-grid"></div>
       </section>
 
-      <!-- TAB 5: MẬT KHẨU & ENTROPY -->
-      <section id="tab-password" class="tab-panel">
-        <div class="panel-header">
-          <h1 data-i18n="pwdTitle">🔐 Kiểm Tra Độ Mạnh Mật Khẩu (Shannon Entropy)</h1>
-          <p data-i18n="pwdSub">Đánh giá khả năng chống bẻ khóa Brute-force bằng công thức toán học H = L × log₂(N).</p>
+      <!-- MODULE 5: MẬT KHẨU ENTROPY & KHUNG GIỜ ĐỘC -->
+      <section id="view-password" class="view-panel">
+        <div class="view-header">
+          <h1 data-i18n="titlePassword">🔐 Đo Lường Entropy Mật Khẩu & Phân Tích Giờ Độc</h1>
+          <p data-i18n="subPassword">Đánh giá độ hỗn loạn thông tin theo công thức Shannon H = L × log₂(N) và thời gian bẻ khóa bằng cụm GPU.</p>
         </div>
 
-        <div class="card" style="max-width: 680px;">
-          <input type="text" id="passwordTestInput" placeholder="Nhập thử một mật khẩu bất kỳ (không nhập mật khẩu thật của bạn)..." oninput="evaluatePasswordEntropy()" />
-          <div id="passwordResultContainer" class="result-area">
-            Nhập mật khẩu để xem chỉ số Entropy (bits) và thời gian bẻ khóa ước tính bằng dàn GPU.
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="card-title">🧮 Bộ Kiểm Định Sức Mạnh Mật Khẩu</h3>
+            <input type="text" id="pwdCheckInput" placeholder="Nhập chuỗi mật khẩu mẫu để đo Entropy (không nhập mật khẩu thật)..." oninput="calculatePasswordStrength()" />
+            <div class="meter-track"><div id="pwdStrengthBar" class="meter-fill"></div></div>
+            <div id="pwdAnalysisOutput" class="output-zone">
+              Nhập mật khẩu bất kỳ để hệ thống tính toán số bit Entropy và thời gian chống chịu Brute-force.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title">🕰️ Biểu Đồ Khung Giờ Cao Điểm Tấn Công (Giờ Độc)</h3>
+            <p style="font-size:13.5px; color:var(--text-sub); margin-top:0;">Tội phạm mạng thường chọn các khung giờ nạn nhân mệt mỏi hoặc mất cảnh giác nhất để gọi điện/gửi link:</p>
+            <div class="stat-tile" style="margin-bottom:10px;">
+              <span>11:00 – 13:30 (Giờ nghỉ trưa)</span>
+              <strong style="font-size:15px; color:var(--danger);">Giả danh Shipper giao hàng / Giao đồ ăn yêu cầu chuyển khoản</strong>
+            </div>
+            <div class="stat-tile" style="margin-bottom:10px;">
+              <span>16:30 – 18:30 (Cuối giờ hành chính)</span>
+              <strong style="font-size:15px; color:var(--warning);">Giả danh Công an / Điện lực dọa khóa dịch vụ trước giờ nghỉ</strong>
+            </div>
+            <div class="stat-tile">
+              <span>22:00 – 02:00 (Đêm khuya)</span>
+              <strong style="font-size:15px; color:var(--danger);">Gửi link khuyến mãi / đầu tư tài chính / chiếm quyền tài khoản</strong>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- TAB 6: ĐẤU TRƯỜNG MÔ PHỎNG TƯƠNG TÁC -->
-      <section id="tab-arena" class="tab-panel">
-        <div class="panel-header">
-          <h1 data-i18n="arenaTitle">🎯 Đấu Trường Mô Phỏng Tình Huống Thực Tế</h1>
-          <p data-i18n="arenaSub">Quan sát giao diện giả lập điện thoại/máy tính và chọn phản ứng chính xác để bảo vệ tài sản.</p>
+      <!-- MODULE 6: ĐẤU TRƯỜNG MÔ PHỎNG TƯƠNG TÁC 3 TẦNG -->
+      <section id="view-arena" class="view-panel">
+        <div class="view-header">
+          <h1 data-i18n="titleArena">🎯 Đấu Trường Mô Phỏng Tình Huống Thực Chiến (3 Tầng)</h1>
+          <p data-i18n="subArena">Trực tiếp quan sát màn hình giả lập thiết bị và đưa ra quyết định xử lý an toàn.</p>
         </div>
-
-        <div class="card" id="arenaContainer"></div>
+        <div class="card" id="arenaStageCard"></div>
       </section>
 
     </main>
   </div>
-        <script>
+
+  <script>
     const WORKER_ENDPOINT = "https://cyberguard-scanner.thienndh-26ns.workers.dev";
 
-    const OFFICIAL_DOMAINS = [
+    const TRUSTED_DOMAINS = [
       "vietcombank.com.vn", "techcombank.com", "bidv.com.vn", "vietinbank.vn",
       "mbbank.com.vn", "agribank.com.vn", "vpbank.com.vn", "acb.com.vn",
       "dichvucong.gov.vn", "vneid.gov.vn", "gdt.gov.vn", "baohiemxahoi.gov.vn",
       "momo.vn", "zalopay.vn", "shopee.vn", "lazada.vn"
     ];
 
-    function levenshteinDistance(a, b) {
-      const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
-      for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-      for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+    function computeLevenshtein(a, b) {
+      const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
 
       for (let i = 1; i <= a.length; i++) {
         for (let j = 1; j <= b.length; j++) {
           const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-          matrix[i][j] = Math.min(
-            matrix[i - 1][j] + 1,
-            matrix[i][j - 1] + 1,
-            matrix[i - 1][j - 1] + cost
-          );
+          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
         }
       }
-      return matrix[a.length][b.length];
+      return dp[a.length][b.length];
     }
 
-    function calculateShannonEntropy(str) {
+    function computeStringEntropy(str) {
       if (!str) return 0;
       const len = str.length;
-      const freq = {};
-      for (const char of str) freq[char] = (freq[char] || 0) + 1;
-      return Object.values(freq).reduce((sum, f) => {
-        const p = f / len;
-        return sum - p * Math.log2(p);
+      const counts = {};
+      for (const ch of str) counts[ch] = (counts[ch] || 0) + 1;
+      return Object.values(counts).reduce((acc, c) => {
+        const p = c / len;
+        return acc - p * Math.log2(p);
       }, 0);
     }
 
-    function analyzeUrlLocal(rawUrl) {
+    function runLocalUrlHeuristics(rawUrl) {
       const findings = [];
-      let localScore = 0;
+      let risk = 0;
 
       try {
         const normalized = rawUrl.startsWith("http") ? rawUrl : `https://${rawUrl}`;
-        const urlObj = new URL(normalized);
-        const hostname = urlObj.hostname.toLowerCase().replace(/^www\./, "");
+        const parsed = new URL(normalized);
+        const host = parsed.hostname.toLowerCase().replace(/^www\./, "");
 
-        if (/^\d{1,3}(\.\d{1,3}){3}$/.test(hostname)) {
-          localScore += 45;
-          findings.push("Sử dụng địa chỉ IP trần trực tiếp thay vì tên miền hợp pháp.");
+        if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host)) {
+          risk += 45;
+          findings.push("Sử dụng địa chỉ IP trần trực tiếp thay vì tên miền đăng ký hợp pháp.");
         }
 
-        const brandKeywords = ["vietcombank", "vneid", "dichvucong", "bidv", "mbbank", "techcombank", "momo", "cong-an", "zalopay"];
-        const isOfficial = OFFICIAL_DOMAINS.includes(hostname);
+        const targets = ["vietcombank", "vneid", "dichvucong", "bidv", "mbbank", "techcombank", "momo", "cong-an", "zalopay"];
+        const isTrusted = TRUSTED_DOMAINS.includes(host);
 
-        if (!isOfficial) {
-          for (const kw of brandKeywords) {
-            if (hostname.includes(kw)) {
-              localScore += 55;
-              findings.push(`Tên miền chứa từ khóa thương hiệu "${kw}" nhưng không thuộc hệ thống chính thống.`);
+        if (!isTrusted) {
+          for (const kw of targets) {
+            if (host.includes(kw)) {
+              risk += 55;
+              findings.push(`Tên miền chứa từ khóa thương hiệu "${kw}" nhưng không thuộc tên miền chính thức.`);
             }
           }
 
-          for (const official of OFFICIAL_DOMAINS) {
-            const dist = levenshteinDistance(hostname, official);
+          for (const official of TRUSTED_DOMAINS) {
+            const dist = computeLevenshtein(host, official);
             if (dist > 0 && dist <= 2) {
-              localScore += 60;
-              findings.push(`Tấn công Typosquatting: Giả mạo tên miền chính thức "${official}" (sai khác ${dist} ký tự).`);
+              risk += 60;
+              findings.push(`Phát hiện Typosquatting: Giả mạo tên miền chính thống "${official}" (sai khác ${dist} ký tự).`);
             }
           }
         }
 
-        const domainLabel = hostname.split(".")[0];
-        const entropy = calculateShannonEntropy(domainLabel);
-        if (domainLabel.length >= 10 && entropy > 3.6) {
-          localScore += 25;
+        const label = host.split(".")[0];
+        const entropy = computeStringEntropy(label);
+        if (label.length >= 10 && entropy > 3.6) {
+          risk += 25;
           findings.push(`Độ hỗn loạn ký tự cao (Entropy = ${entropy.toFixed(2)}), nghi vấn tên miền sinh tự động bởi mã độc (DGA).`);
         }
 
-        if (/\.(apk|exe|bat|scr|msi|vbs)(\?.*)?$/i.test(urlObj.pathname)) {
-          localScore += 65;
-          findings.push("Liên kết trỏ trực tiếp tới tệp cài đặt thực thi nguy hiểm (.apk / .exe).");
+        if (/\.(apk|exe|bat|scr|msi|vbs)(\?.*)?$/i.test(parsed.pathname)) {
+          risk += 65;
+          findings.push("Liên kết trỏ trực tiếp tới tệp thực thi nguy hiểm (.apk / .exe) ngoài kho ứng dụng.");
         }
 
-        if (/\.(xyz|top|club|click|icu|tk|ml|ga)$/i.test(hostname)) {
-          localScore += 25;
-          findings.push("Sử dụng tên miền mở rộng giá rẻ thường bị tội phạm mạng lợi dụng để phát tán mã độc.");
+        if (/\.(xyz|top|club|click|icu|tk|ml|ga)$/i.test(host)) {
+          risk += 25;
+          findings.push("Tên miền sử dụng đuôi mở rộng giá rẻ thường bị tội phạm mạng lợi dụng.");
         }
 
-        return { localScore, findings, entropy: entropy.toFixed(2), isOfficial };
+        return { risk, findings, entropy: entropy.toFixed(2), isTrusted };
       } catch {
-        return { localScore: 25, findings: ["Cấu trúc đường dẫn URL không hợp lệ."], entropy: "0.00", isOfficial: false };
+        return { risk: 25, findings: ["Cấu trúc đường dẫn URL không hợp lệ."], entropy: "0.00", isTrusted: false };
       }
     }
 
-    async function handleUrlScan() {
-      const inputEl = document.getElementById("urlInput");
-      const outEl = document.getElementById("urlResultContainer");
-      const targetUrl = inputEl.value.trim();
+    async function executeUrlScan() {
+      const urlVal = document.getElementById("urlScanInput").value.trim();
+      const outEl = document.getElementById("urlScanOutput");
 
-      if (!targetUrl) {
-        outEl.innerHTML = `<div class="report-box warning">⚠️ Vui lòng nhập đường dẫn URL cần kiểm tra.</div>`;
+      if (!urlVal) {
+        outEl.innerHTML = `<div class="verdict-card warning">⚠️ Vui lòng nhập đường dẫn URL cần phân tích.</div>`;
         return;
       }
 
-      outEl.innerHTML = `<div class="report-box">⏳ <b>Đang chạy phân tích đa lớp:</b> Kiểm tra Heuristic (Levenshtein & Entropy), truy vết chuyển hướng, tuổi đời tên miền RDAP và đối chiếu 70+ Engine diệt virus...</div>`;
+      outEl.innerHTML = `<div class="verdict-card">⏳ <b>Đang chạy phân tích đa lớp:</b> Kiểm tra Heuristic (Levenshtein & Entropy), truy vết chuyển hướng, tuổi đời tên miền RDAP và đối chiếu 70+ Engine diệt virus...</div>`;
 
-      const local = analyzeUrlLocal(targetUrl);
-      let cloud = { gsbThreats: [], vtMalicious: 0, vtTotal: 0, finalUrl: targetUrl, redirected: false, domainAgeDays: null };
+      const local = runLocalUrlHeuristics(urlVal);
+      let cloud = { gsbThreats: [], vtMalicious: 0, vtTotal: 0, finalUrl: urlVal, redirected: false, domainAgeDays: null };
 
       try {
         const res = await fetch(WORKER_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "url", target: targetUrl })
+          body: JSON.stringify({ type: "url", target: urlVal })
         });
-        if (res.ok) {
-          cloud = await res.json();
-        }
-      } catch (e) {
-        console.warn("Cloud scan fallback:", e);
+        if (res.ok) cloud = await res.json();
+      } catch (err) {
+        console.warn("Cloud fallback:", err);
       }
 
-      let totalRisk = local.localScore;
-      const reasons = [...local.findings];
+      let finalRisk = local.risk;
+      const notes = [...local.findings];
 
       if (cloud.gsbThreats && cloud.gsbThreats.length > 0) {
-        totalRisk = 100;
-        reasons.unshift(`Google Safe Browsing phát hiện mối đe dọa: ${cloud.gsbThreats[0].threatType}`);
+        finalRisk = 100;
+        notes.unshift(`Google Safe Browsing cảnh báo mối đe dọa: ${cloud.gsbThreats[0].threatType}`);
       }
 
       if (cloud.vtMalicious > 0) {
-        totalRisk = Math.max(totalRisk, Math.min(100, 65 + cloud.vtMalicious * 10));
-        reasons.unshift(`${cloud.vtMalicious}/${cloud.vtTotal} trình diệt virus quốc tế cảnh báo độc hại.`);
+        finalRisk = Math.max(finalRisk, Math.min(100, 65 + cloud.vtMalicious * 10));
+        notes.unshift(`${cloud.vtMalicious}/${cloud.vtTotal} trình diệt virus quốc tế đánh dấu độc hại.`);
       }
 
-      if (cloud.domainAgeDays !== null && cloud.domainAgeDays < 30 && !local.isOfficial) {
-        totalRisk += 30;
-        reasons.push(`Tên miền mới được đăng ký chỉ ${cloud.domainAgeDays} ngày trước (Dấu hiệu trang lừa đảo ngắn ngày).`);
+      if (cloud.domainAgeDays !== null && cloud.domainAgeDays < 30 && !local.isTrusted) {
+        finalRisk += 30;
+        notes.push(`Tên miền mới được đăng ký chỉ ${cloud.domainAgeDays} ngày trước (Dấu hiệu trang lừa đảo ngắn ngày).`);
       }
 
-      if (cloud.redirected && cloud.finalUrl && cloud.finalUrl !== targetUrl) {
-        reasons.push(`Phát hiện chuyển hướng ngầm tới đích đến cuối: ${cloud.finalUrl}`);
+      if (cloud.redirected && cloud.finalUrl && cloud.finalUrl !== urlVal) {
+        notes.push(`Phát hiện chuyển hướng ngầm tới đích đến cuối: ${cloud.finalUrl}`);
       }
 
-      totalRisk = Math.min(100, totalRisk);
-      const levelClass = totalRisk >= 65 ? "danger" : totalRisk >= 30 ? "warning" : "safe";
-      const verdictText = totalRisk >= 65 ? "🚨 NGUY HIỂM CAO (CHẶN TRUY CẬP)" : totalRisk >= 30 ? "⚠️ CẦN CẢNH GIÁC" : "✅ AN TOÀN";
+      finalRisk = Math.min(100, finalRisk);
+      const cls = finalRisk >= 65 ? "danger" : finalRisk >= 30 ? "warning" : "safe";
+      const label = finalRisk >= 65 ? "🚨 NGUY HIỂM CAO (CHẶN TRUY CẬP)" : finalRisk >= 30 ? "⚠️ CẦN CẢNH GIÁC" : "✅ AN TOÀN";
 
       outEl.innerHTML = `
-        <div class="report-box ${levelClass}">
+        <div class="verdict-card ${cls}">
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-            <strong style="font-size:16px;">${verdictText}</strong>
-            <span style="font-weight:700; padding:4px 12px; border-radius:20px; background:rgba(0,0,0,0.08);">Điểm rủi ro: ${totalRisk}/100</span>
+            <strong style="font-size:16px;">${label}</strong>
+            <span style="font-weight:700; padding:4px 12px; border-radius:999px; background:rgba(0,0,0,0.08);">Điểm rủi ro: ${finalRisk}/100</span>
           </div>
-
-          <div class="metrics-grid">
-            <div class="metric-card"><strong>Engine Diệt Virus:</strong><br/>${cloud.vtMalicious || 0}/${cloud.vtTotal || 70} cảnh báo</div>
-            <div class="metric-card"><strong>Tuổi đời tên miền:</strong><br/>${cloud.domainAgeDays !== null ? cloud.domainAgeDays + " ngày" : "Đang cập nhật RDAP"}</div>
-            <div class="metric-card"><strong>Shannon Entropy:</strong><br/>${local.entropy} bits/ký tự</div>
+          <div class="kpi-row">
+            <div class="kpi-box"><strong>Engine Diệt Virus:</strong><br/>${cloud.vtMalicious || 0}/${cloud.vtTotal || 70} cảnh báo</div>
+            <div class="kpi-box"><strong>Tuổi đời tên miền:</strong><br/>${cloud.domainAgeDays !== null ? cloud.domainAgeDays + " ngày" : "Đang cập nhật RDAP"}</div>
+            <div class="kpi-box"><strong>Shannon Entropy:</strong><br/>${local.entropy} bits/ký tự</div>
           </div>
-
-          <strong>Chi tiết phân tích kỹ thuật:</strong>
+          <strong>Bằng chứng phân tích kỹ thuật:</strong>
           <ul style="margin:6px 0 0; padding-left:20px;">
-            ${(reasons.length > 0 ? reasons : ["Tên miền hợp lệ, không phát hiện dấu hiệu giả mạo hay mã độc trên hệ thống."]).map(r => `<li>${r}</li>`).join("")}
+            ${(notes.length > 0 ? notes : ["Tên miền hợp lệ, không phát hiện dấu hiệu giả mạo hay mã độc."]).map(n => `<li>${n}</li>`).join("")}
           </ul>
         </div>
       `;
     }
-
-    async function handleFileScan(event) {
+    // QUÉT TỆP TIN VIRUS BẰNG MÃ BĂM SHA-256 (CLIENT-SIDE WEB CRYPTO)
+    async function executeFileHashScan(event) {
       const file = event.target.files[0];
       if (!file) return;
-      const outEl = document.getElementById("fileResultContainer");
+      const outEl = document.getElementById("fileScanOutput");
 
-      outEl.innerHTML = `<div class="report-box">⏳ Đang băm chữ ký số <b>SHA-256</b> cục bộ trên trình duyệt và đối chiếu cơ sở dữ liệu mã độc VirusTotal...</div>`;
+      outEl.innerHTML = `<div class="verdict-card">⏳ Đang tính chữ ký số <b>SHA-256</b> cục bộ trên trình duyệt và đối chiếu 70+ Engine diệt virus...</div>`;
 
       try {
-        const arrayBuffer = await file.arrayBuffer();
-        const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
+        const buffer = await file.arrayBuffer();
+        const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
         const sha256Hex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 
@@ -778,379 +1079,410 @@
           body: JSON.stringify({ type: "hash", target: sha256Hex })
         });
         const cloud = await res.json();
-
-        const isDangerousExt = /\.(apk|exe|bat|scr|vbs|msi)$/i.test(file.name);
+        const isExecExt = /\.(apk|exe|bat|scr|vbs|msi)$/i.test(file.name);
 
         if (!cloud.found) {
           outEl.innerHTML = `
-            <div class="report-box ${isDangerousExt ? 'warning' : 'safe'}">
+            <div class="verdict-card ${isExecExt ? 'warning' : 'safe'}">
               <strong>📄 Tệp: ${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)<br/>
               <div style="font-size:12px; color:var(--text-muted); word-break:break-all; margin:6px 0;"><b>SHA-256:</b> ${sha256Hex}</div>
-              <div>${isDangerousExt ? "⚠️ Tệp chưa có trên VirusTotal nhưng mang định dạng cài đặt thực thi nguy hiểm (.apk/.exe) — tuyệt đối không cài đặt nếu tải từ link lạ!" : "✅ Tệp chưa từng bị ghi nhận chứa mã độc trên cơ sở dữ liệu toàn cầu."}</div>
+              <div>${isExecExt ? "⚠️ Tệp chưa có trên VirusTotal nhưng mang định dạng cài đặt thực thi nguy hiểm (.apk/.exe) — tuyệt đối không cài đặt nếu tải từ nguồn lạ!" : "✅ Tệp chưa từng bị ghi nhận chứa mã độc trên cơ sở dữ liệu toàn cầu."}</div>
             </div>
           `;
         } else {
           const isMalware = cloud.malicious > 0;
           outEl.innerHTML = `
-            <div class="report-box ${isMalware ? 'danger' : 'safe'}">
-              <strong style="font-size:16px;">${isMalware ? "🚨 PHÁT HIỆN VIRUS / MÃ ĐỘC!" : "✅ TỆP SẠCH"} — ${file.name}</strong>
-              <div class="metrics-grid">
-                <div class="metric-card"><strong>Phát hiện:</strong><br/>${cloud.malicious}/${cloud.totalEngines} Engine</div>
-                <div class="metric-card"><strong>Họ mã độc:</strong><br/>${isMalware ? cloud.threatLabel : "Không có"}</div>
-                <div class="metric-card"><strong>Định dạng:</strong><br/>${cloud.fileType || "Tệp nhị phân"}</div>
+            <div class="verdict-card ${isMalware ? 'danger' : 'safe'}">
+              <strong style="font-size:16px;">${isMalware ? "🚨 PHÁT HIỆN VIRUS / MÃ ĐỘC!" : "✅ TỆP AN TOÀN"} — ${file.name}</strong>
+              <div class="kpi-row">
+                <div class="kpi-box"><strong>Phát hiện:</strong><br/>${cloud.malicious}/${cloud.totalEngines} Engine</div>
+                <div class="kpi-box"><strong>Họ mã độc:</strong><br/>${isMalware ? cloud.threatLabel : "Không có"}</div>
+                <div class="kpi-box"><strong>Loại tệp:</strong><br/>${cloud.fileType || "Tệp nhị phân"}</div>
               </div>
               <div style="font-size:12px; color:var(--text-muted); word-break:break-all;"><b>SHA-256:</b> ${sha256Hex}</div>
             </div>
           `;
         }
       } catch (err) {
-        outEl.innerHTML = `<div class="report-box danger">❌ Lỗi kết nối Worker kiểm tra mã băm: ${err.message}</div>`;
+        outEl.innerHTML = `<div class="verdict-card danger">❌ Lỗi kết nối Worker kiểm tra mã băm: ${err.message}</div>`;
       }
     }
-            // KIỂM TRA WI-FI (EVIL TWIN)
-    function evaluateWifiRisk() {
-      const cond = document.getElementById("wifiCondition").value;
-      const vpn = document.getElementById("wifiVpn").value;
-      const outEl = document.getElementById("wifiResultContainer");
 
-      const map = {
-        home: { level: "safe", score: 10, title: "✅ Wi-Fi Cá Nhân An Toàn", desc: "Sử dụng mã hóa WPA2/WPA3 chuẩn quốc tế. Khuyến nghị đổi mật khẩu định kỳ 6 tháng/lần." },
-        cafe: { level: "warning", score: 35, title: "⚠️ Wi-Fi Công Cộng Có Mật Khẩu", desc: "Nhiều người dùng chung một lớp mạng nội bộ (LAN), tiềm ẩn nguy cơ nghe lén ARP Spoofing nếu không bật VPN." },
-        open: { level: "danger", score: 75, title: "🚨 Wi-Fi Mở Không Mật Khẩu", desc: "Toàn bộ lưu lượng chưa mã hóa có thể bị chặn đọc. Tuyệt đối không đăng nhập ngân hàng hay nhập OTP." },
-        twin: { level: "danger", score: 95, title: "🚨 CẢNH BÁO TẤN CÔNG EVIL TWIN (TRÙNG TÊN WI-FI)", desc: "Kẻ tấn công đang phát sóng Wi-Fi giả trùng tên để lừa thiết bị tự động kết nối và đánh cắp phiên đăng nhập!" },
-        captive: { level: "danger", score: 90, title: "🚨 BẪY CAPTIVE PORTAL GIẢ MẠO", desc: "Wi-Fi công cộng hợp pháp không bao giờ yêu cầu đăng nhập tài khoản Google/Facebook hoặc mã OTP ngân hàng." }
+    // KIỂM TRA WI-FI (EVIL TWIN)
+    function evaluateWifiSecurity() {
+      const scenario = document.getElementById("wifiScenarioSelect").value;
+      const shield = document.getElementById("wifiShieldSelect").value;
+      const outEl = document.getElementById("wifiScanOutput");
+
+      const profiles = {
+        home: { cls: "safe", risk: 10, title: "✅ Wi-Fi Cá Nhân An Toàn", desc: "Sử dụng chuẩn mã hóa WPA2/WPA3. Khuyến nghị đổi mật khẩu quản trị Router định kỳ 6 tháng/lần." },
+        cafe: { cls: "warning", risk: 40, title: "⚠️ Wi-Fi Công Cộng Dùng Chung Mật Khẩu", desc: "Các thiết bị chung lớp mạng LAN có thể bị nghe lén ARP Spoofing nếu không bật VPN." },
+        open: { cls: "danger", risk: 80, title: "🚨 Wi-Fi Mở Không Mật Khẩu", desc: "Lưu lượng truyền tải không được mã hóa ở tầng liên kết. Tuyệt đối không giao dịch ngân hàng." },
+        twin: { cls: "danger", risk: 95, title: "🚨 CẢNH BÁO TẤN CÔNG EVIL TWIN (TRÙNG TÊN WI-FI)", desc: "Tin tặc dựng trạm phát giả trùng SSID nhằm ép thiết bị tự động kết nối và đánh cắp phiên đăng nhập!" },
+        portal: { cls: "danger", risk: 92, title: "🚨 BẪY CAPTIVE PORTAL GIẢ MẠO", desc: "Wi-Fi công cộng hợp pháp không bao giờ yêu cầu đăng nhập tài khoản Google/Facebook hoặc mã OTP." }
       };
 
-      const item = map[cond];
-      const finalScore = vpn === "yes" ? Math.max(5, item.score - 25) : item.score;
+      const info = profiles[scenario];
+      const adjustedRisk = shield === "vpn" ? Math.max(5, info.risk - 25) : info.risk;
 
       outEl.innerHTML = `
-        <div class="report-box ${item.level}">
-          <strong>${item.title} (Mức rủi ro: ${finalScore}/100)</strong>
-          <p style="margin:6px 0 0;">${item.desc}</p>
-          ${vpn === "yes" ? "<p style='margin:6px 0 0; color:var(--success);'>🛡️ Đã giảm thiểu rủi ro nhờ đường hầm mã hóa VPN.</p>" : "<p style='margin:6px 0 0;'>💡 Khuyến nghị: Bật 4G/5G hoặc kích hoạt VPN trước khi giao dịch trực tuyến.</p>"}
+        <div class="verdict-card ${info.cls}">
+          <strong>${info.title} (Mức rủi ro: ${adjustedRisk}/100)</strong>
+          <p style="margin:6px 0 0;">${info.desc}</p>
+          ${shield === "vpn" ? "<p style='margin:6px 0 0; color:var(--success);'>🛡️ Đã giảm thiểu rủi ro nghe lén nhờ đường hầm mã hóa VPN.</p>" : "<p style='margin:6px 0 0;'>💡 Khuyến nghị: Ngắt Wi-Fi, chuyển sang mạng di động 4G/5G hoặc bật VPN ngay.</p>"}
         </div>
       `;
     }
 
-    // ỨNG CỨU 60S & AI BÓC TÁCH THAO TÚNG TÂM LÝ
-    function renderEmergencyChecklist() {
-      const type = document.getElementById("incidentType").value;
-      const outEl = document.getElementById("checklistOutput");
+    // ỨNG CỨU 60S ĐẾM NGƯỢC & AI BÓC TÁCH TÂM LÝ
+    let rescueInterval = null;
+    function startRescueTimer() {
+      clearInterval(rescueInterval);
+      let timeLeft = 60;
+      const el = document.getElementById("rescueCountdown");
+      el.textContent = timeLeft;
+      rescueInterval = setInterval(() => {
+        timeLeft--;
+        el.textContent = timeLeft;
+        if (timeLeft <= 0) clearInterval(rescueInterval);
+      }, 1000);
+    }
 
-      const checklists = {
+    function renderRescueSteps() {
+      const val = document.getElementById("rescueScenarioSelect").value;
+      const outEl = document.getElementById("rescueStepsOutput");
+
+      const guides = {
         apk: [
-          "<b>Giây 0–15:</b> Bật ngay <b>Chế độ Máy bay (Airplane Mode)</b> và tắt Wi-Fi để cắt đứt kết nối điều khiển từ xa của hacker.",
-          "<b>Giây 15–30:</b> Vào <i>Cài đặt > Ứng dụng</i>, tìm ứng dụng lạ vừa cài (thường giả danh VNeID, Dịch vụ công) và bấm <b>Gỡ cài đặt</b>.",
-          "<b>Giây 30–60:</b> Dùng một điện thoại sạch khác gọi tổng đài ngân hàng yêu cầu <b>khóa khẩn cấp tài khoản/thẻ</b> và đổi mật khẩu Internet Banking."
+          "<b>Giây 0–15:</b> Bật ngay <b>Chế độ Máy bay (Airplane Mode)</b> và tắt Wi-Fi để ngắt kết nối điều khiển từ xa của mã độc.",
+          "<b>Giây 15–30:</b> Vào <i>Cài đặt > Ứng dụng</i>, tìm app lạ vừa cài (giả danh VNeID, Dịch vụ công, Thuế) và bấm <b>Gỡ cài đặt</b>.",
+          "<b>Giây 30–60:</b> Dùng một điện thoại sạch khác gọi hotline ngân hàng yêu cầu <b>khóa khẩn cấp tài khoản/thẻ</b> và đổi mật khẩu Internet Banking."
         ],
         otp: [
-          "<b>Giây 0–20:</b> Gọi ngay đường dây nóng in mặt sau thẻ ngân hàng hoặc mở app ngân hàng bấm <b>Khóa thẻ / Khóa dịch vụ trực tuyến</b>.",
-          "<b>Giây 20–45:</b> Đổi ngay mật khẩu đăng nhập Mobile Banking và mật khẩu Email liên kết.",
-          "<b>Giây 45–60:</b> Chụp màn hình đường link lừa đảo và tin nhắn để lưu làm bằng chứng trình báo."
+          "<b>Giây 0–20:</b> Gọi ngay tổng đài in mặt sau thẻ hoặc mở ứng dụng ngân hàng bấm <b>Khóa thẻ / Khóa dịch vụ trực tuyến</b>.",
+          "<b>Giây 20–45:</b> Đổi ngay mật khẩu đăng nhập Mobile Banking và mật khẩu Email liên kết tài khoản.",
+          "<b>Giây 45–60:</b> Chụp màn hình đường link lừa đảo và tin nhắn để lưu làm chứng cứ trình báo."
         ],
-        transfer: [
-          "<b>Giây 0–20:</b> Gọi ngay tổng đài ngân hàng của bạn thông báo <b>chuyển nhầm/bị lừa đảo</b> để yêu cầu tra soát khẩn cấp.",
-          "<b>Giây 20–40:</b> Lưu lại toàn bộ biên lai chuyển tiền, số tài khoản nhận, nội dung tin nhắn/số điện thoại đối tượng.",
-          "<b>Giây 40–60:</b> Đến cơ quan Công an phường/xã gần nhất hoặc gọi <b>069.219.4053</b> để trình báo ngay lập tức."
+        money: [
+          "<b>Giây 0–20:</b> Gọi ngay tổng đài ngân hàng của bạn thông báo <b>bị lừa đảo chuyển tiền</b> để yêu cầu tra soát phong tỏa khẩn cấp.",
+          "<b>Giây 20–40:</b> Lưu lại toàn bộ biên lai chuyển tiền, số tài khoản nhận và số điện thoại/tin nhắn của đối tượng.",
+          "<b>Giây 40–60:</b> Đến Công an phường/xã gần nhất hoặc gọi đường dây nóng <b>069.219.4053</b> để trình báo ngay."
         ],
-        social: [
+        account: [
           "<b>Giây 0–20:</b> Truy cập trang khôi phục chính thức (<code>facebook.com/hacked</code>) từ thiết bị từng đăng nhập trước đó.",
-          "<b>Giây 20–40:</b> Đăng xuất khỏi tất cả các phiên thiết bị lạ và kích hoạt <b>Xác thực 2 yếu tố (2FA)</b> bằng ứng dụng Authenticator.",
-          "<b>Giây 40–60:</b> Nhắn tin cảnh báo người thân/bạn bè không chuyển tiền nếu nhận được tin nhắn vay mượn từ nick của bạn."
+          "<b>Giây 20–40:</b> Đăng xuất toàn bộ các phiên thiết bị lạ và bật <b>Xác thực 2 yếu tố (2FA)</b> qua ứng dụng Authenticator.",
+          "<b>Giây 40–60:</b> Thông báo ngay cho người thân/bạn bè không chuyển tiền nếu nhận được tin nhắn vay mượn từ tài khoản của bạn."
         ]
       };
 
       outEl.innerHTML = `
-        <div class="report-box danger">
-          <strong>🚨 HÀNH ĐỘNG KHẨN CẤP TRONG 60 GIÂY:</strong>
+        <div class="verdict-card danger">
+          <strong>🚨 PHÁC ĐỒ XỬ LÝ KHẨN CẤP TRONG 60 GIÂY:</strong>
           <ul style="margin:8px 0 0; padding-left:18px;">
-            ${checklists[type].map(step => `<li style="margin-bottom:6px;">${step}</li>`).join("")}
+            ${guides[val].map(s => `<li style="margin-bottom:6px;">${s}</li>`).join("")}
           </ul>
         </div>
       `;
     }
 
-    function analyzeScamPsychology() {
-      const text = document.getElementById("scamMessageInput").value.trim().toLowerCase();
-      const outEl = document.getElementById("aiPsychOutput");
+    function runPsychologyAnalysis() {
+      const msg = document.getElementById("psychInputText").value.trim().toLowerCase();
+      const outEl = document.getElementById("psychAnalysisOutput");
 
-      if (!text) {
-        outEl.innerHTML = `<div class="report-box warning">⚠️ Vui lòng dán nội dung tin nhắn hoặc lời thoại cần phân tích.</div>`;
+      if (!msg) {
+        outEl.innerHTML = `<div class="verdict-card warning">⚠️ Vui lòng dán nội dung tin nhắn hoặc lời thoại cần AI phân tích.</div>`;
         return;
       }
 
-      const triggers = [];
+      const tactics = [];
       let score = 15;
 
-      if (/công an|viện kiểm sát|tòa án|triệu tập|khởi tố|phong tỏa|căn cước|vneid/.test(text)) {
+      if (/công an|viện kiểm sát|tòa án|triệu tập|khởi tố|phong tỏa|cccd|căn cước|vneid/.test(msg)) {
         score += 35;
-        triggers.push("<b>Mạo danh Quyền lực & Đe dọa Pháp lý:</b> Lợi dụng tâm lý sợ hãi cơ quan chức năng để ép nạn nhân làm theo chỉ dẫn.");
+        tactics.push("<b>Mạo danh Quyền lực & Đe dọa Pháp lý:</b> Đánh vào nỗi sợ cơ quan pháp luật để ép nạn nhân phục tùng.");
       }
-      if (/khẩn cấp|ngay lập tức|trong vòng|khóa tài khoản|hết hạn|24h|2 giờ/.test(text)) {
+      if (/khẩn cấp|ngay lập tức|trong vòng|khóa tài khoản|hết hạn|24h|2 giờ/.test(msg)) {
         score += 25;
-        triggers.push("<b>Tạo Áp lực Thời gian Giả tạo:</b> Ép nạn nhân hành động vội vàng, không kịp kiểm chứng với người thân.");
+        tactics.push("<b>Tạo Áp lực Thời gian Giả tạo:</b> Ép nạn nhân hành động vội vàng, không kịp kiểm chứng với gia đình.");
       }
-      if (/chuyển tiền|chuyển khoản|xác minh số dư|nộp phí|hoa hồng|lãi suất|trúng thưởng/.test(text)) {
+      if (/chuyển tiền|chuyển khoản|xác minh số dư|nộp phí|hoa hồng|lãi suất|trúng thưởng/.test(msg)) {
         score += 30;
-        triggers.push("<b>Thao túng Tài chính / Lòng tham:</b> Dẫn dụ chuyển tiền vào tài khoản lạ dưới vỏ bọc 'xác minh' hoặc 'nhận thưởng'.");
+        tactics.push("<b>Thao túng Tài chính / Lòng tham:</b> Dẫn dụ chuyển tiền vào tài khoản lạ dưới vỏ bọc 'xác minh' hoặc 'nhận thưởng'.");
       }
-      if (/otp|mật khẩu|link|đường dẫn|tải ứng dụng|apk|cài đặt/.test(text)) {
+      if (/otp|mật khẩu|link|đường dẫn|tải ứng dụng|apk|cài đặt/.test(msg)) {
         score += 30;
-        triggers.push("<b>Đánh cắp Quyền truy cập:</b> Tìm cách chiếm đoạt mã OTP hoặc cài mã độc kiểm soát thiết bị từ xa.");
+        tactics.push("<b>Chiếm đoạt Quyền kiểm soát:</b> Tìm cách lấy mã OTP hoặc dụ cài mã độc điều khiển thiết bị từ xa.");
       }
 
       score = Math.min(100, score);
-      const level = score >= 65 ? "danger" : score >= 35 ? "warning" : "safe";
+      const cls = score >= 65 ? "danger" : score >= 35 ? "warning" : "safe";
 
       outEl.innerHTML = `
-        <div class="report-box ${level}">
-          <strong>🧠 Kết quả Bóc tách AI — Mức độ thao túng: ${score}/100</strong>
+        <div class="verdict-card ${cls}">
+          <strong>🧠 Kết quả Bóc tách AI — Mức độ thao túng tâm lý: ${score}/100</strong>
           <ul style="margin:8px 0 0; padding-left:18px;">
-            ${(triggers.length ? triggers : ["Chưa phát hiện từ khóa thao túng điển hình, nhưng vẫn cần kiểm chứng người gửi qua kênh chính thức."]).map(t => `<li style="margin-bottom:4px;">${t}</li>`).join("")}
+            ${(tactics.length ? tactics : ["Chưa phát hiện từ khóa thao túng điển hình, nhưng vẫn cần kiểm chứng người gửi qua kênh chính thống."]).map(t => `<li style="margin-bottom:4px;">${t}</li>`).join("")}
           </ul>
         </div>
       `;
     }
 
     // XUẤT ĐƠN TRÌNH BÁO NHANH
-    function generatePoliceReport() {
-      const name = document.getElementById("repName").value.trim() || "[Họ và tên]";
-      const phone = document.getElementById("repPhone").value.trim() || "[Số điện thoại]";
-      const scammer = document.getElementById("repScammer").value.trim() || "[Thông tin đối tượng]";
-      const amount = document.getElementById("repAmount").value.trim() || "0 VNĐ";
-      const now = new Date().toLocaleDateString("vi-VN");
+    function buildIncidentReport() {
+      const name = document.getElementById("sosFullName").value.trim() || "[Họ và tên]";
+      const cccd = document.getElementById("sosCitizenId").value.trim() || "[Số CCCD]";
+      const phone = document.getElementById("sosPhone").value.trim() || "[Số điện thoại]";
+      const suspect = document.getElementById("sosSuspectInfo").value.trim() || "[Thông tin đối tượng]";
+      const amount = document.getElementById("sosLossAmount").value.trim() || "0 VNĐ";
+      const dateStr = new Date().toLocaleDateString("vi-VN");
 
-      const content = `CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nĐộc lập - Tự do - Hạnh phúc\n-------------------\nNgày ${now}\n\nĐƠN TRÌNH BÁO SỰ VIỆC LỪA ĐẢO CHIẾM ĐOẠT TÀI SẢN QUA KHÔNG GIAN MẠNG\n\nKính gửi: Cơ quan Cảnh sát Điều tra / Phòng An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao.\n\nTôi tên là: ${name} — SĐT liên hệ: ${phone}.\nTôi xin trình báo về việc bị đối tượng sử dụng thông tin/tài khoản: ${scammer} thực hiện hành vi lừa đảo chiếm đoạt tài sản với số tiền thiệt hại là: ${amount}.\n\nKính đề nghị Quý Cơ quan tiếp nhận, xác minh và xử lý theo quy định pháp luật.\nNgười làm đơn: ${name}`;
+      const template = `CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM\nĐộc lập - Tự do - Hạnh phúc\n-------------------\nNgày ${dateStr}\n\nĐƠN TRÌNH BÁO SỰ VIỆC LỪA ĐẢO CHIẾM ĐOẠT TÀI SẢN QUA KHÔNG GIAN MẠNG\n\nKính gửi: Cơ quan Cảnh sát Điều tra / Phòng An ninh mạng và phòng, chống tội phạm sử dụng công nghệ cao.\n\nTôi tên là: ${name} — Số CCCD: ${cccd} — SĐT: ${phone}.\nTôi xin trình báo về việc bị đối tượng sử dụng thông tin/tài khoản: ${suspect} thực hiện hành vi lừa đảo chiếm đoạt tài sản với tổng số tiền thiệt hại là: ${amount}.\n\nKính đề nghị Quý Cơ quan tiếp nhận, xác minh và xử lý theo quy định của pháp luật.\nNgười làm đơn: ${name}`;
 
-      document.getElementById("reportOutput").innerHTML = `
-        <div class="report-box safe">
-          <strong>✅ Đã tạo mẫu đơn chuẩn — Bạn có thể sao chép để gửi cơ quan chức năng:</strong>
-          <textarea rows="8" style="margin-top:8px; font-family:monospace; font-size:12.5px;">${content}</textarea>
+      document.getElementById("sosReportOutput").innerHTML = `
+        <div class="verdict-card safe">
+          <strong>✅ Đã khởi tạo mẫu đơn trình báo chuẩn — Sao chép nội dung bên dưới:</strong>
+          <textarea rows="8" style="margin-top:8px; font-family:monospace; font-size:12.5px;">${template}</textarea>
         </div>
       `;
     }
 
     // ĐO ENTROPY MẬT KHẨU
-    function evaluatePasswordEntropy() {
-      const pwd = document.getElementById("passwordTestInput").value;
-      const outEl = document.getElementById("passwordResultContainer");
+    function calculatePasswordStrength() {
+      const pwd = document.getElementById("pwdCheckInput").value;
+      const outEl = document.getElementById("pwdAnalysisOutput");
+      const barEl = document.getElementById("pwdStrengthBar");
 
       if (!pwd) {
-        outEl.innerHTML = "Nhập mật khẩu để xem chỉ số Entropy (bits) và thời gian bẻ khóa ước tính bằng dàn GPU.";
+        barEl.style.width = "0%";
+        outEl.innerHTML = "Nhập mật khẩu bất kỳ để hệ thống tính toán số bit Entropy và thời gian chống chịu Brute-force.";
         return;
       }
 
-      let charsetSize = 0;
-      if (/[a-z]/.test(pwd)) charsetSize += 26;
-      if (/[A-Z]/.test(pwd)) charsetSize += 26;
-      if (/[0-9]/.test(pwd)) charsetSize += 10;
-      if (/[^a-zA-Z0-9]/.test(pwd)) charsetSize += 32;
+      let pool = 0;
+      if (/[a-z]/.test(pwd)) pool += 26;
+      if (/[A-Z]/.test(pwd)) pool += 26;
+      if (/[0-9]/.test(pwd)) pool += 10;
+      if (/[^a-zA-Z0-9]/.test(pwd)) pool += 32;
 
-      const entropy = pwd.length * Math.log2(charsetSize || 1);
-      const combinations = Math.pow(charsetSize || 1, pwd.length);
-      const guessesPerSec = 1e11; // 100 tỷ phép thử/giây (cụm RTX 4090)
-      const seconds = combinations / guessesPerSec;
+      const entropy = pwd.length * Math.log2(pool || 1);
+      const combinations = Math.pow(pool || 1, pwd.length);
+      const seconds = combinations / 1e11; // 100 tỷ phép thử/giây (cụm GPU RTX 4090)
 
-      let timeText = "Dưới 1 giây (Bị bẻ khóa tức thì)";
-      if (seconds >= 31536000 * 1000) timeText = `${(seconds / (31536000 * 1000)).toExponential(1)} nghìn năm`;
-      else if (seconds >= 31536000) timeText = `${Math.round(seconds / 31536000)} năm`;
-      else if (seconds >= 86400) timeText = `${Math.round(seconds / 86400)} ngày`;
-      else if (seconds >= 3600) timeText = `${Math.round(seconds / 3600)} giờ`;
-      else if (seconds >= 60) timeText = `${Math.round(seconds / 60)} phút`;
+      let crackTime = "Dưới 1 giây (Bị bẻ khóa tức thì)";
+      if (seconds >= 31536000 * 1000) crackTime = `${(seconds / (31536000 * 1000)).toExponential(1)} nghìn năm`;
+      else if (seconds >= 31536000) crackTime = `${Math.round(seconds / 31536000)} năm`;
+      else if (seconds >= 86400) crackTime = `${Math.round(seconds / 86400)} ngày`;
+      else if (seconds >= 3600) crackTime = `${Math.round(seconds / 3600)} giờ`;
+      else if (seconds >= 60) crackTime = `${Math.round(seconds / 60)} phút`;
 
-      const level = entropy >= 75 ? "safe" : entropy >= 50 ? "warning" : "danger";
-      const rank = entropy >= 75 ? "🛡️ RẤT MẠNH" : entropy >= 50 ? "⚠️ TRUNG BÌNH" : "🚨 YẾU (DỄ BỊ DÒ)";
+      const pct = Math.min(100, Math.round((entropy / 100) * 100));
+      const cls = entropy >= 75 ? "safe" : entropy >= 50 ? "warning" : "danger";
+      const color = entropy >= 75 ? "#16a34a" : entropy >= 50 ? "#d97706" : "#dc2626";
+      const label = entropy >= 75 ? "🛡️ RẤT MẠNH" : entropy >= 50 ? "⚠️ TRUNG BÌNH" : "🚨 YẾU (DỄ BỊ BẺ KHÓA)";
+
+      barEl.style.width = pct + "%";
+      barEl.style.background = color;
 
       outEl.innerHTML = `
-        <div class="report-box ${level}">
-          <strong>Đánh giá: ${rank}</strong>
-          <div class="metrics-grid">
-            <div class="metric-card"><strong>Độ dài (L):</strong><br/>${pwd.length} ký tự</div>
-            <div class="metric-card"><strong>Không gian ký tự (N):</strong><br/>${charsetSize} ký tự</div>
-            <div class="metric-card"><strong>Entropy (H):</strong><br/>${entropy.toFixed(1)} bits</div>
+        <div class="verdict-card ${cls}">
+          <strong>Đánh giá: ${label}</strong>
+          <div class="kpi-row">
+            <div class="kpi-box"><strong>Độ dài (L):</strong><br/>${pwd.length} ký tự</div>
+            <div class="kpi-box"><strong>Không gian ký tự (N):</strong><br/>${pool} ký tự</div>
+            <div class="kpi-box"><strong>Entropy (H):</strong><br/>${entropy.toFixed(1)} bits</div>
           </div>
-          <div>⏱️ <b>Thời gian bẻ khóa ước tính (cụm GPU 100 tỷ thử/giây):</b> ${timeText}</div>
+          <div>⏱️ <b>Thời gian bẻ khóa ước tính (cụm GPU 100 tỷ thử/giây):</b> ${crackTime}</div>
         </div>
       `;
     }
 
     // TIN TỨC CẢNH BÁO
-    const NEWS_DATA = [
-      { tag: "CẢNH BÁO KHẨN", source: "NCSC Việt Nam", title: "Giả mạo ứng dụng VNeID tích hợp mã độc SpyNote chiếm quyền điều khiển điện thoại", desc: "Kẻ gian gọi điện hướng dẫn người dân cài tệp .APK ngoài Google Play để kích hoạt định danh mức 2, sau đó chiếm quyền đọc mã OTP ngân hàng." },
-      { tag: "DEEPFAKE AI", source: "Cục An toàn thông tin", title: "Cuộc gọi video Deepfake giả danh người thân vay tiền khẩn cấp", desc: "Sử dụng trí tuệ nhân tạo ghép khuôn mặt và giọng nói trong vài giây ngắn ngủi nhằm tạo lòng tin trước khi yêu cầu chuyển khoản gấp." },
-      { tag: "WI-FI CÔNG CỘNG", source: "CyberGuard Lab", title: "Tấn công Evil Twin tại sân bay và quán cà phê đánh cắp phiên đăng nhập", desc: "Thiết lập trạm phát sóng trùng tên với Wi-Fi miễn phí tại địa điểm công cộng để chặn bắt gói tin HTTP và lừa nhập tài khoản mạng xã hội." }
+    const NEWS_ITEMS = [
+      { tag: "MÃ ĐỘC ANDROID", source: "NCSC Việt Nam", title: "Giả mạo ứng dụng VNeID phát tán Trojan SpyNote chiếm quyền điều khiển điện thoại", desc: "Kẻ gian gọi điện hướng dẫn cài tệp .APK ngoài Google Play và yêu cầu bật quyền Trợ năng (Accessibility) để tự động đọc mã OTP ngân hàng." },
+      { tag: "DEEPFAKE AI", source: "Cục An toàn thông tin", title: "Cuộc gọi video Deepfake giả danh người thân vay tiền khẩn cấp trong 10 giây", desc: "Sử dụng mô hình tổng hợp khuôn mặt và giọng nói thời gian thực nhằm tạo lòng tin trước khi thúc ép chuyển khoản gấp." },
+      { tag: "WI-FI CÔNG CỘNG", source: "CyberGuard Lab", title: "Tấn công Evil Twin tại sân bay và quán cà phê đánh cắp phiên đăng nhập", desc: "Thiết lập trạm phát sóng trùng tên với Wi-Fi miễn phí tại địa điểm công cộng để chặn bắt gói tin HTTP và lừa nhập tài khoản mạng xã hội." },
+      { tag: "LỪA ĐẢO VIỆC LÀM", source: "Chống Lừa Đảo", title: "Bẫy cộng tác viên chốt đơn hoàn tiền hoa hồng cao trên sàn thương mại điện tử giả", desc: "Cho nạn nhân nhận hoa hồng thật ở các đơn nhỏ đầu tiên, sau đó yêu cầu nạp số tiền lớn để mở khóa hệ thống rồi chiếm đoạt." }
     ];
 
-    function renderNews() {
-      document.getElementById("newsGrid").innerHTML = NEWS_DATA.map(n => `
-        <div class="news-card">
-          <span class="news-tag">${n.tag} • ${n.source}</span>
-          <h3 style="margin:0 0 8px; font-size:16px;">${n.title}</h3>
-          <p style="margin:0; font-size:13.5px; color:var(--text-muted); line-height:1.5;">${n.desc}</p>
+    function renderNewsFeed() {
+      document.getElementById("newsFeedGrid").innerHTML = NEWS_ITEMS.map(item => `
+        <div class="news-item">
+          <div>
+            <span class="news-badge">${item.tag} • ${item.source}</span>
+            <h3 style="margin:0 0 8px; font-size:16px;">${item.title}</h3>
+            <p style="margin:0; font-size:13.5px; color:var(--text-sub); line-height:1.55;">${item.desc}</p>
+          </div>
         </div>
       `).join("");
     }
 
-    // ĐẤU TRƯỜNG MÔ PHỎNG TƯƠNG TÁC
-    const SCENARIOS = [
+    // ĐẤU TRƯỜNG MÔ PHỎNG 3 TẦNG
+    const ARENA_LEVELS = [
       {
-        stage: "Tầng 1 — Phản xạ Tin nhắn Giả mạo",
-        header: "📱 Tin nhắn SMS từ: VIETCOMBANK",
-        body: "Tai khoan VCB cua quy khach se bi khoa sau 2 gio do chua cap nhat sinh trac hoc. Vui long xac thuc tai: <u>http://vietcombank-sinh-trac.xyz</u>",
-        question: "Bạn nhận được tin nhắn nằm chung luồng với tin nhắn ngân hàng thật. Bạn xử lý thế nào?",
-        options: [
-          { text: "Bấm ngay vào đường link trong tin nhắn để cập nhật kẻo bị khóa tài khoản.", correct: false, explain: "❌ Sai! Kẻ gian dùng trạm BTS giả gửi SMS Brandname trùng tên ngân hàng để dẫn dụ vào web giả mạo .xyz." },
-          { text: "Không bấm link; tự mở ứng dụng VCB Digibank chính thức hoặc gọi hotline ngân hàng kiểm tra.", correct: true, explain: "✅ Chính xác! Ngân hàng không bao giờ gửi đường link yêu cầu đăng nhập qua tin nhắn SMS." }
+        title: "Tầng 1 — Phản xạ Tin nhắn SMS Brandname Giả mạo",
+        deviceHeader: "<span>💬 Tin nhắn: VIETCOMBANK</span><span>17:20</span>",
+        deviceBody: "Tai khoan VCB cua quy khach se bi tam khoa sau 2 gio do chua cap nhat sinh trac hoc. Vui long xac thuc tai: <u>http://vietcombank-sinh-trac.xyz</u>",
+        question: "Tin nhắn nằm chung luồng với tin nhắn ngân hàng thật. Bạn xử lý như thế nào?",
+        choices: [
+          { text: "Bấm ngay vào link trong tin nhắn để cập nhật kẻo bị khóa tài khoản.", ok: false, note: "❌ Sai! Kẻ gian dùng trạm phát sóng BTS giả gửi SMS Brandname trùng tên ngân hàng để dẫn dụ vào web giả mạo .xyz." },
+          { text: "Không bấm link; tự mở ứng dụng VCB Digibank chính thức hoặc gọi hotline ngân hàng để kiểm tra.", ok: true, note: "✅ Chính xác! Ngân hàng không bao giờ gửi đường link yêu cầu đăng nhập qua tin nhắn SMS." }
         ]
       },
       {
-        stage: "Tầng 2 — Nhận diện Mã độc Cài đặt",
-        header: "📲 Cuộc gọi từ 'Cán bộ Công an Phường'",
-        body: "Anh/chị vào trình duyệt Chrome tải tệp <b>BoCongAn_VNeID_v3.apk</b> và bật quyền <i>Trợ năng (Accessibility)</i> để hoàn tất hồ sơ định danh.",
+        title: "Tầng 2 — Nhận diện Mã độc Cài đặt (.APK)",
+        deviceHeader: "<span>📞 Cuộc gọi: Cán bộ Công an</span><span>02:14</span>",
+        deviceBody: "Anh/chị mở trình duyệt Chrome tải tệp <b>BoCongAn_VNeID_v3.apk</b> và cấp quyền <i>Trợ năng (Accessibility)</i> để hoàn tất định danh mức 2.",
         question: "Hành động nào giúp bạn thoát khỏi bẫy chiếm quyền điều khiển điện thoại?",
-        options: [
-          { text: "Cúp máy ngay lập tức; tuyệt đối không tải file .APK ngoài kho ứng dụng chính thức.", correct: true, explain: "✅ Chuẩn xác! Tệp .APK kết hợp quyền Trợ năng cho phép mã độc tự thao tác màn hình và chuyển sạch tiền trong tài khoản." },
-          { text: "Làm theo hướng dẫn vì đối phương đọc đúng số CCCD và địa chỉ nhà của mình.", correct: false, explain: "❌ Nguy hiểm! Dữ liệu cá nhân có thể bị rò rỉ từ nhiều nguồn khác nhau, không phải bằng chứng xác thực cán bộ công an." }
+        choices: [
+          { text: "Cúp máy ngay; tuyệt đối không tải file .APK ngoài kho ứng dụng chính thức CH Play / App Store.", ok: true, note: "✅ Chuẩn xác! Tệp .APK kết hợp quyền Trợ năng cho phép mã độc tự thao tác màn hình và chuyển sạch tiền trong tài khoản." },
+          { text: "Làm theo hướng dẫn vì đối phương đọc đúng số CCCD và địa chỉ nhà của mình.", ok: false, note: "❌ Nguy hiểm! Dữ liệu cá nhân có thể bị rò rỉ từ nhiều nguồn khác nhau, không phải bằng chứng xác thực cán bộ công an." }
+        ]
+      },
+      {
+        title: "Tầng 3 — Phòng thủ Tấn công Wi-Fi Evil Twin",
+        deviceHeader: "<span>📡 Cài đặt Wi-Fi</span><span>Sân bay</span>",
+        deviceBody: "Danh sách mạng khả dụng:<br/>• <b>Free_Airport_WiFi</b> (Mở - Không mật khẩu, tín hiệu cực mạnh)<br/>• <b>Airport_Official_5G</b> (WPA2 - Có mật khẩu tại quầy thông tin)",
+        question: "Bạn cần chuyển khoản gấp tại sân bay. Lựa chọn nào đảm bảo an toàn tuyệt đối?",
+        choices: [
+          { text: "Kết nối mạng Free_Airport_WiFi vì tín hiệu mạnh và không cần hỏi mật khẩu.", ok: false, note: "❌ Rủi ro cao! Đây là dấu hiệu điển hình của trạm phát Wi-Fi giả mạo (Evil Twin) dùng để nghe lén dữ liệu." },
+          { text: "Tắt Wi-Fi, sử dụng dữ liệu di động 4G/5G cá nhân (hoặc bật VPN) để thực hiện giao dịch.", ok: true, note: "✅ Xuất sắc! Mạng di động 4G/5G có cơ chế mã hóa riêng giữa SIM và trạm phát nhà mạng, an toàn hơn nhiều so với Wi-Fi công cộng." }
         ]
       }
     ];
-    let currentStage = 0;
+    let currentLevelIdx = 0;
 
-    function renderArena() {
-      const s = SCENARIOS[currentStage];
-      document.getElementById("arenaContainer").innerHTML = `
+    function renderArenaStage() {
+      const lv = ARENA_LEVELS[currentLevelIdx];
+      document.getElementById("arenaStageCard").innerHTML = `
         <div style="text-align:center; margin-bottom:14px;">
-          <span style="background:var(--primary); color:#fff; padding:4px 12px; border-radius:20px; font-size:12.5px; font-weight:700;">${s.stage} (${currentStage + 1}/${SCENARIOS.length})</span>
+          <span style="background:var(--primary); color:#fff; padding:5px 14px; border-radius:999px; font-size:12.5px; font-weight:700;">${lv.title} (${currentLevelIdx + 1}/${ARENA_LEVELS.length})</span>
         </div>
-        <div class="phone-mockup">
-          <div class="phone-header">${s.header}</div>
-          <div class="phone-body">${s.body}</div>
+        <div class="sim-device">
+          <div class="sim-bar">${lv.deviceHeader}</div>
+          <div class="sim-screen">${lv.deviceBody}</div>
         </div>
-        <p style="text-align:center; font-weight:600; max-width:600px; margin:0 auto 14px;">${s.question}</p>
-        <div class="arena-options">
-          ${s.options.map((opt, idx) => `<button class="arena-opt-btn" onclick="checkArenaAnswer(${idx})">${opt.text}</button>`).join("")}
+        <p style="text-align:center; font-weight:700; max-width:640px; margin:0 auto 14px;">${lv.question}</p>
+        <div class="choice-stack">
+          ${lv.choices.map((c, idx) => `<button class="choice-btn" onclick="submitArenaChoice(${idx})">${c.text}</button>`).join("")}
         </div>
-        <div id="arenaFeedback" class="result-area" style="max-width:640px; margin:16px auto 0;"></div>
+        <div id="arenaResultBox" class="output-zone" style="max-width:680px; margin:16px auto 0;"></div>
       `;
     }
 
-    function checkArenaAnswer(idx) {
-      const s = SCENARIOS[currentStage];
-      const chosen = s.options[idx];
-      const nextBtn = currentStage < SCENARIOS.length - 1
-        ? `<button class="primary-btn" style="margin-top:10px;" onclick="currentStage++; renderArena();">Tiếp sang Tầng ${currentStage + 2} ➡️</button>`
-        : `<button class="primary-btn" style="margin-top:10px;" onclick="currentStage=0; renderArena();">🔄 Luyện tập lại từ đầu</button>`;
+    function submitArenaChoice(idx) {
+      const lv = ARENA_LEVELS[currentLevelIdx];
+      const pick = lv.choices[idx];
+      const nextAction = currentLevelIdx < ARENA_LEVELS.length - 1
+        ? `<button class="btn-primary" style="margin-top:10px;" onclick="currentLevelIdx++; renderArenaStage();">Tiếp sang Tầng ${currentLevelIdx + 2} ➡️</button>`
+        : `<button class="btn-primary" style="margin-top:10px;" onclick="currentLevelIdx=0; renderArenaStage();">🔄 Chơi lại từ Tầng 1</button>`;
 
-      document.getElementById("arenaFeedback").innerHTML = `
-        <div class="report-box ${chosen.correct ? 'safe' : 'danger'}">
-          <div>${chosen.explain}</div>
-          ${nextBtn}
+      document.getElementById("arenaResultBox").innerHTML = `
+        <div class="verdict-card ${pick.ok ? 'safe' : 'danger'}">
+          <div>${pick.note}</div>
+          ${nextAction}
         </div>
       `;
     }
 
-    // ĐIỀU HƯỚNG TAB, ĐỒNG HỒ GIỜ ĐỘC, THEME & SONG NGỮ VI/EN
-    function openTab(tabId, btnEl) {
-      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
-      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-      document.getElementById(tabId).classList.add("active");
+    // ĐIỀU HƯỚNG, ĐỒNG HỒ GIỜ ĐỘC, DARK MODE & SONG NGỮ VI/EN
+    function navigateView(viewId, btnEl) {
+      document.querySelectorAll(".view-panel").forEach(v => v.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+      document.getElementById(viewId).classList.add("active");
       btnEl.classList.add("active");
       document.getElementById("sidebar").classList.remove("open");
     }
 
-    function switchScannerMode(mode, btnEl) {
-      ["url", "file", "wifi"].forEach(m => document.getElementById("mode-" + m).style.display = (m === mode ? "block" : "none"));
-      document.querySelectorAll(".sub-tab").forEach(b => b.classList.remove("active"));
+    function setScannerSubMode(mode, btnEl) {
+      ["url", "file", "wifi"].forEach(m => document.getElementById("submode-" + m).style.display = (m === mode ? "block" : "none"));
+      document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
       btnEl.classList.add("active");
     }
 
-    function fillUrlSample(url) {
-      document.getElementById("urlInput").value = url;
-      handleUrlScan();
+    function runSampleUrl(sample) {
+      document.getElementById("urlScanInput").value = sample;
+      executeUrlScan();
     }
 
-    function toggleTheme() {
+    function toggleDarkMode() {
       document.body.classList.toggle("dark-mode");
     }
 
-    function toggleMobileMenu() {
+    function toggleSidebar() {
       document.getElementById("sidebar").classList.toggle("open");
     }
 
-    let currentLang = "vi";
-    const I18N = {
+    let lang = "vi";
+    const DICT = {
       vi: {
-        brandSub: "Nền tảng Phòng vệ & Ứng cứu Lừa đảo",
-        groupEmergency: "🚨 ỨNG CỨU KHẨN CẤP",
-        navScanner: "Quét Link & File Virus",
-        navSos60: "Ứng Cứu 60s & AI",
-        navReport: "SOS & Đơn Trình Báo",
-        groupPrevention: "🛡️ PHÒNG NGỪA & RÈN LUYỆN",
-        navNews: "Tin Tức Cảnh Báo",
-        navPwd: "Mật Khẩu & Entropy",
-        navArena: "Đấu Trường Mô Phỏng",
-        privacyTitle: "🔒 Cam kết Bảo mật",
-        privacyDesc: "Mật khẩu và tệp tin được xử lý 100% cục bộ trên trình duyệt (Client-side), không lưu trữ lên máy chủ.",
-        scanTitle: "🔍 Trung Tâm Quét Link & Mã Độc Đa Lớp",
-        scanSub: "Kết hợp phân tích Heuristic (Levenshtein, Entropy) và 70+ Engine diệt virus qua VirusTotal & Google Safe Browsing.",
-        subUrl: "🔗 Quét Liên Kết (URL)",
-        subFile: "🦠 Quét File Virus (SHA-256)",
-        subWifi: "📡 Kiểm Tra Wi-Fi (Evil Twin)",
-        btnScan: "Phân Tích Ngay"
+        brandSubtitle: "Hệ thống Phòng vệ & Ứng cứu An ninh mạng Đa lớp",
+        secEmergency: "🚨 ỨNG CỨU KHẨN CẤP",
+        menuScanner: "Quét Link & File Virus",
+        menuRescue: "Ứng Cứu 60s & Phân Tích",
+        menuSos: "SOS & Đơn Trình Báo",
+        secPrevention: "🛡️ PHÒNG NGỪA & RÈN LUYỆN",
+        menuNews: "Trung Tâm Tin Tức",
+        menuPassword: "Mật Khẩu & Entropy",
+        menuArena: "Đấu Trường Mô Phỏng",
+        privHeading: "🔒 Cam kết Zero-Knowledge",
+        privBody: "Mật khẩu và tệp tin được băm & tính toán 100% cục bộ trên trình duyệt (Client-side), tuyệt đối không lưu trữ trên máy chủ.",
+        titleScanner: "🔍 Trung Tâm Phân Tích URL, Mã Độc & Wi-Fi Đa Lớp",
+        subScanner: "Kết hợp thuật toán Heuristic (Levenshtein Distance, Shannon Entropy) cùng 70+ Engine diệt virus từ VirusTotal & Google Safe Browsing.",
+        tabUrl: "🔗 Quét Liên Kết (URL)",
+        tabFile: "🦠 Quét File Virus (SHA-256)",
+        tabWifi: "📡 Kiểm Tra Wi-Fi (Evil Twin)",
+        btnRunScan: "Quét Đa Lớp Ngay"
       },
       en: {
-        brandSub: "Cyber Threat Defense & Incident Response",
-        groupEmergency: "🚨 EMERGENCY RESPONSE",
-        navScanner: "URL & Malware Scanner",
-        navSos60: "60s Rescue & AI",
-        navReport: "SOS & Incident Report",
-        groupPrevention: "🛡️ PREVENTION & TRAINING",
-        navNews: "Threat Intelligence",
-        navPwd: "Password & Entropy",
-        navArena: "Simulation Arena",
-        privacyTitle: "🔒 Privacy Guarantee",
-        privacyDesc: "Passwords and files are processed 100% locally in your browser (Client-side) and never stored on servers.",
-        scanTitle: "🔍 Multi-Layer URL & Malware Scanner",
-        scanSub: "Combines Heuristic analysis (Levenshtein, Entropy) with 70+ antivirus engines via VirusTotal & Safe Browsing.",
-        subUrl: "🔗 Scan URL",
-        subFile: "🦠 Scan Malware File (SHA-256)",
-        subWifi: "📡 Wi-Fi Security (Evil Twin)",
-        btnScan: "Analyze Now"
+        brandSubtitle: "Multi-Layer Cyber Defense & Incident Response",
+        secEmergency: "🚨 EMERGENCY RESPONSE",
+        menuScanner: "URL & Malware Scanner",
+        menuRescue: "60s Rescue & AI Analysis",
+        menuSos: "SOS & Incident Report",
+        secPrevention: "🛡️ PREVENTION & TRAINING",
+        menuNews: "Threat Intelligence",
+        menuPassword: "Password & Entropy",
+        menuArena: "Simulation Arena",
+        privHeading: "🔒 Zero-Knowledge Privacy",
+        privBody: "Passwords and files are hashed & processed 100% locally in your browser (Client-side) and never stored on servers.",
+        titleScanner: "🔍 Multi-Layer URL, Malware & Wi-Fi Scanner",
+        subScanner: "Combines Heuristic algorithms (Levenshtein Distance, Shannon Entropy) with 70+ antivirus engines via VirusTotal & Safe Browsing.",
+        tabUrl: "🔗 Scan URL",
+        tabFile: "🦠 Scan Malware File (SHA-256)",
+        tabWifi: "📡 Wi-Fi Security (Evil Twin)",
+        btnRunScan: "Scan Now"
       }
     };
 
-    function toggleLanguage() {
-      currentLang = currentLang === "vi" ? "en" : "vi";
-      document.getElementById("langSwitchBtn").textContent = currentLang === "vi" ? "🌐 EN" : "🌐 VI";
+    function switchLanguage() {
+      lang = lang === "vi" ? "en" : "vi";
+      document.getElementById("btnLangToggle").textContent = lang === "vi" ? "🌐 EN" : "🌐 VI";
       document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        if (I18N[currentLang][key]) el.textContent = I18N[currentLang][key];
-      });   
+        const k = el.getAttribute("data-i18n");
+        if (DICT[lang][k]) el.textContent = DICT[lang][k];
+      });
     }
 
-    function updateClockAndThreatHour() {
+    function refreshLiveClock() {
       const now = new Date();
-      document.getElementById("liveClock").textContent = now.toTimeString().split(" ")[0];
-      const hour = now.getHours();
-      const badge = document.getElementById("timeThreatBadge");
-      const label = document.getElementById("hourRiskLabel");
+      document.getElementById("liveTimeDisplay").textContent = now.toTimeString().split(" ")[0];
+      const h = now.getHours();
+      const pill = document.getElementById("clockStatusPill");
+      const txt = document.getElementById("toxicHourText");
 
-      // Khung giờ cao điểm lừa đảo: 11h-13h (giờ nghỉ trưa), 16h30-18h (tan tầm), 22h-2h (đêm khuya mất cảnh giác)
-      const isPeak = (hour >= 11 && hour <= 13) || (hour >= 16 && hour <= 18) || (hour >= 22 || hour <= 2);
-      badge.className = "status-pill " + (isPeak ? "danger" : "safe");
-      label.textContent = isPeak
-        ? (currentLang === "vi" ? "⚠️ Khung giờ cao điểm lừa đảo" : "⚠️ Peak Scam Hours")
-        : (currentLang === "vi" ? "Khung giờ ổn định" : "Normal Risk Hours");
+      const isToxic = (h >= 11 && h <= 13) || (h >= 16 && h <= 18) || (h >= 22 || h <= 2);
+      pill.className = "clock-pill " + (isToxic ? "danger" : "safe");
+      txt.textContent = isToxic
+        ? (lang === "vi" ? "⚠️ Khung giờ cao điểm lừa đảo" : "⚠️ Peak Scam Hours")
+        : (lang === "vi" ? "Khung giờ ổn định" : "Normal Risk Hours");
     }
 
-    // KHỞI TẠO HỆ THỐNG
-    setInterval(updateClockAndThreatHour, 1000);
-    updateClockAndThreatHour();
-    evaluateWifiRisk();
-    renderEmergencyChecklist();
-    renderNews();
-    renderArena();
+    setInterval(refreshLiveClock, 1000);
+    refreshLiveClock();
+    evaluateWifiSecurity();
+    renderRescueSteps();
+    renderNewsFeed();
+    renderArenaStage();
   </script>
 </body>
 </html>
