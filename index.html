@@ -485,13 +485,7 @@
         <!-- ==================== TRANG 1: BẢNG TIN AN NINH MẠNG ==================== -->
         <div id="newsHomeTab" class="tab-content active">
             <div class="fb-feed-wrap">
-                <div class="threat-ticker-bar">
-                    <span class="ticker-tag">🔴 LIVE INTEL</span>
-                    <div class="ticker-track">
-                        <span>Cảnh báo toàn cầu: Gia tăng chiến dịch đánh cắp Session Cookie vượt qua xác thực 2FA • Lỗ hổng thực thi mã từ xa (RCE) trên trình duyệt • Giả mạo cuộc gọi Deepfake AI nhắm vào sinh viên & người cao tuổi tại Việt Nam...</span>
-                    </div>
-                </div>
-
+            
                 <div class="intel-metrics-grid">
                     <div class="intel-metric-card">
                         <span class="metric-label">MỨC ĐỘ ĐE DỌA</span>
@@ -789,7 +783,7 @@
   <!-- Biểu đồ thanh ngang tự động tính % từ Worker -->
   <div class="cg-vector-bars">
     <div class="cg-vector-bars-head">
-      <span class="cg-vector-bars-title">📈 Cơ Cấu Nhóm Chiêu Thức Tấn Công &amp; Lừa Đảo (Tự Động Cân Bằng Theo Tin Mới)</span>
+     <span class="cg-vector-bars-title">📈 Cơ Cấu Chiêu Thức Tấn Công (Tự Động Cập Nhật)</span>
       <span class="cg-vector-bars-meta" id="cgTrendUpdateTime">Đang tính tỷ lệ thực tế...</span>
     </div>
 
@@ -890,6 +884,27 @@
     }
   }
 </script>
+                <style>
+  /* Thu gọn bong bóng nổi góc dưới phải để không che chữ */
+  [style*="position: fixed"][style*="bottom"],
+  [style*="position:fixed"][style*="bottom"],
+  .floating-quiz-btn,
+  .shield-float-btn {
+    bottom: 14px !important;
+    right: 14px !important;
+    padding: 7px 11px !important;
+    font-size: 0.74rem !important;
+    opacity: 0.88;
+    transform: scale(0.86);
+    transform-origin: bottom right;
+    transition: all 0.2s ease;
+  }
+  [style*="position: fixed"][style*="bottom"]:hover,
+  [style*="position:fixed"][style*="bottom"]:hover {
+    opacity: 1;
+    transform: scale(0.95);
+  }
+</style>
 <!-- ================= KẾT THÚC HƯỚNG 1 (NÂNG CẤP) ================= -->
                 <!-- ================= HƯỚNG 2 (BẢN GỌN) + HƯỚNG 3 (TIN TỰ ĐỘNG) ================= -->
 <style>
