@@ -1650,32 +1650,613 @@
         <!-- ==================== TRANG 4: MẬT KHẨU & GIỜ ĐỘC ==================== -->
         <div id="pwdClockTab" class="tab-content">
             <div class="fb-feed-wrap">
-                <div class="card" style="border-top: 3px solid #6366f1;">
-                    <div class="section-header-box">
-                        <div class="section-big-logo" style="background:rgba(99,102,241,0.18);">🔐</div>
-                        <div>
-                            <h2>Đo Độ Mạnh Mật Khẩu (Chỉ Số Entropy)</h2>
-                            <p style="font-size:0.78rem; color:var(--text-muted);">Đánh giá khả năng chống dò mật khẩu tự động (Brute-force)</p>
-                        </div>
-                    </div>
-                    <input type="text" id="pwdInput" placeholder="Nhập thử mật khẩu để kiểm tra..." oninput="checkPassword()">
-                    <div class="result-box" id="pwdResult">Nhập mật khẩu phía trên để tính chỉ số Entropy (bits).</div>
-                </div>
+              <!-- ================= MODULE MẬT KHẨU THỰC CHIẾN & RADAR GIỜ ĐỘC 24H ================= -->
+<style>
+  .cgp-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: #e2e8f0;
+  }
 
-                <div class="card" style="border-top: 3px solid #38bdf8;">
-                    <div class="section-header-box">
-                        <div class="section-big-logo" style="background:rgba(56,189,248,0.18);">⏱️</div>
-                        <div>
-                            <h2>Cảnh Báo Rủi Ro Theo Khung Giờ Sinh Học</h2>
-                            <p style="font-size:0.78rem; color:var(--text-muted);">Theo dõi khung giờ cao điểm của chiến dịch lừa đảo & mã độc tống tiền</p>
-                        </div>
-                    </div>
-                    <div style="background:var(--bg-sub); padding:18px; border-radius:12px; text-align:center; margin-bottom:12px; border:1px solid var(--border);">
-                        <div id="cyberClock" style="font-size:2.4rem; font-weight:900; color:var(--accent);">00:00:00</div>
-                        <div id="threatWindowBadge" class="badge b-warn" style="margin-top:6px;">...</div>
-                    </div>
-                    <p id="threatWindowDesc" style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;"></p>
-                </div>
+  .cgp-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 16px;
+  }
+
+  .cgp-card {
+    background: rgba(11, 21, 40, 0.94);
+    border: 1px solid rgba(56, 189, 248, 0.24);
+    border-radius: 14px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .cgp-card-amber {
+    border-top: 3px solid #f59e0b;
+  }
+
+  .cgp-card-rose {
+    border-top: 3px solid #f43f5e;
+  }
+
+  .cgp-card-emerald {
+    border-top: 3px solid #10b981;
+  }
+
+  .cgp-title {
+    margin: 0 0 4px;
+    font-size: 1.04rem;
+    font-weight: 700;
+    color: #f8fafc;
+  }
+
+  .cgp-sub {
+    margin: 0;
+    font-size: 0.79rem;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  .cgp-input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(6, 13, 26, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 10px;
+    padding: 4px 8px;
+  }
+
+  .cgp-input-group:focus-within {
+    border-color: #38bdf8;
+  }
+
+  .cgp-pass-input {
+    flex: 1;
+    border: none !important;
+    background: transparent !important;
+    color: #f8fafc !important;
+    font-family: Consolas, monospace;
+    font-size: 0.94rem;
+    padding: 8px 6px !important;
+    margin: 0 !important;
+    outline: none;
+  }
+
+  .cgp-icon-btn {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    color: #38bdf8;
+    border-radius: 7px;
+    padding: 5px 9px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
+  .cgp-icon-btn:hover {
+    background: rgba(56, 189, 248, 0.25);
+    color: #fff;
+  }
+
+  .cgp-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .cgp-btn-gen {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    background: rgba(245, 158, 11, 0.14);
+    color: #fbbf24;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .cgp-btn-gen:hover {
+    background: rgba(245, 158, 11, 0.25);
+  }
+
+  .cgp-btn-pwned {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(90deg, #0284c7 0%, #2563eb 100%);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .cgp-btn-pwned:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .cgp-meter-track {
+    width: 100%;
+    height: 8px;
+    background: rgba(148, 163, 184, 0.16);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .cgp-meter-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: #fb7185;
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+
+  .cgp-metrics-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: #cbd5e1;
+  }
+
+  .cgp-pwned-box {
+    background: rgba(6, 13, 26, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: #cbd5e1;
+  }
+
+  /* Cột phải: Đồng hồ & Nhịp sinh học 24h */
+  .cgp-clock-hud {
+    background: rgba(6, 13, 26, 0.88);
+    border: 1px solid rgba(244, 63, 94, 0.25);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .cgp-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+
+  .cgp-slot-btn {
+    background: rgba(6, 13, 26, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 7px 4px;
+    text-align: center;
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    transition: all 0.2s ease;
+  }
+
+  .cgp-slot-btn strong {
+    display: block;
+    font-size: 0.76rem;
+    color: #e2e8f0;
+    margin-bottom: 2px;
+  }
+
+  .cgp-slot-btn.active {
+    background: rgba(244, 63, 94, 0.16);
+    border-color: #fb7185;
+    color: #fda4af;
+  }
+
+  .cgp-slot-btn.active strong {
+    color: #fff;
+  }
+
+  .cgp-bio-detail {
+    background: rgba(6, 13, 26, 0.82);
+    border-left: 3px solid #fb7185;
+    border-radius: 9px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+  }
+
+  /* Khối dưới: Lớp giáp chống mất acc */
+  .cgp-shield-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+  }
+
+  .cgp-shield-item {
+    background: rgba(6, 13, 26, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 10px;
+    padding: 11px 12px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .cgp-shield-item.checked {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(52, 211, 153, 0.45);
+  }
+
+  .cgp-shield-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 2px solid #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #060d1a;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .cgp-shield-item.checked .cgp-shield-box {
+    background: #34d399;
+    border-color: #34d399;
+  }
+</style>
+
+<div class="cgp-wrap">
+  <div class="cgp-grid-2">
+    <!-- CỘT TRÁI: KIỂM TRA MẬT KHẨU & RÒ RỈ THẬT -->
+    <div class="cgp-card cgp-card-amber">
+      <div>
+        <h2 class="cgp-title">🔐 Kiểm Tra Mật Khẩu &amp; Rò Rỉ Dữ Liệu Thật</h2>
+        <p class="cgp-sub">Đo độ mạnh Entropy và đối chiếu dữ liệu lộ lọt thực tế qua chuẩn ẩn danh <strong>k-Anonymity</strong>.</p>
+      </div>
+
+      <div class="cgp-input-group">
+        <input type="password" id="cgpPassInput" class="cgp-pass-input" placeholder="Nhập mật khẩu hoặc bấm Tạo Cụm Dễ Nhớ..." oninput="cgpEvaluatePassword()" />
+        <button type="button" class="cgp-icon-btn" id="cgpToggleEyeBtn" onclick="cgpToggleEye()">👁️ Hiện</button>
+        <button type="button" class="cgp-icon-btn" onclick="cgpCopyPass()">📋 Copy</button>
+      </div>
+
+      <div>
+        <div class="cgp-meter-track">
+          <div class="cgp-meter-fill" id="cgpMeterFill"></div>
+        </div>
+        <div class="cgp-metrics-row" style="margin-top:6px;">
+          <span id="cgpEntropyLabel">Độ mạnh: <strong>0 bits</strong></span>
+          <span id="cgpCrackTimeLabel">Thời gian dò phá: <strong>--</strong></span>
+        </div>
+      </div>
+
+      <div class="cgp-action-row">
+        <button type="button" class="cgp-btn-gen" onclick="cgpGeneratePassphrase()">✨ Tạo Cụm Dễ Nhớ</button>
+        <button type="button" class="cgp-btn-pwned" id="cgpPwnedBtn" onclick="cgpCheckDataBreach()">🔍 Kiểm Tra Lộ Lọt Thật</button>
+      </div>
+
+      <div class="cgp-pwned-box" id="cgpPwnedResult">
+        🛡️ <strong>Bảo mật tuyệt đối:</strong> Trình duyệt tự băm SHA-1 và chỉ gửi 5 ký tự đầu đi đối chiếu (Have I Been Pwned API) — mật khẩu gốc không bao giờ rời khỏi máy bạn.
+      </div>
+    </div>
+
+    <!-- CỘT PHẢI: RADAR GIỜ ĐỘC & NHỊP SINH HỌC 24H -->
+    <div class="cgp-card cgp-card-rose">
+      <div>
+        <h2 class="cgp-title">⏰ Radar Giờ Độc &amp; Nhịp Sinh Học 24h</h2>
+        <p class="cgp-sub">Tự động nhận diện khung giờ hiện tại — bấm vào từng khung giờ để xem chiêu thức kẻ gian hay dùng.</p>
+      </div>
+
+      <div class="cgp-clock-hud">
+        <div>
+          <div style="font-size:0.72rem;color:#94a3b8;text-transform:uppercase;">Giờ hệ thống thực tế</div>
+          <div id="cyberClock" style="font-size:2rem;font-weight:900;color:#38bdf8;line-height:1.15;">00:00:00</div>
+        </div>
+        <div style="text-align:right;">
+          <div id="threatWindowBadge" class="badge b-warn">Đang đồng bộ...</div>
+          <div id="cgpBioFocusLabel" style="font-size:0.74rem;color:#fda4af;margin-top:4px;">Cảnh giác sinh học: --</div>
+        </div>
+      </div>
+
+      <div class="cgp-slots-grid" id="cgpBioSlots">
+        <button type="button" class="cgp-slot-btn" data-slot="0" onclick="cgpSelectBioSlot(0)"><strong>00h–05h</strong>Đêm khuya</button>
+        <button type="button" class="cgp-slot-btn" data-slot="1" onclick="cgpSelectBioSlot(1)"><strong>06h–11h</strong>Đầu sáng</button>
+        <button type="button" class="cgp-slot-btn" data-slot="2" onclick="cgpSelectBioSlot(2)"><strong>11h–14h</strong>Nghỉ trưa</button>
+        <button type="button" class="cgp-slot-btn" data-slot="3" onclick="cgpSelectBioSlot(3)"><strong>14h–20h</strong>Chiều tối</button>
+        <button type="button" class="cgp-slot-btn" data-slot="4" onclick="cgpSelectBioSlot(4)"><strong>21h–24h</strong>Tối muộn</button>
+      </div>
+
+      <div class="cgp-bio-detail">
+        <div id="cgpBioSlotDetail" style="margin-bottom:4px;"></div>
+        <p id="threatWindowDesc" style="margin:0;font-size:0.77rem;color:#94a3b8;line-height:1.4;"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- KHỐI DƯỚI: LỚP GIÁP CHỐNG MẤT ACC -->
+  <div class="cgp-card cgp-card-emerald">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;">
+      <div>
+        <h2 class="cgp-title">🛡️ Bảng Chấm Điểm "Lớp Giáp Chống Mất Acc" (Bù Đắp Lúc Mất Cảnh Giác)</h2>
+        <p class="cgp-sub">Con người luôn có lúc mệt mỏi vào Giờ Độc — tích chọn 4 lớp khóa dưới đây để dù lỡ bấm nhầm link, kẻ gian vẫn không chiếm được tài khoản.</p>
+      </div>
+      <div style="text-align:right;">
+        <span style="font-size:0.76rem;color:#94a3b8;">Chỉ số phòng vệ: </span>
+        <strong id="cgpShieldScoreText" style="font-size:1.05rem;color:#34d399;">0% (0/4 lớp)</strong>
+      </div>
+    </div>
+
+    <div class="cgp-meter-track">
+      <div class="cgp-meter-fill" id="cgpShieldMeter" style="background:#34d399;"></div>
+    </div>
+
+    <div class="cgp-shield-grid" id="cgpShieldList">
+      <div class="cgp-shield-item" data-idx="0" onclick="cgpToggleShield(0)">
+        <div class="cgp-shield-box">✓</div>
+        <div>
+          <strong style="font-size:0.83rem;color:#f8fafc;display:block;margin-bottom:2px;">1. 2FA bằng App Authenticator / Passkey</strong>
+          <span style="font-size:0.75rem;color:#94a3b8;">Không dùng mã SMS OTP vì dễ bị đọc trộm tin nhắn hoặc chiếm quyền SIM.</span>
+        </div>
+      </div>
+
+      <div class="cgp-shield-item" data-idx="1" onclick="cgpToggleShield(1)">
+        <div class="cgp-shield-box">✓</div>
+        <div>
+          <strong style="font-size:0.83rem;color:#f8fafc;display:block;margin-bottom:2px;">2. Email gốc dùng mật khẩu độc lập 100%</strong>
+          <span style="font-size:0.75rem;color:#94a3b8;">Mật khẩu Gmail khôi phục không trùng với bất kỳ web, game hay app nào khác.</span>
+        </div>
+      </div>
+
+      <div class="cgp-shield-item" data-idx="2" onclick="cgpToggleShield(2)">
+        <div class="cgp-shield-box">✓</div>
+        <div>
+          <strong style="font-size:0.83rem;color:#f8fafc;display:block;margin-bottom:2px;">3. Không lưu mật khẩu trần trên trình duyệt</strong>
+          <span style="font-size:0.75rem;color:#94a3b8;">Ngăn mã độc Infostealer hút sạch mật khẩu &amp; Session Cookie khi tải nhầm tệp lạ.</span>
+        </div>
+      </div>
+
+      <div class="cgp-shield-item" data-idx="3" onclick="cgpToggleShield(3)">
+        <div class="cgp-shield-box">✓</div>
+        <div>
+          <strong style="font-size:0.83rem;color:#f8fafc;display:block;margin-bottom:2px;">4. Quy tắc "Đóng băng 60 giây" vào Giờ Độc</strong>
+          <span style="font-size:0.75rem;color:#94a3b8;">Không bấm link, không đọc OTP, không chuyển tiền khi đang buồn ngủ hoặc bị hối gấp.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const CGP_BIO_DATA = [
+    {
+      focus: "Cảnh giác sinh học: Rất thấp (35%)",
+      html: "<strong>🌙 00h00 – 05h00 (Đêm khuya — Suy giảm vỏ não trước trán):</strong> Não bộ mệt mỏi khiến khả năng phản biện giảm mạnh. Kẻ gian thường gửi tin nhắn hù dọa <em>“tài khoản sắp bị khóa vĩnh viễn”</em> hoặc <em>“vi phạm bản quyền”</em> để ép nạn nhân bấm link Phishing trong hoảng loạn."
+    },
+    {
+      focus: "Cảnh giác sinh học: Trung bình (65%)",
+      html: "<strong>☀️ 06h00 – 11h00 (Đầu giờ sáng — Vội vàng công việc):</strong> Tâm lý xử lý nhanh đầu ngày dễ khiến người dùng mở nhầm tệp đính kèm giả mạo <em>thông báo Thuế, VNeID, hóa đơn điện tử</em> hoặc tài liệu công việc chứa mã độc."
+    },
+    {
+      focus: "Cảnh giác sinh học: Thấp (50%)",
+      html: "<strong>🍜 11h00 – 14h00 (Nghỉ trưa — Mệt sau giờ học/làm):</strong> Cao điểm chiêu trò giả danh <em>Shipper giao hàng</em> gọi điện báo chuyển nhầm tiền hoặc gửi link hủy gói cước tự động trừ tiền."
+    },
+    {
+      focus: "Cảnh giác sinh học: Khá (75%)",
+      html: "<strong>🌆 14h00 – 20h00 (Chiều &amp; Tối sớm — Giao dịch trực tuyến):</strong> Kẻ gian tung bẫy <em>tuyển cộng tác viên online, săn voucher giả</em> hoặc giả mạo trang thanh toán ngân hàng đánh cắp mã OTP."
+    },
+    {
+      focus: "Cảnh giác sinh học: Thấp (40%)",
+      html: "<strong>🚨 21h00 – 24h00 (Tối muộn — Cao điểm Phishing &amp; Deepfake):</strong> Thời điểm dễ mất tài khoản nhất trong ngày. Tin tặc thường dùng tài khoản bạn bè bị hack hoặc cuộc gọi <em>Deepfake AI</em> mượn tiền gấp, nhờ bình chọn cuộc thi qua link lạ."
+    }
+  ];
+
+  function cgpGetCurrentBioSlot() {
+    const h = new Date().getHours();
+    if (h < 6) return 0;
+    if (h < 11) return 1;
+    if (h < 14) return 2;
+    if (h < 21) return 3;
+    return 4;
+  }
+
+  function cgpSelectBioSlot(idx) {
+    document.querySelectorAll(".cgp-slot-btn").forEach((btn, i) => {
+      btn.classList.toggle("active", i === idx);
+    });
+    const info = CGP_BIO_DATA[idx] || CGP_BIO_DATA[4];
+    const focusEl = document.getElementById("cgpBioFocusLabel");
+    const detailEl = document.getElementById("cgpBioSlotDetail");
+    if (focusEl) focusEl.textContent = info.focus;
+    if (detailEl) detailEl.innerHTML = info.html;
+  }
+
+  function cgpToggleEye() {
+    const inp = document.getElementById("cgpPassInput");
+    const btn = document.getElementById("cgpToggleEyeBtn");
+    if (!inp) return;
+    if (inp.type === "password") {
+      inp.type = "text";
+      if (btn) btn.textContent = "🙈 Ẩn";
+    } else {
+      inp.type = "password";
+      if (btn) btn.textContent = "👁️ Hiện";
+    }
+  }
+
+  function cgpCopyPass() {
+    const inp = document.getElementById("cgpPassInput");
+    if (!inp || !inp.value) return;
+    navigator.clipboard?.writeText(inp.value);
+    const resBox = document.getElementById("cgpPwnedResult");
+    if (resBox) {
+      resBox.innerHTML = "📋 <strong>Đã sao chép mật khẩu vào bộ nhớ tạm!</strong> Hãy lưu vào trình quản lý mật khẩu uy tín (như Bitwarden / Apple Passwords).";
+    }
+  }
+
+  function cgpGeneratePassphrase() {
+    const words1 = ["CaPheSuaDa", "BienMyKhe", "CauRong", "BanMiHoiAn", "PhoCo", "TraDaoCamSa", "RungThong", "SongHan"];
+    const words2 = ["AnToan", "LaChan", "BaoMat", "VungVang", "TinhTao", "KienCo", "CanhGiac"];
+    const syms = ["!", "@", "#", "$", "*"];
+    const w1 = words1[Math.floor(Math.random() * words1.length)];
+    const w2 = words2[Math.floor(Math.random() * words2.length)];
+    const num = Math.floor(100 + Math.random() * 900);
+    const sym = syms[Math.floor(Math.random() * syms.length)];
+    const generated = `${w1}-${w2}-${num}${sym}`;
+
+    const inp = document.getElementById("cgpPassInput");
+    const btn = document.getElementById("cgpToggleEyeBtn");
+    if (inp) {
+      inp.value = generated;
+      inp.type = "text";
+      if (btn) btn.textContent = "🙈 Ẩn";
+      cgpEvaluatePassword();
+    }
+  }
+
+  function cgpEvaluatePassword() {
+    const val = document.getElementById("cgpPassInput")?.value || "";
+    const fill = document.getElementById("cgpMeterFill");
+    const entEl = document.getElementById("cgpEntropyLabel");
+    const crackEl = document.getElementById("cgpCrackTimeLabel");
+    if (!fill || !entEl || !crackEl) return;
+
+    if (!val) {
+      fill.style.width = "0%";
+      entEl.innerHTML = "Độ mạnh: <strong>0 bits</strong>";
+      crackEl.innerHTML = "Thời gian dò phá: <strong>--</strong>";
+      return;
+    }
+
+    let pool = 0;
+    if (/[a-z]/.test(val)) pool += 26;
+    if (/[A-Z]/.test(val)) pool += 26;
+    if (/[0-9]/.test(val)) pool += 10;
+    if (/[^a-zA-Z0-9]/.test(val)) pool += 32;
+
+    const entropy = Math.round(val.length * Math.log2(pool || 1));
+    let pct = Math.min(100, Math.round((entropy / 95) * 100));
+    let color = "#fb7185";
+    let crackText = "Vài giây (Rất yếu)";
+
+    if (entropy >= 80) {
+      color = "#34d399";
+      crackText = "Hàng triệu năm (Cực mạnh)";
+    } else if (entropy >= 60) {
+      color = "#38bdf8";
+      crackText = "Hàng trăm năm (An toàn)";
+    } else if (entropy >= 40) {
+      color = "#fbbf24";
+      crackText = "Vài ngày – vài tháng (Trung bình)";
+    }
+
+    fill.style.width = `${pct}%`;
+    fill.style.background = color;
+    entEl.innerHTML = `Độ mạnh: <strong style="color:${color}">${entropy} bits</strong>`;
+    crackEl.innerHTML = `Thời gian dò phá: <strong>${crackText}</strong>`;
+  }
+
+  async function cgpCheckDataBreach() {
+    const val = document.getElementById("cgpPassInput")?.value || "";
+    const resBox = document.getElementById("cgpPwnedResult");
+    const btn = document.getElementById("cgpPwnedBtn");
+    if (!val) {
+      if (resBox) resBox.innerHTML = "⚠️ Hãy nhập mật khẩu vào ô phía trên trước khi bấm kiểm tra lộ lọt.";
+      return;
+    }
+
+    if (btn) btn.disabled = true;
+    if (resBox) resBox.innerHTML = "⏳ Đang băm SHA-1 trên trình duyệt và đối chiếu dữ liệu rò rỉ toàn cầu...";
+
+    try {
+      const msgUint8 = new TextEncoder().encode(val);
+      const hashBuffer = await crypto.subtle.digest("SHA-1", msgUint8);
+      const hashHex = Array.from(new Uint8Array(hashBuffer))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")
+        .toUpperCase();
+
+      const prefix = hashHex.slice(0, 5);
+      const suffix = hashHex.slice(5);
+
+      const response = await fetch(`https://api.pwnedpasswords.com/range/${prefix}`);
+      if (!response.ok) throw new Error("Không kết nối được máy chủ đối chiếu.");
+
+      const text = await response.text();
+      const lines = text.split("\n");
+      let foundCount = 0;
+
+      for (const line of lines) {
+        const [hashSuffix, countStr] = line.trim().split(":");
+        if (hashSuffix === suffix) {
+          foundCount = parseInt(countStr || "0", 10);
+          break;
+        }
+      }
+
+      if (foundCount > 0) {
+        resBox.innerHTML = `🚨 <strong style="color:#fb7185;">NGUY HIỂM: Mật khẩu này đã bị lộ ${foundCount.toLocaleString("vi-VN")} lần</strong> trong các vụ rò rỉ dữ liệu! Tin tặc có sẵn trong danh sách dò tự động — hãy bấm <em>"✨ Tạo Cụm Dễ Nhớ"</em> để đổi ngay.`;
+      } else {
+        resBox.innerHTML = `✅ <strong style="color:#34d399;">AN TOÀN: Chưa từng xuất hiện</strong> trong kho dữ liệu rò rỉ công khai (Have I Been Pwned). Đừng dùng chung mật khẩu này cho nhiều trang web khác nhau nhé!`;
+      }
+    } catch (err) {
+      resBox.innerHTML = `⚠️ Không thể kiểm tra lúc này (${err.message}). Hãy ưu tiên dùng cụm mật khẩu dài từ 14 ký tự trở lên.`;
+    } finally {
+      if (btn) btn.disabled = false;
+    }
+  }
+
+  const CGP_SHIELD_KEY = "cyberguard_shield_checks_v1";
+  let cgpShieldState = [false, false, false, false];
+
+  function cgpRenderShield() {
+    const items = document.querySelectorAll(".cgp-shield-item");
+    items.forEach((el, i) => {
+      el.classList.toggle("checked", Boolean(cgpShieldState[i]));
+    });
+    const activeCount = cgpShieldState.filter(Boolean).length;
+    const pct = activeCount * 25;
+    const scoreText = document.getElementById("cgpShieldScoreText");
+    const meter = document.getElementById("cgpShieldMeter");
+    if (scoreText) scoreText.textContent = `${pct}% (${activeCount}/4 lớp)`;
+    if (meter) meter.style.width = `${pct}%`;
+  }
+
+  function cgpToggleShield(idx) {
+    cgpShieldState[idx] = !cgpShieldState[idx];
+    try {
+      localStorage.setItem(CGP_SHIELD_KEY, JSON.stringify(cgpShieldState));
+    } catch (_) {}
+    cgpRenderShield();
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    cgpSelectBioSlot(cgpGetCurrentBioSlot());
+    try {
+      const saved = JSON.parse(localStorage.getItem(CGP_SHIELD_KEY) || "[]");
+      if (Array.isArray(saved) && saved.length === 4) {
+        cgpShieldState = saved;
+      }
+    } catch (_) {}
+    cgpRenderShield();
+  });
+</script>
+<!-- ================= KẾT THÚC MODULE MẬT KHẨU & GIỜ ĐỘC ================= -->
             </div>
         </div>
 
