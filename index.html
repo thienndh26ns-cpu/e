@@ -691,6 +691,19 @@
                         </div>
                         <div id="visionAiResultBox" style="display: none; text-align: left; margin-top: 8px; padding: 9px 11px; border-radius: 9px; background: var(--bg-card); border-left: 4px solid #a855f7; font-size: 0.82rem; line-height: 1.4;"></div>
                     </div>
+                    <!-- VÙNG QUÉT MÃ BĂM TỆP TIN SHA-256 QUA VIRUSTOTAL -->
+<div style="border: 1.5px dashed #a855f7; background: rgba(168, 85, 247, 0.08); border-radius: 12px; padding: 9px 11px; text-align: center; margin-bottom: 10px;">
+    <input type="file" id="malwareFileInput" style="display: none;" onchange="handleFileHashScan(event)">
+    <div onclick="document.getElementById('malwareFileInput').click()" style="cursor: pointer;">
+        <div style="font-size: 0.83rem; font-weight: 700; color: #c084fc;">
+            🧬 Kiểm Tra Tệp Nghi Ngờ (.APK, .EXE, .ZIP, .PDF)
+        </div>
+        <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 2px;">
+            Tính mã băm <b>SHA-256</b> tại máy & đối chiếu VirusTotal (Không upload tệp)
+        </div>
+    </div>
+    <div id="fileHashResultBox" style="display: none; text-align: left; margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: var(--bg-card); border-left: 4px solid #a855f7; font-size: 0.8rem;"></div>
+</div>
 
                     <div style="margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 4px;">
                         <button class="sample-btn" onclick="loadSample(1)">🏦 Mạo danh Bank</button>
@@ -1197,8 +1210,9 @@
     }
     function adminUnlockAll() { saveVerifiedLevel(3); updateTierCardsUI(); closeAdminModal(); showAiNarrator(true, "Đã mở khóa cả 3 Tầng (Admin)."); }
     function adminRelockAll() { saveVerifiedLevel(1); updateTierCardsUI(); resetToTiers(); closeAdminModal(); showAiNarrator(false, "Đã khóa lại về Tầng 1."); }
+// ================= 4. LUỒNG 2 GIAI ĐOẠN: SÀNG LỌC + THREAT INTEL WORKER -> LAB CHUYÊN SÂU =================
+    const SCANNER_WORKER_URL = "https://cyberguard-scanner.thienndh-26ns.workers.dev/";
 
-    // ================= 4. LUỒNG 2 GIAI ĐOẠN: CỘT 1 (SÀNG LỌC) -> CỘT 2 (CHUYÊN SÂU & SANDBOX) =================
     const VN_TRUSTED_ENTITIES = [
         { name: "Vietcombank", domain: "vietcombank.com.vn", keywords: ["vietcombank", "vcb"] },
         { name: "BIDV", domain: "bidv.com.vn", keywords: ["bidv"] },
@@ -1246,6 +1260,19 @@
         return entropy;
     }
 
+    function getClientRootDomain(hostname) {
+        const clean = hostname.toLowerCase().replace(/^www\./, "");
+        if (/^\d{1,3}(\.\d{1,3}){3}$/.test(clean)) return clean;
+        const parts = clean.split(".");
+        if (parts.length <= 2) return clean;
+        const multiTlds = ["com.vn", "gov.vn", "edu.vn", "org.vn", "net.vn", "biz.vn", "info.vn", "co.uk", "com.au"];
+        const lastTwo = parts.slice(-2).join(".");
+        if (multiTlds.includes(lastTwo) && parts.length >= 3) {
+            return parts.slice(-3).join(".");
+        }
+        return lastTwo;
+    }
+
     function switchDeepLabMode(mode) {
         const linkPanel = document.getElementById('deepLinkLabPanel');
         const wifiPanel = document.getElementById('deepWifiLabPanel');
@@ -1289,6 +1316,8 @@
         document.getElementById('phishingInput').value = '';
         latestScanReport = null;
         resetScannerCardTheme();
+        const fileBox = document.getElementById('fileHashResultBox');
+        if (fileBox) fileBox.style.display = 'none';
         document.getElementById('phishingResult').innerHTML = 'Đã làm mới. Sẵn sàng sàng lọc liên kết tiếp theo.';
         document.getElementById('deepLinkPlaceholder').style.display = 'block';
         document.getElementById('deepLinkReportContent').style.display = 'none';
@@ -1303,7 +1332,65 @@
         scanPhishing();
     }
 
-    function scanPhishing() {
+    // Quét mã băm SHA-256 cục bộ + đối chiếu VirusTotal qua Cloudflare Worker
+    async function handleFileHashScan(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const resultBox = document.getElementById('fileHashResultBox');
+        resultBox.style.display = 'block';
+        resultBox.style.borderLeftColor = 'var(--warn)';
+        resultBox.innerHTML = `⏳ Đang tính mã băm SHA-256 cho tệp <b>${file.name}</b> (${(file.size / 1024).toFixed(1)} KB)...`;
+
+        try {
+            const buffer = await file.arrayBuffer();
+            const hashBuf = await crypto.subtle.digest('SHA-256', buffer);
+            const sha256 = Array.from(new Uint8Array(hashBuf)).map(b => b.toString(16).padStart(2, '0')).join('');
+
+            resultBox.innerHTML = `🔍 Đang tra cứu mã băm <code>${sha256.slice(0, 16)}...</code> trên VirusTotal...`;
+
+            const res = await fetch(SCANNER_WORKER_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type: 'hash', target: sha256 })
+            });
+            const data = await res.json();
+
+            if (!res.ok || data.error) {
+                throw new Error(data.error || `HTTP ${res.status}`);
+            }
+
+            if (!data.found) {
+                const isDangerExt = /\.(apk|exe|bat|scr|vbs|msi|cmd)$/i.test(file.name);
+                resultBox.style.borderLeftColor = isDangerExt ? 'var(--danger)' : 'var(--warn)';
+                resultBox.innerHTML = `
+                    <div style="font-weight:700; color:${isDangerExt ? 'var(--danger)' : 'var(--warn)'};">
+                        ${isDangerExt ? '🚨 CẢNH BÁO TỆP CÀI ĐẶT LẠ' : '⚠️ CHƯA CÓ DỮ LIỆU TRÊN VIRUSTOTAL'}
+                    </div>
+                    <div style="margin-top:3px;">${data.message}</div>
+                    <div style="font-family:monospace; font-size:0.72rem; color:var(--text-muted); margin-top:4px;">SHA-256: ${sha256}</div>
+                `;
+                return;
+            }
+
+            const isMalware = (data.malicious || 0) > 0 || (data.suspicious || 0) >= 2;
+            resultBox.style.borderLeftColor = isMalware ? 'var(--danger)' : 'var(--safe)';
+            resultBox.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span class="badge ${isMalware ? 'b-danger' : 'b-safe'}">
+                        ${isMalware ? `☠️ MÃ ĐỘC (${data.malicious}/${data.totalEngines} hãng)` : `✅ SẠCH (0/${data.totalEngines} hãng)`}
+                    </span>
+                    <span style="font-size:0.72rem; color:var(--text-muted);">${data.fileType}</span>
+                </div>
+                ${isMalware ? `<div>• <b>Phân loại mã độc:</b> <code style="color:var(--danger);">${data.threatLabel}</code></div>` : ''}
+                <div style="font-family:monospace; font-size:0.72rem; color:var(--text-muted); margin-top:3px;">SHA-256: ${sha256}</div>
+            `;
+        } catch (err) {
+            resultBox.style.borderLeftColor = 'var(--danger)';
+            resultBox.innerHTML = `❌ Lỗi kiểm tra tệp: ${err.message}`;
+        }
+    }
+
+    async function scanPhishing() {
         const rawText = document.getElementById('phishingInput').value.trim();
         const box = document.getElementById('phishingResult');
         const card = document.getElementById('phishingScannerCard');
@@ -1318,27 +1405,45 @@
             return;
         }
 
+        let decodedText = rawText;
+        try { decodedText = decodeURIComponent(rawText); } catch (_) {}
+
         let riskScore = 0;
-        let quickVerdict = "";
         let findings = [];
         let lossItems = [];
         let officialSuggestion = null;
-        let techMetrics = { protocol: "Không rõ", host: "Không trích xuất được URL", entropy: "N/A", levenshtein: "N/A" };
-        const lowerText = rawText.toLowerCase();
+        let techMetrics = {
+            protocol: "Không rõ",
+            host: "Không trích xuất được URL",
+            finalUrl: "N/A",
+            entropy: "N/A",
+            levenshtein: "N/A",
+            gsbStatus: "Chưa kiểm tra",
+            vtStatus: "Chưa kiểm tra",
+            domainAge: "Không rõ",
+            workerOnline: false
+        };
+        const lowerText = decodedText.toLowerCase();
 
         const urlRegex = /(https?:\/\/[^\s"'<>]+|(?:[a-zA-Z0-9-]+\.)+(?:com\.vn|gov\.vn|edu\.vn|vn|com|net|org|xyz|top|vip|icu|online|site|tk|ly|co)(?:\/[^\s"'<>]*)?)/gi;
-        const matchedUrls = rawText.match(urlRegex) || [];
-        let fullUrlSample = matchedUrls.length > 0 ? matchedUrls[0] : "http://link-nghi-ngo.xyz";
+        const matchedUrls = decodedText.match(urlRegex) || [];
+        let fullUrlSample = matchedUrls.length > 0 ? matchedUrls[0] : "";
 
-        if (matchedUrls.length > 0) {
+        if (fullUrlSample) {
             try {
-                const normalized = fullUrlSample.startsWith('http') ? fullUrlSample : 'http://' + fullUrlSample;
+                const normalized = /^https?:\/\//i.test(fullUrlSample) ? fullUrlSample : 'http://' + fullUrlSample;
                 const parsed = new URL(normalized);
                 const extractedHost = parsed.hostname.toLowerCase();
+                const rootDomain = getClientRootDomain(extractedHost);
                 techMetrics.host = extractedHost;
-                techMetrics.protocol = fullUrlSample.toLowerCase().startsWith('https://') ? "HTTPS (Có mã hóa TLS)" : "HTTP (Văn bản thô - Nguy hiểm)";
+                techMetrics.finalUrl = normalized;
+                techMetrics.protocol = normalized.toLowerCase().startsWith('https://') ? "HTTPS (Có mã hóa TLS)" : "HTTP (Văn bản thô - Nguy hiểm)";
 
-                if (fullUrlSample.toLowerCase().startsWith('http://')) {
+                if (parsed.username || normalized.includes('@')) {
+                    riskScore += 55;
+                    findings.push(`🎭 <b>Bẫy ký tự '@' che giấu tên miền thật:</b> Trình duyệt sẽ bỏ qua phần trước dấu <code>@</code> và chuyển thẳng tới <code>${extractedHost}</code>.`);
+                }
+                if (normalized.toLowerCase().startsWith('http://')) {
                     riskScore += 30;
                     findings.push("🔓 <b>Giao thức HTTP không mã hóa:</b> Dữ liệu đăng nhập truyền đi dạng văn bản thô.");
                 }
@@ -1351,18 +1456,18 @@
                     findings.push("🎭 <b>Tấn công Homograph / Punycode (RFC 3492):</b> Tên miền dùng ký tự Unicode giả dạng chữ Latinh.");
                 }
 
-                const hostParts = extractedHost.split('.');
+                const hostParts = rootDomain.split('.');
                 const tld = hostParts[hostParts.length - 1];
                 if (HIGH_RISK_TLDS.includes(tld)) {
                     riskScore += 35;
                     findings.push(`⚠️ <b>Đuôi tên miền rủi ro cao (.${tld}):</b> Thường dùng lập web lừa đảo dùng một lần.`);
                 }
                 if (SHORTENERS.some(s => extractedHost === s || extractedHost.endsWith('.' + s))) {
-                    riskScore += 25;
-                    findings.push("🔗 <b>Liên kết rút gọn che giấu đích đến:</b> Dùng để vượt qua bộ lọc tin nhắn.");
+                    riskScore += 20;
+                    findings.push("🔗 <b>Liên kết rút gọn che giấu đích đến:</b> Đang tự động truy vết URL thật phía sau...");
                 }
 
-                const mainLabel = hostParts.length >= 2 ? hostParts[0] : extractedHost;
+                const mainLabel = hostParts[0];
                 const entropy = calculateShannonEntropy(mainLabel);
                 techMetrics.entropy = entropy.toFixed(2) + " bits";
                 if (mainLabel.length >= 8 && entropy > 3.6) {
@@ -1382,7 +1487,7 @@
                 }
 
                 if (!isVerifiedOfficial) {
-                    const cleanHostBase = extractedHost.replace(/^www\./, '').split('.')[0];
+                    const cleanHostBase = rootDomain.split('.')[0];
                     for (let entity of VN_TRUSTED_ENTITIES) {
                         const cleanOfficialBase = entity.domain.split('.')[0];
                         const dist = levenshteinDistance(cleanHostBase, cleanOfficialBase);
@@ -1397,18 +1502,13 @@
                         }
                     }
                 }
-            } catch (e) {}
+            } catch (_) {}
         }
 
-        const isApkFlag = /\.(apk|exe|bat|scr|vbs|msi|cmd)\b/i.test(lowerText);
+        let isApkFlag = /\.(apk|exe|bat|scr|vbs|msi|cmd)\b/i.test(lowerText);
         if (isApkFlag) {
             riskScore += 65;
             findings.push("☠️ <b>Chứa tệp cài đặt mã độc (.APK / .EXE):</b> Vượt qua kiểm duyệt kho ứng dụng.");
-            lossItems.push(
-                { icon: "📲", title: "Quyền điều khiển máy", desc: "Chiếm quyền Trợ năng (Accessibility), tự thao tác màn hình từ xa." },
-                { icon: "💬", title: "Toàn bộ tin nhắn OTP", desc: "Đọc trộm mã OTP ngân hàng gửi về SMS để tự động chuyển tiền." },
-                { icon: "📇", title: "Danh bạ & Ảnh CCCD", desc: "Hút toàn bộ danh bạ và ảnh giấy tờ cá nhân trong thư viện." }
-            );
         }
 
         const urgencyWords = ["khóa tài khoản", "khoa tai khoan", "tam khoa", "tạm khóa", "xác thực ngay", "xac thuc ngay", "trúng thưởng", "sinh trắc học", "triệu tập", "hoàn phí"];
@@ -1418,9 +1518,86 @@
             findings.push(`🧠 <b>Thao túng tâm lý:</b> Dùng từ ngữ hù dọa (<i>"${matchedUrgency.slice(0, 2).join('", "')}"</i>) ép bấm vội.`);
         }
 
+        // Hiển thị trạng thái đang đối chiếu Threat Intelligence thời gian thực
+        if (fullUrlSample) {
+            box.innerHTML = `<span style="color:var(--accent);">⏳ Đang đối chiếu URL với <b>Google Safe Browsing</b>, <b>VirusTotal</b> & <b>RDAP</b>...</span>`;
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 7500);
+                const workerRes = await fetch(SCANNER_WORKER_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'url', target: fullUrlSample }),
+                    signal: controller.signal
+                });
+                clearTimeout(timeoutId);
+
+                if (workerRes.ok) {
+                    const intel = await workerRes.json();
+                    techMetrics.workerOnline = true;
+                    techMetrics.finalUrl = intel.finalUrl || techMetrics.finalUrl;
+
+                    // 1. Kiểm tra chuyển hướng (Redirect Chain)
+                    if (intel.redirected && intel.finalUrl) {
+                        findings.push(`↪️ <b>Phát hiện chuyển hướng tự động tới:</b> <code>${intel.finalUrl}</code>`);
+                        if (/\.(apk|exe|bat|scr|msi)\b/i.test(intel.finalUrl)) {
+                            isApkFlag = true;
+                            riskScore += 70;
+                            findings.push("☠️ <b>Link chuyển hướng ngầm tới tệp cài đặt mã độc (.APK / .EXE)!</b>");
+                        } else {
+                            riskScore += 15;
+                        }
+                    }
+
+                    // 2. Kết quả Google Safe Browsing
+                    if (Array.isArray(intel.gsbThreats) && intel.gsbThreats.length > 0) {
+                        const threatTypes = intel.gsbThreats.map(t => t.threatType).join(', ');
+                        riskScore += 85;
+                        techMetrics.gsbStatus = `🚨 ĐỘC HẠI (${threatTypes})`;
+                        findings.unshift(`🚨 <b>Google Safe Browsing cảnh báo đỏ:</b> Trang web bị liệt kê danh sách đen (${threatTypes}).`);
+                    } else {
+                        techMetrics.gsbStatus = "✅ Chưa ghi nhận vi phạm";
+                    }
+
+                    // 3. Kết quả VirusTotal
+                    if (intel.vtMalicious > 0) {
+                        riskScore += 85;
+                        techMetrics.vtStatus = `☠️ ${intel.vtMalicious}/${intel.vtTotal} hãng phát hiện độc hại`;
+                        findings.unshift(`☠️ <b>VirusTotal xác nhận mã độc:</b> ${intel.vtMalicious}/${intel.vtTotal} bộ máy bảo mật quốc tế gắn cờ nguy hiểm.`);
+                    } else if (intel.vtFound && intel.vtTotal > 0) {
+                        techMetrics.vtStatus = `✅ Sạch (0/${intel.vtTotal} hãng)`;
+                    } else {
+                        techMetrics.vtStatus = "⚠️ URL mới (0/0 - Chưa lập chỉ mục)";
+                        if (riskScore >= 25) riskScore += 10;
+                    }
+
+                    // 4. Tuổi đời tên miền (RDAP)
+                    if (typeof intel.domainAgeDays === 'number') {
+                        techMetrics.domainAge = `${intel.domainAgeDays} ngày (Tạo ${intel.domainCreatedDate || ''})`;
+                        if (intel.domainAgeDays <= 30) {
+                            riskScore += 35;
+                            findings.push(`🆕 <b>Tên miền cực mới (${intel.domainAgeDays} ngày tuổi):</b> Rất phổ biến trong các chiến dịch lừa đảo ngắn hạn.`);
+                        } else if (intel.domainAgeDays >= 365) {
+                            riskScore = Math.max(0, riskScore - 15);
+                            findings.push(`🏛️ <b>Tên miền hoạt động lâu năm (${intel.domainAgeDays} ngày):</b> Có lịch sử tồn tại ổn định.`);
+                        }
+                    }
+                }
+            } catch (_) {
+                techMetrics.gsbStatus = "Ngoại tuyến (Dùng bộ lọc cục bộ)";
+                techMetrics.vtStatus = "Ngoại tuyến (Dùng bộ lọc cục bộ)";
+            }
+        }
+
         riskScore = Math.min(100, Math.max(0, riskScore));
 
-        if (riskScore >= 50 && lossItems.length === 0) {
+        if (isApkFlag) {
+            lossItems.push(
+                { icon: "📲", title: "Quyền điều khiển máy", desc: "Chiếm quyền Trợ năng (Accessibility), tự thao tác màn hình từ xa." },
+                { icon: "💬", title: "Toàn bộ tin nhắn OTP", desc: "Đọc trộm mã OTP ngân hàng gửi về SMS để tự động chuyển tiền." },
+                { icon: "📇", title: "Danh bạ & Ảnh CCCD", desc: "Hút toàn bộ danh bạ và ảnh giấy tờ cá nhân trong thư viện." }
+            );
+        } else if (riskScore >= 50) {
             lossItems.push(
                 { icon: "🔑", title: "Tên đăng nhập & Mật khẩu", desc: "Gửi trực tiếp về máy chủ tin tặc ngay khi bấm Đăng nhập." },
                 { icon: "🔢", title: "Mã xác thực OTP", desc: "Bot tự động dùng mã OTP vừa nhập để rút tiền trong 3 giây." },
@@ -1429,7 +1606,7 @@
         }
 
         latestScanReport = {
-            url: fullUrlSample,
+            url: techMetrics.finalUrl !== "N/A" ? techMetrics.finalUrl : (fullUrlSample || "Tin nhắn văn bản"),
             riskScore,
             isApk: isApkFlag,
             findings,
@@ -1439,6 +1616,7 @@
         };
 
         resetScannerCardTheme();
+        let quickVerdict = "";
 
         if (riskScore >= 50) {
             card.classList.add('scanner-card-danger');
@@ -1464,16 +1642,25 @@
         } else {
             pill.className = 'badge b-safe';
             pill.innerText = `✅ AN TOÀN (${riskScore}/100)`;
-            quickVerdict = `Không phát hiện dấu hiệu giả mạo hay mã độc trong quá trình sàng lọc nhanh.`;
+            quickVerdict = `Không phát hiện dấu hiệu giả mạo hay mã độc qua các lớp kiểm tra.`;
         }
 
+        const intelSummaryStrip = techMetrics.workerOnline
+            ? `<div style="display:flex; flex-wrap:wrap; gap:6px; font-size:0.74rem; margin-bottom:8px; padding:6px 8px; border-radius:7px; background:var(--bg-card); border:1px solid var(--border);">
+                <span><b>GSB:</b> ${techMetrics.gsbStatus}</span> •
+                <span><b>VirusTotal:</b> ${techMetrics.vtStatus}</span> •
+                <span><b>Tuổi domain:</b> ${techMetrics.domainAge}</span>
+               </div>`
+            : '';
+
         box.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:4px;">
                 <span class="badge ${riskScore >= 50 ? 'b-danger' : (riskScore >= 25 ? 'b-warn' : 'b-safe')}">
                     ${riskScore >= 50 ? '🚨 ĐỘC HẠI' : (riskScore >= 25 ? '⚠️ ĐÁNG NGỜ' : '✅ AN TOÀN')} • ${riskScore}/100 ĐIỂM
                 </span>
                 <span style="font-family:monospace; font-size:0.76rem; color:var(--text-muted);">${techMetrics.host}</span>
             </div>
+            ${intelSummaryStrip}
             <p style="font-size:0.86rem; margin-bottom:10px;">${quickVerdict}</p>
             <button class="action-btn" style="width:100%;" onclick="exportToDeepAnalysis()">
                 ➡️ Xuất Phân Tích Chuyên Sâu & Chạy Kiểm Thử (Cột 2)
@@ -1492,14 +1679,25 @@
         const forensicBox = document.getElementById('deepForensicDetails');
 
         let html = `
-            <div style="font-weight:800; color:var(--accent); margin-bottom:6px; border-bottom:1px solid var(--border); padding-bottom:5px;">
-                📊 BÁO CÁO KỸ THUẬT CHUYÊN SÂU
+            <div style="font-weight:800; color:var(--accent); margin-bottom:8px; border-bottom:1px solid var(--border); padding-bottom:5px;">
+                📊 BÁO CÁO TÌNH BÁO & KỸ THUẬT CHUYÊN SÂU
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:0.79rem; margin-bottom:8px;">
-                <div>• <b>Host đích:</b> <code>${r.techMetrics.host}</code></div>
-                <div>• <b>Giao thức:</b> ${r.techMetrics.protocol}</div>
-                <div>• <b>Shannon Entropy:</b> ${r.techMetrics.entropy}</div>
-                <div>• <b>Levenshtein:</b> ${r.techMetrics.levenshtein}</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:0.78rem; margin-bottom:8px;">
+                <div style="background:var(--bg-card); padding:6px 8px; border-radius:7px; border:1px solid var(--border);">
+                    <b>Google Safe Browsing:</b><br>${r.techMetrics.gsbStatus}
+                </div>
+                <div style="background:var(--bg-card); padding:6px 8px; border-radius:7px; border:1px solid var(--border);">
+                    <b>VirusTotal Engine:</b><br>${r.techMetrics.vtStatus}
+                </div>
+                <div style="background:var(--bg-card); padding:6px 8px; border-radius:7px; border:1px solid var(--border);">
+                    <b>Tuổi tên miền (RDAP):</b><br>${r.techMetrics.domainAge}
+                </div>
+                <div style="background:var(--bg-card); padding:6px 8px; border-radius:7px; border:1px solid var(--border);">
+                    <b>Entropy / Levenshtein:</b><br>${r.techMetrics.entropy} • ${r.techMetrics.levenshtein}
+                </div>
+            </div>
+            <div style="font-size:0.78rem; margin-bottom:8px;">
+                • <b>URL đích cuối cùng:</b> <code style="word-break:break-all;">${r.techMetrics.finalUrl}</code> (${r.techMetrics.protocol})
             </div>
         `;
 
@@ -1573,6 +1771,7 @@
             }
         }, 450);
     }
+    
 
     // ================= 5. MODULE HYBRID: OCR + GEMINI VISION PHÂN TÍCH LOGO & GIAO DIỆN =================
     let currentUploadedImageBase64 = null;
