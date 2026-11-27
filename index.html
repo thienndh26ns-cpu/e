@@ -368,37 +368,187 @@
     <div class="night-stars-layer"></div>
     <div class="distant-celestial"></div>
 
-    <div class="tactical-stage">
-        <div class="watchtower-wrap">
-            <svg viewBox="0 0 110 120" width="92" height="105">
-                <line x1="55" y1="2" x2="55" y2="16" stroke="#38bdf8" stroke-width="2.5"/>
-                <circle cx="55" cy="2" r="3.5" fill="#f43f5e"/>
-                <polygon points="32,26 55,14 78,26" fill="#1e3a8a" stroke="#38bdf8" stroke-width="2"/>
-                <rect x="34" y="26" width="42" height="15" rx="3" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
-                <rect x="40" y="30" width="30" height="7" rx="2" fill="#fef08a"/>
-                <polygon points="40,41 70,41 78,108 32,108" fill="#1e293b" stroke="#475569" stroke-width="2"/>
-            </svg>
-        </div>
-        <div class="shield-svg-wrap">
-            <svg viewBox="0 0 120 130" width="112" height="120">
-                <defs>
-                    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="#0866ff"/>
-                        <stop offset="50%" stop-color="#6366f1"/>
-                        <stop offset="100%" stop-color="#ec4899"/>
-                    </linearGradient>
-                </defs>
-                <path d="M60 8 L108 26 V64 C108 94 86 114 60 124 C34 114 12 94 12 64 V26 Z" fill="url(#shieldGrad)"/>
-                <path d="M40 64 L54 78 L82 48" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-    </div>
+   <!-- LOGO CYBERGUARD AI 3D -->
+<style>
+  .cg-logo3d-stage {
+    perspective: 900px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 14px;
+  }
+  .cg-logo3d-card {
+    width: 195px;
+    height: 195px;
+    transform-style: preserve-3d;
+    animation: cgLogoFloat3D 4.5s ease-in-out infinite;
+    filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.55))
+            drop-shadow(0 0 22px rgba(56, 189, 248, 0.35));
+    transition: transform 0.35s ease;
+    cursor: pointer;
+  }
+  .cg-logo3d-card:hover {
+    animation-play-state: paused;
+    transform: rotateY(14deg) rotateX(10deg) scale(1.06);
+  }
+  @keyframes cgLogoFloat3D {
+    0%, 100% { transform: translateY(0px) rotateY(-6deg) rotateX(4deg); }
+    50%      { transform: translateY(-8px) rotateY(6deg) rotateX(-3deg); }
+  }
+</style>
 
-    <div class="welcome-content">
+<div class="cg-logo3d-stage">
+  <div class="cg-logo3d-card">
+    <svg viewBox="0 0 320 320" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Viền vàng ánh kim 3D -->
+        <linearGradient id="cgGoldBevel" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fef08a"/>
+          <stop offset="35%" stop-color="#f59e0b"/>
+          <stop offset="70%" stop-color="#fde047"/>
+          <stop offset="100%" stop-color="#92400e"/>
+        </linearGradient>
+        <!-- Mặt vát 3D xanh cyan nửa trên trái -->
+        <linearGradient id="cgCyanFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#67e8f9"/>
+          <stop offset="50%" stop-color="#06b6d4"/>
+          <stop offset="100%" stop-color="#3b82f6"/>
+        </linearGradient>
+        <!-- Mặt vát 3D tím neon nửa dưới phải -->
+        <linearGradient id="cgPurpleFacet" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#60a5fa"/>
+          <stop offset="50%" stop-color="#8b5cf6"/>
+          <stop offset="100%" stop-color="#6d28d9"/>
+        </linearGradient>
+        <!-- Lòng khiên tối tạo chiều sâu 3D -->
+        <radialGradient id="cgInnerCore" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stop-color="#132a52"/>
+          <stop offset="70%" stop-color="#08152c"/>
+          <stop offset="100%" stop-color="#040b18"/>
+        </radialGradient>
+        <!-- Hiệu ứng phát sáng neon cho ổ khóa -->
+        <linearGradient id="cgLockNeon" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#22d3ee"/>
+          <stop offset="55%" stop-color="#38bdf8"/>
+          <stop offset="100%" stop-color="#c084fc"/>
+        </linearGradient>
+        <filter id="cgNeonGlow" x="-25%" y="-25%" width="150%" height="150%">
+          <feGaussianBlur stdDeviation="3.5" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <!-- Cắt chéo 2 nửa khiên -->
+        <clipPath id="cgClipTopLeft">
+          <polygon points="0,0 320,0 320,76 62,232 0,232"/>
+        </clipPath>
+        <clipPath id="cgClipBottomRight">
+          <polygon points="320,90 320,320 0,320 0,246 72,246"/>
+        </clipPath>
+      </defs>
+
+      <!-- Mạch điện tỏa ra bên trái -->
+      <g stroke="#22d3ee" stroke-width="2.2" fill="none" opacity="0.72">
+        <polyline points="94,116 58,92 40,92"/>
+        <circle cx="35" cy="92" r="4.5" fill="#22d3ee"/>
+        <polyline points="88,148 46,148 32,134"/>
+        <circle cx="29" cy="131" r="4" fill="#38bdf8"/>
+        <polyline points="95,180 54,180 36,198"/>
+        <circle cx="32" cy="202" r="5" fill="#22d3ee"/>
+        <line x1="112" y1="214" x2="80" y2="240"/>
+        <circle cx="76" cy="243" r="4" fill="#67e8f9"/>
+      </g>
+
+      <!-- Mạch điện tỏa ra bên phải -->
+      <g stroke="#38bdf8" stroke-width="2.2" fill="none" opacity="0.72">
+        <polyline points="226,116 262,92 280,92"/>
+        <circle cx="285" cy="92" r="5" fill="#38bdf8"/>
+        <polyline points="232,148 274,148 288,134"/>
+        <circle cx="291" cy="131" r="4" fill="#22d3ee"/>
+        <polyline points="225,180 266,180 284,198"/>
+        <circle cx="288" cy="202" r="4.5" fill="#38bdf8"/>
+        <line x1="208" y1="214" x2="240" y2="240"/>
+        <circle cx="244" cy="243" r="4" fill="#67e8f9"/>
+      </g>
+
+      <!-- Nền lõi khiên 3D -->
+      <path d="M160 52 L226 78 C226 164 205 224 160 258 C115 224 94 164 94 78 Z"
+            fill="url(#cgInnerCore)"/>
+
+      <!-- Nửa khiên trên-trái (Viền vàng 3D + mặt vát Cyan) -->
+      <g clip-path="url(#cgClipTopLeft)">
+        <path d="M160 38 L238 69 C238 168 213 234 160 272 C107 234 82 168 82 69 Z"
+              fill="url(#cgGoldBevel)"/>
+        <path d="M160 44 L232 73 C232 166 209 229 160 265 C111 229 88 166 88 73 Z"
+              fill="url(#cgCyanFacet)"/>
+        <path d="M160 56 L221 80 C221 161 201 218 160 251 C119 218 99 161 99 80 Z"
+              fill="url(#cgGoldBevel)"/>
+        <path d="M160 60 L217 83 C217 160 198 214 160 246 C122 214 103 160 103 83 Z"
+              fill="url(#cgInnerCore)"/>
+      </g>
+
+      <!-- Nửa khiên dưới-phải (Viền vàng 3D + mặt vát Tím) -->
+      <g clip-path="url(#cgClipBottomRight)">
+        <path d="M160 38 L238 69 C238 168 213 234 160 272 C107 234 82 168 82 69 Z"
+              fill="url(#cgGoldBevel)"/>
+        <path d="M160 44 L232 73 C232 166 209 229 160 265 C111 229 88 166 88 73 Z"
+              fill="url(#cgPurpleFacet)"/>
+        <path d="M160 56 L221 80 C221 161 201 218 160 251 C119 218 99 161 99 80 Z"
+              fill="url(#cgGoldBevel)"/>
+        <path d="M160 60 L217 83 C217 160 198 214 160 246 C122 214 103 160 103 83 Z"
+              fill="url(#cgInnerCore)"/>
+      </g>
+
+      <!-- Ổ khóa mạch điện phát sáng 3D ở trung tâm -->
+      <g filter="url(#cgNeonGlow)">
+        <!-- Quai khóa đôi -->
+        <path d="M135 135 V113 A25 25 0 0 1 185 113 V135"
+              fill="none" stroke="url(#cgLockNeon)" stroke-width="6.5" stroke-linecap="round"/>
+        <path d="M142 135 V114 A18 18 0 0 1 178 114 V135"
+              fill="none" stroke="#a5f3fc" stroke-width="2" opacity="0.8"/>
+
+        <!-- Thân khóa -->
+        <rect x="123" y="135" width="74" height="66" rx="13"
+              fill="#07152e" stroke="url(#cgLockNeon)" stroke-width="4.5"/>
+
+        <!-- Đường mạch điện bên trong thân khóa -->
+        <g stroke="url(#cgLockNeon)" stroke-width="2.4" fill="none" stroke-linecap="round">
+          <line x1="160" y1="136" x2="160" y2="149"/>
+          <line x1="160" y1="184" x2="160" y2="200"/>
+          <!-- Chân mạch bên trái -->
+          <line x1="124" y1="152" x2="139" y2="152"/><circle cx="142" cy="152" r="2.6" fill="#22d3ee"/>
+          <line x1="124" y1="167" x2="139" y2="167"/><circle cx="142" cy="167" r="2.6" fill="#22d3ee"/>
+          <line x1="124" y1="182" x2="139" y2="182"/><circle cx="142" cy="182" r="2.6" fill="#22d3ee"/>
+          <!-- Chân mạch bên phải -->
+          <line x1="196" y1="152" x2="181" y2="152"/><circle cx="178" cy="152" r="2.6" fill="#c084fc"/>
+          <line x1="196" y1="167" x2="181" y2="167"/><circle cx="178" cy="167" r="2.6" fill="#c084fc"/>
+          <line x1="196" y1="182" x2="181" y2="182"/><circle cx="178" cy="182" r="2.6" fill="#c084fc"/>
+        </g>
+
+        <!-- Lỗ khóa phát sáng trắng xanh -->
+        <circle cx="160" cy="161" r="6.8" fill="#e0f2fe"/>
+        <polygon points="156,165 164,165 167,181 153,181" fill="#e0f2fe"/>
+      </g>
+    </svg>
+  </div>
+</div>
         <div class="welcome-badge" id="welcomeStatusPill"><span>🛡️ Hệ thống phòng vệ không gian mạng</span></div>
         <h1 class="welcome-title"><span>CyberGuard AI</span></h1>
         <p class="welcome-sub">Nền tảng kiểm tra mã độc thời gian thực, giám sát an toàn Wi-Fi, phân tích hình ảnh lừa đảo và huấn luyện phản xạ an ninh mạng.</p>
         <button class="start-btn" onclick="startSystem()">🚀 Bắt đầu ngay</button>
+        <!-- THÔNG TIN NHÓM THỰC HIỆN -->
+<div style="margin: 22px auto 0; padding: 10px 20px; border-radius: 14px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(56, 189, 248, 0.28); backdrop-filter: blur(8px); max-width: 520px; width: fit-content; text-align: center; font-size: 0.88rem; line-height: 1.6; color: #cbd5e1; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);">
+  <div style="font-weight: 700; color: #38bdf8; letter-spacing: 0.5px; margin-bottom: 2px;">
+    👥 Group 1
+  </div>
+  <div>
+    <span style="color: #94a3b8;">Leader:</span> <strong style="color: #f8fafc;">Nguyễn Đình Hoàn Thiện</strong>
+  </div>
+  <div>
+    <span style="color: #94a3b8;">Members:</span> <span style="color: #e2e8f0;">Lương Minh Thuận, Trần Duy Nam</span>
+  </div>
+</div>
     </div>
 </section>
 
