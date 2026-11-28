@@ -358,6 +358,222 @@
         .b-warn { background: rgba(245, 158, 11, 0.15); color: var(--warn); border: 1px solid var(--warn); }
         .b-danger { background: rgba(244, 63, 94, 0.18); color: var(--danger); border: 1px solid var(--danger); }
         footer { text-align: center; padding: 20px 10px; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 28px; max-width: 780px; margin-left: auto; margin-right: auto; }
+
+        /* Giao dien nang cap: thong nhat khoang cach, do tuong phan va trang thai tương tác */
+        :root {
+            --sidebar-w: 238px;
+            --radius-card: 18px;
+            --shadow: 0 14px 38px rgba(2, 6, 23, 0.42);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 82% 8%, rgba(56, 189, 248, 0.12), transparent 24rem),
+                radial-gradient(circle at 12% 78%, rgba(129, 140, 248, 0.08), transparent 22rem),
+                var(--bg-sky-gradient) !important;
+            background-attachment: fixed !important;
+        }
+
+        body.day-theme {
+            background:
+                radial-gradient(circle at 85% 6%, rgba(255, 255, 255, 0.72), transparent 28rem),
+                radial-gradient(circle at 8% 92%, rgba(251, 191, 36, 0.10), transparent 24rem),
+                var(--bg-sky-gradient) !important;
+        }
+
+        #welcomeScreen {
+            background: linear-gradient(180deg, rgba(2, 6, 23, 0.10), rgba(2, 6, 23, 0.34));
+        }
+
+        body.day-theme #welcomeScreen {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.20), rgba(255, 255, 255, 0.08));
+        }
+
+        .cg-logo3d-stage { margin-bottom: 8px; }
+        .cg-logo3d-card {
+            width: 170px;
+            height: 170px;
+            filter: drop-shadow(0 18px 30px rgba(0, 0, 0, 0.38)) drop-shadow(0 0 24px rgba(56, 189, 248, 0.28));
+        }
+        .welcome-badge {
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 24px rgba(2, 6, 23, 0.16);
+        }
+        .welcome-title {
+            font-size: clamp(2.15rem, 5vw, 3.25rem);
+            line-height: 1.05;
+        }
+        .welcome-sub {
+            max-width: 620px;
+            font-size: 1.02rem;
+        }
+        .start-btn {
+            min-height: 48px;
+            padding-inline: 38px;
+            letter-spacing: 0.2px;
+            box-shadow: 0 12px 30px rgba(8, 102, 255, 0.34);
+        }
+        .start-btn:active { transform: translateY(0) scale(0.98); }
+
+        .top-navbar {
+            height: 64px;
+            padding-inline: clamp(12px, 2vw, 22px);
+            box-shadow: 0 8px 24px rgba(2, 6, 23, 0.12);
+        }
+        .brand { letter-spacing: -0.2px; }
+        .mini-logo-icon {
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            box-shadow: 0 6px 16px rgba(8, 102, 255, 0.24);
+        }
+        .hamburger-btn,
+        .fb-modal-close,
+        .bubble-close-btn {
+            transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+        }
+        .hamburger-btn:hover { transform: rotate(4deg); }
+
+        .left-sidebar {
+            top: 64px;
+            padding: 16px 12px;
+            box-shadow: 10px 0 30px rgba(2, 6, 23, 0.10);
+        }
+        .sidebar-item {
+            min-height: 48px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+        }
+        .sidebar-item:hover {
+            transform: translateX(2px);
+            border-color: var(--border);
+        }
+        .sidebar-item.active {
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.20), rgba(56, 189, 248, 0.06));
+            box-shadow: inset 3px 0 0 var(--accent), 0 8px 18px rgba(56, 189, 248, 0.08);
+        }
+        .sidebar-sos-btn {
+            min-height: 48px;
+            justify-content: center;
+        }
+
+        .main-workspace {
+            margin-top: 64px;
+            padding: 24px clamp(12px, 2.2vw, 28px) 72px;
+            min-height: calc(100vh - 64px);
+        }
+        .fb-feed-wrap { max-width: 840px; gap: 18px; }
+        .card,
+        .intel-metric-card,
+        .news-article-card,
+        .triage-card,
+        .fb-modal-dialog {
+            border-radius: var(--radius-card);
+        }
+        .card,
+        .intel-metric-card,
+        .news-article-card {
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .intel-metric-card:hover,
+        .news-article-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(56, 189, 248, 0.38);
+            box-shadow: 0 18px 42px rgba(2, 6, 23, 0.24);
+        }
+        body.day-theme .intel-metric-card:hover,
+        body.day-theme .news-article-card:hover {
+            box-shadow: 0 14px 34px rgba(15, 23, 42, 0.10);
+        }
+
+        .intel-metric-card { padding: 16px 18px; }
+        .metric-val { line-height: 1.25; }
+        .section-header-box { margin-bottom: 16px; }
+
+        .triage-option-btn {
+            min-height: 64px;
+            transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+        }
+        .triage-option-btn:hover { background: rgba(56, 189, 248, 0.07); }
+
+        input[type="text"],
+        input[type="password"],
+        textarea,
+        select {
+            min-height: 44px;
+            outline: none;
+            transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.14);
+        }
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        select:focus-visible {
+            outline: 3px solid rgba(56, 189, 248, 0.28);
+            outline-offset: 2px;
+        }
+
+        .action-btn,
+        .emerald-btn,
+        .danger-btn,
+        .sample-btn,
+        .option-btn,
+        .tier-card {
+            transition: transform 0.18s ease, filter 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+        }
+        .action-btn:hover,
+        .emerald-btn:hover,
+        .danger-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+        .option-btn:hover,
+        .tier-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.38);
+            border: 3px solid transparent;
+            border-radius: 999px;
+            background-clip: padding-box;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.58); }
+
+        @media (max-width: 768px) {
+            .top-navbar { height: 58px; }
+            .brand span { font-size: 0.98rem; }
+            #topModeTag { display: none; }
+            .left-sidebar { top: 58px; width: min(280px, 84vw); }
+            .main-workspace { margin-top: 58px; padding: 14px 10px 72px; }
+            .vigilance-bubble-wrapper { right: 12px; bottom: 18px; }
+            .vigilance-circle-bubble { width: 112px; height: 112px; font-size: 0.82rem; }
+            .ai-narrator-overlay.enter { right: 10px; bottom: 10px; }
+            .fb-modal-body { padding: 14px; }
+            .fb-modal-header { padding-inline: 48px 38px; }
+            .welcome-sub { font-size: 0.92rem; }
+        }
+
+        @media (max-width: 480px) {
+            .cg-logo3d-card { width: 145px; height: 145px; }
+            .welcome-title { font-size: 2.05rem; }
+            .welcome-sub { max-width: 92%; }
+            .start-btn { width: min(280px, 88vw); }
+            .top-navbar { padding-inline: 10px; }
+            .brand { gap: 7px; }
+            .mini-logo-icon { width: 32px; height: 32px; }
+            #headerLiveClock { font-size: 0.78rem !important; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
     </style>
 </head>
 <body>
